@@ -8,7 +8,7 @@ An introduction to Neural Networks with Python and Pytorch which covers optmizat
 
 - [Course Jupyter Book](https://fum-cs.github.io/deep-learning/README.html)
 
-2024 Instructor: Mahmood Amintoosi
+2026 Instructor: Mahmood Amintoosi
 
 ---
 
