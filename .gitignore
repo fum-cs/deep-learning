@@ -1,0 +1,6 @@
+notebooks/_build
+notebooks/_build/*/
+/notebooks/data
+__pycache__
+
+/notebooks/data/bitmoji_bw/train
