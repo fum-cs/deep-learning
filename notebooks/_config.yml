@@ -1,7 +1,7 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: NN
+title: DL
 author: Mahmood Amintoosi
 logo: img/fum-cs-logo.png
 copyright: "2026. CC0 Licensed - Computer Science Dept., Ferdowsi University of Mashhad"  # Copyright year to be placed in the footer
