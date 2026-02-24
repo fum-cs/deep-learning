@@ -4,3 +4,4 @@ notebooks/_build/*/
 __pycache__
 
 /notebooks/data/bitmoji_bw/train
+/notebooks/.ipynb_checkpoints
