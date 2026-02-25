@@ -18,48 +18,13 @@ In this exciting journey, we'll delve into the fascinating world of **Neural Net
 
 ## Instructors
 
-<table style="width:100%;">  
-  <tr>  
-    <td style="width:20%;">  
-      <img src="_images/M-Amintoosi.jpg" alt="Mahmood Amintoosi" style="width:100px;height:auto;">  
-    </td>  
-    <td>  
-      <strong><a href="https://mamintoosi.github.io/">Mahmood Amintoosi</a></strong><br>  
-      Email: m.amintoosi AT um.ac.ir
-    </td>  
-  </tr>  
-</table>
+[Mahmood Amintoosi](https://mamintoosi.github.io/), Email: m.amintoosi AT um.ac.ir
 
 ---
 
 ## Teaching Assistants
 
-<table style="width:50%;">
-  <tr>
-    <td style="width:120px; text-align:center; vertical-align:middle;">
-      <img src="_images/T-Kordi.jpg" alt="Tarane Kordi" style="width:100px;height:auto;">  
-      <br>
-      <strong><a href="https://github.com/Taraneh-trk">Tarane Kordi</a></strong><br>  
-      Email: sztu1380 AT gmail  
-    </td>
-    <td style="width:120px; text-align:center; vertical-align:middle;">
-      (TA Head)
-    </td>
-  </tr>
-  <!-- <tr>
-  <td> <br> </td>
-  </tr>
-  <tr>
-      <td style="width:120px; text-align:center; vertical-align:middle;">
-      <img src="_images/Mr-Dashtban.jpg" alt="Mr. Dashtban" style="width:100px;height:auto;"> <br>
-      Mr. Dashtban
-    </td>
-    <td style="width:120px; text-align:center; vertical-align:middle;">
-      <img src="_images/Miss-Kiani.jpg" alt="Miss. Kiani" style="width:100px;height:auto;"> <br>
-      Miss. Kiani
-    </td>
-  </tr> -->
-</table>
+[Tarane Kordi](https://github.com/Taraneh-trk), TA Head
 
 
 ## Questions?
