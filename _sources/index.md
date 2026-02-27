@@ -13,9 +13,23 @@ In this exciting journey, we'll delve into the fascinating world of **Neural Net
 - **Programming Skills**: Familiarity with Python programming. A great starting point is [Think Python](https://allendowney.github.io/ThinkPython/), which offers a deep dive into the language's essentials.
 - **Mathematics**: Basic understanding of calculus and statistics at the undergraduate level.
 
+
+# Course Staff
+
+## Instructors
+
+[Mahmood Amintoosi](https://mamintoosi.github.io/), Email: m.amintoosi AT um.ac.ir
+
+---
+
+## Teaching Assistants
+
+[Tarane Kordi](https://github.com/Taraneh-trk), TA Head
+
+
 ## Questions?
 
-I will be having office hours for this course on Saturday (10:00 AM--11:30 AM). If this is not convenient, email me at m dot amintoosi AT um.ac.ir, talk to me after class or [schedule an appointment via Calendly](https://calendly.com/m-amintoosi/30min). Also you can find me at [Bale](https://web.bale.ai/chat), [Eitaa](https://web.eitaa.com/) and [FUM-VU](https://vu.um.ac.ir/).
+I will be having office hours for this course on Saturday (10:00 AM--11:30 AM). If this is not convenient, email me at m dot amintoosi AT um.ac.ir, talk to me after class or [schedule an appointment via Calendly](https://calendly.com/m-amintoosi/30min). Also you can find me at [Bale](https://web.bale.ai/chat), [Rubika](https://web.rubika.ir/), [Eitaa](https://web.eitaa.com/) and [FUM-VU](https://vu.um.ac.ir/).
 
 <!-- ## Our Slack workspace
 
