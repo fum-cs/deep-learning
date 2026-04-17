@@ -193,6 +193,7 @@
 <li class="toctree-l1"><a class="reference internal" href="lecture3_neural-networks-basics.html">Introduction to Pytorch &amp; Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lecture4_neural-networks-for-classification.html">Neural Networks for Classification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lecture5_neural-networks-regularization.html">Regularization and Dropout in Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lecture6_1d_cnns.html">Introduction to 1D Convolutional Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lecture6_cnns-pt1.html">Introduction to Convolutional Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lecture7_cnns-pt2.html">Advanced Convolutional Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lecture8_advanced-deep-learning.html">Advanced Deep Learning</a></li>
@@ -445,12 +446,12 @@ document.write(`
 </li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-differentiation">Matrix Differentiation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-differentiation-further-reading">Matrix Differentiation (Further Reading)</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Introduction</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notation-and-nomenclature">Notation and Nomenclature</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-multiplication">Matrix Multiplication</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partioned-matrices-further-reading">Partioned Matrices (Further Reading)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Matrix Differentiation</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partitioned-matrices">Partitioned Matrices</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-differentiation">Matrix Differentiation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further Reading</a></li>
 </ul>
 </li>
@@ -484,10 +485,10 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Auto-setup when running on Google Colab</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_ipython</span><span class="p">())</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/content/neural-networks&#39;</span><span class="p">):</span>
-    <span class="o">!</span>git<span class="w"> </span>clone<span class="w"> </span>-q<span class="w"> </span>https://github.com/fum-cs/neural-networks.git<span class="w"> </span>/content/neural-networks
-    <span class="o">!</span>pip<span class="w"> </span>--quiet<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>/content/neural-networks/requirements_colab.txt
-    <span class="o">%</span><span class="k">cd</span> neural-networks/notebooks
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_ipython</span><span class="p">())</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/content/deep-learning&#39;</span><span class="p">):</span>
+    <span class="o">!</span>git<span class="w"> </span>clone<span class="w"> </span>-q<span class="w"> </span>https://github.com/fum-cs/deep-learning.git<span class="w"> </span>/content/deep-learning
+    <span class="o">!</span>pip<span class="w"> </span>--quiet<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>/content/deep-learning/requirements_colab.txt
+    <span class="o">%</span><span class="k">cd</span> deep-learning/notebooks
 </pre></div>
 </div>
 </div>
@@ -597,7 +598,6 @@ document.write(`
 <section id="vector-valued-functions">
 <h2>Vector-valued Functions<a class="headerlink" href="#vector-valued-functions" title="Link to this heading">#</a></h2>
 <hr><ul class="simple">
-<li><p>You may not have encountered these yet in MDS.</p></li>
 <li><p>These are functions with multiple <em>outputs</em> (and may or may not have multiple <em>inputs</em>).</p></li>
 <li><p>Example with 1 input and 3 outputs:</p></li>
 </ul>
@@ -692,20 +692,15 @@ document.write(`
 </div>
 </details>
 </div>
-<p>Notes:</p>
-<ul class="simple">
-<li><p>For a fixed <span class="math notranslate nohighlight">\(y\)</span>, when <span class="math notranslate nohighlight">\(x\)</span> grows, the <span class="math notranslate nohighlight">\(x\)</span>-component of the output grows (horizontal length of the arrows)</p></li>
-<li><p>A similar argument can be made for <span class="math notranslate nohighlight">\(y\)</span>.</p></li>
-<li><p>It’s not always the case that the number of inputs equals the number of outputs - this is a special case!</p>
-<ul>
-<li><p>But it’s a very important special case, as we’ll see below.</p></li>
-<li><p>What it means is that the “input space” and the “output space” are the same.</p></li>
-<li><p>Which allows for this kind of visualization.</p></li>
-</ul>
-</li>
-<li><p>(optional) It’s not always the case that the <span class="math notranslate nohighlight">\(i\)</span>th component of the output depends on the <span class="math notranslate nohighlight">\(i\)</span>th component of the inputs - this is also a special case!</p></li>
-</ul>
-</section>
+<!-- Notes:
+
+- For a fixed $y$, when $x$ grows, the $x$-component of the output grows (horizontal length of the arrows)
+- A similar argument can be made for $y$.
+- It's not always the case that the number of inputs equals the number of outputs - this is a special case!
+  - But it's a very important special case, as we'll see below.
+  - What it means is that the "input space" and the "output space" are the same.
+  - Which allows for this kind of visualization.
+- (optional) It's not always the case that the $i$th component of the output depends on the $i$th component of the inputs - this is also a special case! --></section>
 <section id="partial-derivatives">
 <h2>Partial Derivatives<a class="headerlink" href="#partial-derivatives" title="Link to this heading">#</a></h2>
 <hr><ul class="simple">
@@ -907,8 +902,8 @@ document.write(`
 </section>
 </section>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="matrix-differentiation">
-<h1>Matrix Differentiation<a class="headerlink" href="#matrix-differentiation" title="Link to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="matrix-differentiation-further-reading">
+<h1>Matrix Differentiation (Further Reading)<a class="headerlink" href="#matrix-differentiation-further-reading" title="Link to this heading">#</a></h1>
 <p><a class="reference external" href="https://atmos.washington.edu/~dennis/MatrixCalculus.pdf">matrix calculus</a></p>
 <p>Randal J. Barnes,
 Department of Civil Engineering, University of Minnesota.
@@ -1065,8 +1060,8 @@ c_{i j}=\sum_{k=1}^{n} a_{i k} b_{k j}
 \]</div>
 <p>q.e.d.</p>
 </section>
-<section id="partioned-matrices-further-reading">
-<h2>Partioned Matrices (Further Reading)<a class="headerlink" href="#partioned-matrices-further-reading" title="Link to this heading">#</a></h2>
+<section id="partitioned-matrices">
+<h2>Partitioned Matrices<a class="headerlink" href="#partitioned-matrices" title="Link to this heading">#</a></h2>
 <p>Frequently, I will find it convenient to deal with partitioned matrices <span class="math notranslate nohighlight">\({ }^{1}\)</span>. Such a representation, and the manipulation of this representation, are two of the relative advantages of the symbolic matrix notation.</p>
 <p><strong>Definition 4.</strong> Let <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> be <span class="math notranslate nohighlight">\(m \times n\)</span> and write</p>
 <div class="math notranslate nohighlight">
@@ -1102,8 +1097,8 @@ D &amp; E
 \]</div>
 <p>q.e.d.</p>
 </section>
-<section id="id2">
-<h2>Matrix Differentiation<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<section id="matrix-differentiation">
+<h2>Matrix Differentiation<a class="headerlink" href="#matrix-differentiation" title="Link to this heading">#</a></h2>
 <p>In the following discussion I will differentiate matrix quantities with respect to the elements of the referenced matrices. Although no new concept is required to carry out such operations, the element-by-element calculations involve cumbersome manipulations and, thus, it is useful to derive the necessary results and have them readily available <span class="math notranslate nohighlight">\({ }^{2}\)</span>.</p>
 <p><strong>Convention 3</strong></p>
 <p>Let</p>
@@ -1467,8 +1462,7 @@ Definition 5 Let <span class="math notranslate nohighlight">\(\mathbf{A}\)</span
 <li><p>Golub, Gene H., and Charles F. Van Loan, 1983, Matrix Computations, Johns Hopkins University Press, Baltimore, Maryland, 476 pp.</p></li>
 <li><p>Graybill, Franklin A., 1983, Matrices with Applications in Statistics, 2nd Edition, Wadsworth International Group, Belmont, California, 461 pp .</p></li>
 </ul>
-<p>[1]: Much of the material in this section is extracted directly from Dhrymes (1978, Section 2.7).</p>
-<p>[2]: Much of the material in this section is extracted directly from Dhrymes (1978, Section 4.3). The interested reader is directed to this worthy reference to find additional results.</p>
+<p>[1] Much of the material in this section is extracted directly from Dhrymes (1978, Sections 2.7 &amp; 4.3). The interested reader is directed to this worthy reference to find additional results.</p>
 </section>
 </section>
 
@@ -1549,12 +1543,12 @@ Definition 5 Let <span class="math notranslate nohighlight">\(\mathbf{A}\)</span
 </li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-differentiation">Matrix Differentiation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-differentiation-further-reading">Matrix Differentiation (Further Reading)</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Introduction</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notation-and-nomenclature">Notation and Nomenclature</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-multiplication">Matrix Multiplication</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partioned-matrices-further-reading">Partioned Matrices (Further Reading)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Matrix Differentiation</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partitioned-matrices">Partitioned Matrices</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-differentiation">Matrix Differentiation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further Reading</a></li>
 </ul>
 </li>

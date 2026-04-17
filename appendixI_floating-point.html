@@ -192,6 +192,7 @@
 <li class="toctree-l1"><a class="reference internal" href="lecture3_neural-networks-basics.html">Introduction to Pytorch &amp; Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lecture4_neural-networks-for-classification.html">Neural Networks for Classification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lecture5_neural-networks-regularization.html">Regularization and Dropout in Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lecture6_1d_cnns.html">Introduction to 1D Convolutional Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lecture6_cnns-pt1.html">Introduction to Convolutional Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lecture7_cnns-pt2.html">Advanced Convolutional Neural Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lecture8_advanced-deep-learning.html">Advanced Deep Learning</a></li>
@@ -498,10 +499,10 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Auto-setup when running on Google Colab</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_ipython</span><span class="p">())</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/content/neural-networks&#39;</span><span class="p">):</span>
-    <span class="o">!</span>git<span class="w"> </span>clone<span class="w"> </span>-q<span class="w"> </span>https://github.com/fum-cs/neural-networks.git<span class="w"> </span>/content/neural-networks
-    <span class="o">!</span>pip<span class="w"> </span>--quiet<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>/content/neural-networks/requirements_colab.txt
-    <span class="o">%</span><span class="k">cd</span> neural-networks/notebooks
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_ipython</span><span class="p">())</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/content/deep-learning&#39;</span><span class="p">):</span>
+    <span class="o">!</span>git<span class="w"> </span>clone<span class="w"> </span>-q<span class="w"> </span>https://github.com/fum-cs/deep-learning.git<span class="w"> </span>/content/deep-learning
+    <span class="o">!</span>pip<span class="w"> </span>--quiet<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>/content/deep-learning/requirements_colab.txt
+    <span class="o">%</span><span class="k">cd</span> deep-learning/notebooks
 </pre></div>
 </div>
 </div>
