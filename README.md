@@ -68,4 +68,4 @@ In notebooks folder:
 - copy ../require.js ./_build
 - ghp-import -n -p -f ./_build/html
 - jupyter-book build --builder pdflatex ./
-- python patch_html.py
+- python fix_jupyterbook.py

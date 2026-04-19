@@ -21,4 +21,7 @@ chapters:
 - file: appendixG_bitmoji-CNN
 - file: appendixH_transposed_conv
 - file: appendixI_floating-point
+- file: hws/index
+  sections:
+  - file: hws/HW-2D-CNN-learn-filters
 
