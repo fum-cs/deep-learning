@@ -1,0 +1,1013 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Exercise: Learning and Inverting Image Filters with CNNs &#8212; DL</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'hws/HW-2D-CNN-learn-filters';</script>
+    <link rel="icon" href="../_static/fum-logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Home Works" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/fum-cs-logo.png" class="logo__image only-light" alt="DL - Home"/>
+    <script>document.write(`<img src="../_static/fum-cs-logo.png" class="logo__image only-dark" alt="DL - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Deep Learning
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../lecture1_introduction.html">Introduction to the Course</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_1_regression.html">Regression</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_2_gradient-descent.html">Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_3_stochastic-gradient-descent.html">Stochastic Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture3_neural-networks-basics.html">Introduction to Pytorch &amp; Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture4_neural-networks-for-classification.html">Neural Networks for Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture5_neural-networks-regularization.html">Regularization and Dropout in Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_1d_cnns.html">Introduction to 1D Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_cnns-pt1.html">Introduction to Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture7_cnns-pt2.html">Advanced Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture8_advanced-deep-learning.html">Advanced Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixA_gradients.html">Appendix A: Gradients Review</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../appendixB_logistic-loss.html">Appendix B: Logistic Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixC_computing-derivatives.html">Appendix C: Computing Derivatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixD_tensor-basics.html">Appendix D: Basics of Numpy and Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixE_pytorch-autograd.html">Appendix E: Auto Differentiation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixF_pytorch-optimizers.html">Appendix F: Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixG_bitmoji-CNN.html">Appendix G: Creating a CNN to Predict Bitmojis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixH_transposed_conv.html">Appendix H: Transposed Convolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixI_floating-point.html">Appendix I: Floating Point Numbers</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Home Works</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Exercise: Learning and Inverting Image Filters with CNNs</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning/issues/new?title=Issue%20on%20page%20%2Fhws/HW-2D-CNN-learn-filters.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/hws/HW-2D-CNN-learn-filters.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Exercise: Learning and Inverting Image Filters with CNNs</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-provided">Setup (Provided)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#image-loading-complete-this-function">Image Loading (Complete this function)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-learning-the-prewitt-filter">Part 1: Learning the Prewitt Filter</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-statement">Problem Statement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-works">Why this works</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#code-template">Code Template</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-for-part-1">Questions for Part 1</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-inverse-problem-reconstructing-from-filtered-output">Part 2: Inverse Problem - Reconstructing from Filtered Output</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Problem Statement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-insight">Key Insight</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Code Template</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-for-part-2">Questions for Part 2</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-multi-filter-reconstruction">Part 3: Multi-Filter Reconstruction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Problem Statement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Code Template</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-for-part-3">Questions for Part 3</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deliverables">Deliverables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hints-and-tips">Hints and Tips</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes">Learning Outcomes</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="exercise-learning-and-inverting-image-filters-with-cnns">
+<h1>Exercise: Learning and Inverting Image Filters with CNNs<a class="headerlink" href="#exercise-learning-and-inverting-image-filters-with-cnns" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>In this exercise, you will explore the relationship between classical image processing filter ‘Prewitt’ and Convolutional Neural Networks. You will:</p>
+<ol class="arabic simple">
+<li><p><strong>Learn a filter</strong>: Train a CNN to discover the Prewitt edge detection filter</p></li>
+<li><p><strong>Invert a filter</strong>: Reconstruct an image from its filtered version (inverse problem)</p></li>
+<li><p><strong>Multi-filter reconstruction</strong>: Use two filters simultaneously for better reconstruction</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="setup-provided">
+<h2>Setup (Provided)<a class="headerlink" href="#setup-provided" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">correlate2d</span>
+
+<span class="c1"># Set random seeds</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Define filters</span>
+<span class="n">PREWITT_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="n">PREWITT_Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="image-loading-complete-this-function">
+<h2>Image Loading (Complete this function)<a class="headerlink" href="#image-loading-complete-this-function" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_image</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load an image from file and convert to grayscale numpy array [0, 1].</span>
+<span class="sd">    </span>
+<span class="sd">    Steps:</span>
+<span class="sd">    1. Use PIL.Image.open() to load the image</span>
+<span class="sd">    2. Convert to grayscale if it&#39;s RGB (use .convert(&#39;L&#39;))</span>
+<span class="sd">    3. Convert to numpy array with dtype=float32</span>
+<span class="sd">    4. Normalize to range [0, 1] by dividing by 255</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy array of shape (H, W) with values in [0, 1]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: Implement image loading</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Load your image</span>
+<span class="n">IMAGE_PATH</span> <span class="o">=</span> <span class="s1">&#39;input-image.jpg&#39;</span>  <span class="c1"># Change to your image path</span>
+<span class="n">original_image</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span><span class="n">IMAGE_PATH</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image shape: </span><span class="si">{</span><span class="n">original_image</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image range: [</span><span class="si">{</span><span class="n">original_image</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">original_image</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+
+<span class="c1"># Visualize</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">original_image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Original Input Image&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Convert to tensor for PyTorch</span>
+<span class="c1"># TODO: Convert original_image to torch tensor with shape (1, 1, H, W)</span>
+<span class="c1"># Hint: Use torch.tensor(), .float(), .unsqueeze(), and move to device if available</span>
+<span class="n">input_tensor</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Replace with your code</span>
+</pre></div>
+</div>
+<p>Please use one the following images:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Ali1.jpg</p></th>
+<th class="head"><p>Ali2.jpg</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><img alt="" src="../_images/Ali1.jpg" /></p></td>
+<td><p><img alt="" src="../_images/Ali2.jpg" /></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="part-1-learning-the-prewitt-filter">
+<h2>Part 1: Learning the Prewitt Filter<a class="headerlink" href="#part-1-learning-the-prewitt-filter" title="Link to this heading">#</a></h2>
+<section id="problem-statement">
+<h3>Problem Statement<a class="headerlink" href="#problem-statement" title="Link to this heading">#</a></h3>
+<p>The Prewitt filter for horizontal edge detection is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="mi">1</span>  <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span> <span class="p">]</span>
+<span class="p">[</span> <span class="mi">1</span>  <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span> <span class="p">]</span>
+<span class="p">[</span> <span class="mi">1</span>  <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>When applied to an image, it highlights vertical edges. Instead of manually coding this filter, we want a CNN to <strong>learn</strong> it from data.</p>
+<p><strong>Task</strong>:</p>
+<ol class="arabic simple">
+<li><p>Create the target filtered image using <code class="docutils literal notranslate"><span class="pre">correlate2d</span></code> with the true Prewitt kernel</p></li>
+<li><p>Build a single-layer CNN with random initialization</p></li>
+<li><p>Train the network to match the target</p></li>
+<li><p>Compare the learned weights with the true Prewitt kernel</p></li>
+</ol>
+</section>
+<section id="why-this-works">
+<h3>Why this works<a class="headerlink" href="#why-this-works" title="Link to this heading">#</a></h3>
+<p>The CNN has no knowledge of the Prewitt filter initially. Through gradient descent on MSE loss, it discovers that certain weight patterns (positive on left, negative on right) minimize the error.</p>
+</section>
+<section id="code-template">
+<h3>Code Template<a class="headerlink" href="#code-template" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PART 1: Learning Prewitt Filter&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Step 1: Generate target using classical filtering</span>
+<span class="c1"># TODO: Use correlate2d to apply PREWITT_X to original_image</span>
+<span class="c1"># mode=&#39;same&#39;, boundary=&#39;wrap&#39; preserves image size</span>
+<span class="n">target_prewitt</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Replace with your code</span>
+
+<span class="c1"># Convert to tensor</span>
+<span class="n">target_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">target_prewitt</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Define the model</span>
+<span class="k">class</span> <span class="nc">LearnableFilter</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># TODO: Define a Conv2d layer with:</span>
+        <span class="c1"># - 1 input channel, 1 output channel</span>
+        <span class="c1"># - kernel_size=3, padding=1 (to preserve size)</span>
+        <span class="c1"># - bias=False (we only want the filter weights)</span>
+        <span class="c1"># Do NOT initialize with Prewitt weights - use default random init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Replace with your code</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># TODO: Apply the convolution</span>
+        <span class="k">pass</span>
+
+<span class="n">model1</span> <span class="o">=</span> <span class="n">LearnableFilter</span><span class="p">()</span>
+
+<span class="c1"># Step 3: Setup training</span>
+<span class="c1"># TODO: Define MSE loss function</span>
+<span class="n">criterion</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Replace with your code</span>
+
+<span class="c1"># TODO: Define Adam optimizer for model1.parameters() with lr=0.01</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Replace with your code</span>
+
+<span class="c1"># Step 4: Training loop</span>
+<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">losses</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
+    <span class="c1"># TODO: Complete the training loop:</span>
+    <span class="c1"># 1. Set model to train mode</span>
+    <span class="c1"># 2. Zero gradients</span>
+    <span class="c1"># 3. Forward pass: model1(input_tensor)</span>
+    <span class="c1"># 4. Compute loss with target_tensor</span>
+    <span class="c1"># 5. Backward pass</span>
+    <span class="c1"># 6. Optimizer step</span>
+    
+    <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">200</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch [</span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_epochs</span><span class="si">}</span><span class="s2">], Loss: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Step 5: Extract and compare weights</span>
+<span class="n">learned_kernel</span> <span class="o">=</span> <span class="n">model1</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">True Prewitt kernel:</span><span class="se">\n</span><span class="si">{</span><span class="n">PREWITT_X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Learned kernel:</span><span class="se">\n</span><span class="si">{</span><span class="n">learned_kernel</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># TODO: Compute and print the element-wise absolute difference</span>
+<span class="c1"># What pattern do you observe in the learned kernel?</span>
+
+<span class="c1"># Step 6: Visualization</span>
+<span class="c1"># TODO: Create a 2x3 subplot showing:</span>
+<span class="c1"># - Loss curve over epochs</span>
+<span class="c1"># - True Prewitt kernel (imshow with RdBu_r colormap, vmin=-2, vmax=2)</span>
+<span class="c1"># - Learned kernel (same colormap settings)</span>
+<span class="c1"># - Input image</span>
+<span class="c1"># - Target filtered image</span>
+<span class="c1"># - Model output image</span>
+
+<span class="c1"># Hint: Use model1.eval() and torch.no_grad() for inference</span>
+</pre></div>
+</div>
+</section>
+<section id="questions-for-part-1">
+<h3>Questions for Part 1<a class="headerlink" href="#questions-for-part-1" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>What values does the learned kernel converge to? Do they match the Prewitt filter (±1)?</p></li>
+<li><p>What happens if you reduce the number of epochs? Increase learning rate?</p></li>
+<li><p>Try with <code class="docutils literal notranslate"><span class="pre">padding=0</span></code> (valid convolution). How does the output size change and why?</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-2-inverse-problem-reconstructing-from-filtered-output">
+<h2>Part 2: Inverse Problem - Reconstructing from Filtered Output<a class="headerlink" href="#part-2-inverse-problem-reconstructing-from-filtered-output" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h3>Problem Statement<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>Given:</p>
+<ul class="simple">
+<li><p>The <strong>output</strong> of a Prewitt filter (edges only)</p></li>
+<li><p>The <strong>knowledge</strong> of which filter was used</p></li>
+</ul>
+<p>Recover the <strong>original image</strong>.</p>
+<p>This is an <strong>ill-posed inverse problem</strong>: multiple images can produce similar edge maps. We solve it via optimization: start from random noise and iteratively adjust until applying Prewitt gives the target edge map.</p>
+</section>
+<section id="key-insight">
+<h3>Key Insight<a class="headerlink" href="#key-insight" title="Link to this heading">#</a></h3>
+<p>We freeze the filter weights (known) and optimize the <strong>input image</strong> instead.</p>
+</section>
+<section id="id2">
+<h3>Code Template<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PART 2: Reconstructing from Single Filter Output&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Step 1: Create model with FIXED Prewitt weights</span>
+<span class="k">class</span> <span class="nc">FixedPrewittFilter</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="c1"># TODO: Initialize conv weight with PREWITT_X tensor</span>
+        <span class="c1"># Hint: torch.tensor(PREWITT_X).float().unsqueeze(0).unsqueeze(0)</span>
+        
+        <span class="c1"># TODO: Freeze all parameters (requires_grad = False)</span>
+        <span class="c1"># We don&#39;t want to train the filter - it&#39;s fixed!</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model2</span> <span class="o">=</span> <span class="n">FixedPrewittFilter</span><span class="p">()</span>
+
+<span class="c1"># Step 2: Prepare target (filtered image)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">target_single</span> <span class="o">=</span> <span class="n">model2</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
+
+<span class="c1"># Step 3: Initialize optimizable image</span>
+<span class="c1"># TODO: Create a random tensor with same shape as input_tensor</span>
+<span class="c1"># requires_grad=True is crucial - we optimize THIS, not the model</span>
+<span class="n">reconstructed</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Replace with your code</span>
+
+<span class="c1"># Step 4: Setup optimizer</span>
+<span class="c1"># TODO: Adam optimizer, but optimize [reconstructed] not model parameters!</span>
+<span class="n">optimizer2</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Replace with your code</span>
+
+<span class="c1"># Step 5: Optimization loop with snapshots</span>
+<span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">snapshot_interval</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">snapshots</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Store intermediate results</span>
+<span class="n">losses2</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_iterations</span><span class="p">):</span>
+    <span class="c1"># TODO: Complete optimization loop:</span>
+    <span class="c1"># 1. Zero gradients</span>
+    <span class="c1"># 2. Forward pass: apply model2 to reconstructed image</span>
+    <span class="c1"># 3. Compute MSE loss against target_single</span>
+    <span class="c1"># 4. Backward pass</span>
+    <span class="c1"># 5. Optimizer step</span>
+    
+    <span class="c1"># TODO: Clamp reconstructed image to [0, 1] after each step</span>
+    <span class="c1"># Hint: use .clamp_(0, 1) in torch.no_grad() context</span>
+    
+    <span class="n">losses2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">iteration</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">snapshot_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">snapshots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reconstructed</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration [</span><span class="si">{</span><span class="n">iteration</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_iterations</span><span class="si">}</span><span class="s2">], Loss: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Step 6: Visualization</span>
+<span class="c1"># TODO: Create visualization showing:</span>
+<span class="c1"># - Original image</span>
+<span class="c1"># - Target filtered image (what we tried to match)</span>
+<span class="c1"># - Reconstruction progress: show snapshots at iterations 100, 200, ..., 1000</span>
+<span class="c1"># - Final reconstructed image vs original</span>
+<span class="c1"># - Absolute difference map (use &#39;hot&#39; colormap)</span>
+<span class="c1"># - Loss curve</span>
+
+<span class="c1"># Questions to consider:</span>
+<span class="c1"># - Does the reconstruction perfectly match the original? Why or why not?</span>
+<span class="c1"># - What information was lost in the filtering process?</span>
+</pre></div>
+</div>
+</section>
+<section id="questions-for-part-2">
+<h3>Questions for Part 2<a class="headerlink" href="#questions-for-part-2" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Why start from random noise? What would happen if you started from all zeros or a blurred image?</p></li>
+<li><p>The reconstruction is imperfect—what visual features are missing or wrong?</p></li>
+<li><p>What does this tell you about edge detection filters? Are they invertible?</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-3-multi-filter-reconstruction">
+<h2>Part 3: Multi-Filter Reconstruction<a class="headerlink" href="#part-3-multi-filter-reconstruction" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h3>Problem Statement<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>Using <strong>one</strong> filter loses information. Using <strong>two</strong> different filters provides complementary constraints.</p>
+<p>We now have:</p>
+<ul class="simple">
+<li><p>Prewitt X output (sensitive to vertical gradients)</p></li>
+<li><p>Prewitt Y output</p></li>
+</ul>
+<p>Both describe the same underlying image. Can we reconstruct better with two constraints than one?</p>
+</section>
+<section id="id4">
+<h3>Code Template<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PART 3: Reconstructing from Two Filter Outputs&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Step 1: Define model with TWO fixed filters</span>
+<span class="k">class</span> <span class="nc">TwoFixedFilters</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># TODO: Conv2d with 2 output channels (one for each filter)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Replace with your code</span>
+        
+        <span class="c1"># TODO: Initialize weights: Channel 0 = PREWITT_X, Channel 1 = PREWITT_Y</span>
+        <span class="c1"># Hint: Stack with np.stack([PREWITT_X, PREWITT_Y]), then convert to tensor</span>
+        <span class="c1"># Shape should be (2, 1, 3, 3) for Conv2d weight</span>
+        
+        <span class="c1"># TODO: Freeze parameters</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># Returns shape: (batch, 2, H, W) - two filtered outputs</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model3</span> <span class="o">=</span> <span class="n">TwoFixedFilters</span><span class="p">()</span>
+
+<span class="c1"># Step 2: Generate two targets simultaneously</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">target_two</span> <span class="o">=</span> <span class="n">model3</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>  <span class="c1"># Shape: [1, 2, H, W]</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target shape: </span><span class="si">{</span><span class="n">target_two</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Channel 0: Prewitt X edges&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Channel 1: Prewitt Y edges&quot;</span><span class="p">)</span>
+
+<span class="c1"># Visualize both targets</span>
+<span class="c1"># TODO: Show original + both filtered outputs side by side</span>
+
+<span class="c1"># Step 3: Initialize reconstruction (same as Part 2)</span>
+<span class="n">reconstructed3</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># TODO: Random init with requires_grad=True</span>
+<span class="n">optimizer3</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># TODO: Adam optimizer for reconstructed3</span>
+
+<span class="c1"># Step 4: Optimize to match BOTH channels</span>
+<span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">snapshot_interval</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">snapshots3</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">losses3</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_iterations</span><span class="p">):</span>
+    <span class="c1"># TODO: Optimization loop</span>
+    <span class="c1"># Same as Part 2, but loss is computed on BOTH channels</span>
+    <span class="c1"># The MSE automatically sums over all elements including both channels</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">iteration</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">snapshot_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">snapshots3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reconstructed3</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration [</span><span class="si">{</span><span class="n">iteration</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_iterations</span><span class="si">}</span><span class="s2">], Loss: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Step 5: Comparison visualization</span>
+<span class="c1"># TODO: Create comprehensive visualization:</span>
+<span class="c1"># Row 1: Original, Prewitt-X target, Prewitt-Y target</span>
+<span class="c1"># Row 2: Reconstruction progress (snapshots)</span>
+<span class="c1"># Row 3: Final result, original, difference map, loss curve</span>
+
+<span class="c1"># TODO: Compute and print final MSE vs original image</span>
+<span class="n">final3</span> <span class="o">=</span> <span class="n">reconstructed3</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">mse_two_filters</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># TODO: Compute MSE</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Reconstruction MSE with two filters: </span><span class="si">{</span><span class="n">mse_two_filters</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Compare to Part 2 (single filter): </span><span class="si">{</span><span class="n">mse_single</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Improvement: </span><span class="si">{</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mse_two_filters</span><span class="o">/</span><span class="n">mse_single</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="questions-for-part-3">
+<h3>Questions for Part 3<a class="headerlink" href="#questions-for-part-3" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Compare reconstruction quality: two filters vs one filter. Quantify the improvement.</p></li>
+<li><p>Why does adding Prewitt-Y help?</p></li>
+<li><p>Can you perfectly reconstruct the original? What fundamental limits exist?</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="deliverables">
+<h2>Deliverables<a class="headerlink" href="#deliverables" title="Link to this heading">#</a></h2>
+<p>Submit a Jupyter notebook containing:</p>
+<ol class="arabic simple">
+<li><p><strong>Completed code</strong> for all three parts with your <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">TODO</span></code> implementations</p></li>
+<li><p><strong>Visualizations</strong> for each part (use provided templates)</p></li>
+<li><p><strong>Written answers</strong> to all questions</p></li>
+<li><p><strong>Bonus</strong>: Experiment with different initialization strategies in Part 2 (random, zeros, blurred original) and report results</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="hints-and-tips">
+<h2>Hints and Tips<a class="headerlink" href="#hints-and-tips" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Tensor shapes</strong>: Use <code class="docutils literal notranslate"><span class="pre">.shape</span></code> frequently to debug. Conv2d expects <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">C,</span> <span class="pre">H,</span> <span class="pre">W)</span></code>.</p></li>
+<li><p><strong>Device</strong>: If you have GPU, move tensors with <code class="docutils literal notranslate"><span class="pre">.to(device)</span></code>. CPU works fine too.</p></li>
+<li><p><strong>Learning rate</strong>: If training is unstable, reduce lr to 0.001.</p></li>
+<li><p><strong>Visualization</strong>: Use <code class="docutils literal notranslate"><span class="pre">vmin,</span> <span class="pre">vmax</span></code> in <code class="docutils literal notranslate"><span class="pre">imshow</span></code> for consistent scaling.</p></li>
+<li><p><strong>Clamping</strong>: Always clamp reconstructed images to [0,1] to stay in valid range.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="learning-outcomes">
+<h2>Learning Outcomes<a class="headerlink" href="#learning-outcomes" title="Link to this heading">#</a></h2>
+<p>After completing this exercise, you should understand:</p>
+<ul class="simple">
+<li><p>How CNNs can discover classical image processing operations</p></li>
+<li><p>The relationship between convolution and its “inverse” (deconvolution/reconstruction)</p></li>
+<li><p>Why multiple filters provide richer representations</p></li>
+<li><p>The information-theoretic limits of feature extraction</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./hws"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Home Works</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-provided">Setup (Provided)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#image-loading-complete-this-function">Image Loading (Complete this function)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-learning-the-prewitt-filter">Part 1: Learning the Prewitt Filter</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-statement">Problem Statement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-works">Why this works</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#code-template">Code Template</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-for-part-1">Questions for Part 1</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-inverse-problem-reconstructing-from-filtered-output">Part 2: Inverse Problem - Reconstructing from Filtered Output</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Problem Statement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-insight">Key Insight</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Code Template</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-for-part-2">Questions for Part 2</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-multi-filter-reconstruction">Part 3: Multi-Filter Reconstruction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Problem Statement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Code Template</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-for-part-3">Questions for Part 3</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deliverables">Deliverables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hints-and-tips">Hints and Tips</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes">Learning Outcomes</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Mahmood Amintoosi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. CC0 Licensed - Computer Science Dept., Ferdowsi University of Mashhad.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
