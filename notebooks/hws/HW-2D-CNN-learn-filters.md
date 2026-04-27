@@ -84,9 +84,10 @@ input_tensor = None  # Replace with your code
 
 Please use one the following images:
 
-| Ali1.jpg | Ali2.jpg |
+|  |  |
 |-----------|---------------|
 | ![](img/Ali1.jpg) | ![](img/Ali2.jpg) |
+| ![](img/Persepolis.jpg) | ![](img/Qasem.jpg) |
 
 ---
 
@@ -152,7 +153,7 @@ criterion = None  # Replace with your code
 optimizer = None  # Replace with your code
 
 # Step 4: Training loop
-num_epochs = 1000
+num_epochs = 500
 losses = []
 
 for epoch in range(num_epochs):
@@ -252,7 +253,7 @@ reconstructed = None  # Replace with your code
 optimizer2 = None  # Replace with your code
 
 # Step 5: Optimization loop with snapshots
-num_iterations = 1000
+num_iterations = 500
 snapshot_interval = 100
 snapshots = []  # Store intermediate results
 losses2 = []
@@ -278,7 +279,7 @@ for iteration in range(num_iterations):
 # TODO: Create visualization showing:
 # - Original image
 # - Target filtered image (what we tried to match)
-# - Reconstruction progress: show snapshots at iterations 100, 200, ..., 1000
+# - Reconstruction progress: show snapshots at iterations 100, 200, ..., 500
 # - Final reconstructed image vs original
 # - Absolute difference map (use 'hot' colormap)
 # - Loss curve
@@ -350,7 +351,7 @@ reconstructed3 = None  # TODO: Random init with requires_grad=True
 optimizer3 = None  # TODO: Adam optimizer for reconstructed3
 
 # Step 4: Optimize to match BOTH channels
-num_iterations = 1000
+num_iterations = 500
 snapshot_interval = 100
 snapshots3 = []
 losses3 = []
