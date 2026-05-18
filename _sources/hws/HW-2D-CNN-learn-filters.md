@@ -82,11 +82,13 @@ plt.show()
 input_tensor = None  # Replace with your code
 ```
 
-Please use one the following images:
+Some sample images:
 
-| Ali1.jpg | Ali2.jpg |
+|  |  |
 |-----------|---------------|
-| ![](img/Ali1.jpg) | ![](img/Ali2.jpg) |
+| ![](img/President.jpg) | ![](img/Rahbar.jpg) |
+| ![](img/Persepolis.jpg) | ![](img/Qasem.jpg) |
+| ![](img/Gen-M-Safa.jpg) [Gen M. Safa](https://www.hamshahrionline.ir/news/532645/%D8%A7%D8%AD%D8%AA%D8%B1%D8%A7%D9%85-%D9%88%DB%8C%DA%98%D9%87-%D8%A7%D9%86%DA%AF%D9%84%DB%8C%D8%B3%DB%8C-%D9%87%D8%A7-%D8%A8%D9%87-%D8%B4%DA%A9%D8%A7%D8%B1%DA%86%DB%8C-%D8%AA%D8%A7%D9%86%DA%A9-%D8%AA%D8%B5%D9%88%DB%8C%D8%B1-%D8%AA%D9%86%D8%AF%DB%8C%D8%B3-%D9%85%D8%AD%D9%85%D8%AF-%D8%B9%D9%84%DB%8C) | ![](img/M-PilAfkan.jpg) [M. Pilafkan](https://www.mfpa.ir/fa/news/7245/%DB%8C%D8%A7%D8%AF%DB%8C-%DA%A9%D9%86%DB%8C%D9%85-%D8%A7%D8%B2-%D9%82%D9%87%D8%B1%D9%85%D8%A7%D9%86-%DA%86%D8%B2%D8%A7%D8%A8%D9%87-%D8%B4%D9%87%DB%8C%D8%AF-%D9%85%D8%A7%D8%B4%D8%A7%D8%A1%D8%A7%D9%84%D9%84%D9%87-%D9%BE%DB%8C%D9%84-%D8%A7%D9%81%DA%A9%D9%86) |
 
 ---
 
@@ -152,7 +154,7 @@ criterion = None  # Replace with your code
 optimizer = None  # Replace with your code
 
 # Step 4: Training loop
-num_epochs = 1000
+num_epochs = 500
 losses = []
 
 for epoch in range(num_epochs):
@@ -252,7 +254,7 @@ reconstructed = None  # Replace with your code
 optimizer2 = None  # Replace with your code
 
 # Step 5: Optimization loop with snapshots
-num_iterations = 1000
+num_iterations = 500
 snapshot_interval = 100
 snapshots = []  # Store intermediate results
 losses2 = []
@@ -278,7 +280,7 @@ for iteration in range(num_iterations):
 # TODO: Create visualization showing:
 # - Original image
 # - Target filtered image (what we tried to match)
-# - Reconstruction progress: show snapshots at iterations 100, 200, ..., 1000
+# - Reconstruction progress: show snapshots at iterations 100, 200, ..., 500
 # - Final reconstructed image vs original
 # - Absolute difference map (use 'hot' colormap)
 # - Loss curve
@@ -350,7 +352,7 @@ reconstructed3 = None  # TODO: Random init with requires_grad=True
 optimizer3 = None  # TODO: Adam optimizer for reconstructed3
 
 # Step 4: Optimize to match BOTH channels
-num_iterations = 1000
+num_iterations = 500
 snapshot_interval = 100
 snapshots3 = []
 losses3 = []

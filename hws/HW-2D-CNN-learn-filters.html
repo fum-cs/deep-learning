@@ -521,16 +521,22 @@ document.write(`
 <span class="n">input_tensor</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Replace with your code</span>
 </pre></div>
 </div>
-<p>Please use one the following images:</p>
+<p>Some sample images:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>Ali1.jpg</p></th>
-<th class="head"><p>Ali2.jpg</p></th>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p></p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><img alt="" src="../_images/Ali1.jpg" /></p></td>
-<td><p><img alt="" src="../_images/Ali2.jpg" /></p></td>
+<tr class="row-even"><td><p><img alt="" src="../_images/President.jpg" /></p></td>
+<td><p><img alt="" src="../_images/Rahbar.jpg" /></p></td>
+</tr>
+<tr class="row-odd"><td><p><img alt="" src="../_images/Persepolis.jpg" /></p></td>
+<td><p><img alt="" src="../_images/Qasem.jpg" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="" src="../_images/Gen-M-Safa.jpg" /> <a class="reference external" href="https://www.hamshahrionline.ir/news/532645/%D8%A7%D8%AD%D8%AA%D8%B1%D8%A7%D9%85-%D9%88%DB%8C%DA%98%D9%87-%D8%A7%D9%86%DA%AF%D9%84%DB%8C%D8%B3%DB%8C-%D9%87%D8%A7-%D8%A8%D9%87-%D8%B4%DA%A9%D8%A7%D8%B1%DA%86%DB%8C-%D8%AA%D8%A7%D9%86%DA%A9-%D8%AA%D8%B5%D9%88%DB%8C%D8%B1-%D8%AA%D9%86%D8%AF%DB%8C%D8%B3-%D9%85%D8%AD%D9%85%D8%AF-%D8%B9%D9%84%DB%8C">Gen M. Safa</a></p></td>
+<td><p><img alt="" src="../_images/M-PilAfkan.jpg" /> <a class="reference external" href="https://www.mfpa.ir/fa/news/7245/%DB%8C%D8%A7%D8%AF%DB%8C-%DA%A9%D9%86%DB%8C%D9%85-%D8%A7%D8%B2-%D9%82%D9%87%D8%B1%D9%85%D8%A7%D9%86-%DA%86%D8%B2%D8%A7%D8%A8%D9%87-%D8%B4%D9%87%DB%8C%D8%AF-%D9%85%D8%A7%D8%B4%D8%A7%D8%A1%D8%A7%D9%84%D9%84%D9%87-%D9%BE%DB%8C%D9%84-%D8%A7%D9%81%DA%A9%D9%86">M. Pilafkan</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -599,7 +605,7 @@ document.write(`
 <span class="n">optimizer</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Replace with your code</span>
 
 <span class="c1"># Step 4: Training loop</span>
-<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">losses</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
@@ -701,7 +707,7 @@ document.write(`
 <span class="n">optimizer2</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Replace with your code</span>
 
 <span class="c1"># Step 5: Optimization loop with snapshots</span>
-<span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">snapshot_interval</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">snapshots</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Store intermediate results</span>
 <span class="n">losses2</span> <span class="o">=</span> <span class="p">[]</span>
@@ -727,7 +733,7 @@ document.write(`
 <span class="c1"># TODO: Create visualization showing:</span>
 <span class="c1"># - Original image</span>
 <span class="c1"># - Target filtered image (what we tried to match)</span>
-<span class="c1"># - Reconstruction progress: show snapshots at iterations 100, 200, ..., 1000</span>
+<span class="c1"># - Reconstruction progress: show snapshots at iterations 100, 200, ..., 500</span>
 <span class="c1"># - Final reconstructed image vs original</span>
 <span class="c1"># - Absolute difference map (use &#39;hot&#39; colormap)</span>
 <span class="c1"># - Loss curve</span>
@@ -801,7 +807,7 @@ document.write(`
 <span class="n">optimizer3</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># TODO: Adam optimizer for reconstructed3</span>
 
 <span class="c1"># Step 4: Optimize to match BOTH channels</span>
-<span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">snapshot_interval</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">snapshots3</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">losses3</span> <span class="o">=</span> <span class="p">[]</span>

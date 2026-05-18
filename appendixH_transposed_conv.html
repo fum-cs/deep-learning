@@ -207,6 +207,10 @@
 <li class="toctree-l1"><a class="reference internal" href="appendixG_bitmoji-CNN.html">Appendix G: Creating a CNN to Predict Bitmojis</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Appendix H: Transposed Convolution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="appendixI_floating-point.html">Appendix I: Floating Point Numbers</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="hws/index.html">Home Works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="hws/HW-2D-CNN-learn-filters.html">Exercise: Learning and Inverting Image Filters with CNNs</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -434,8 +438,9 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-operation">Basic Operation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-strides-and-multiple-channels">[<strong>Padding, Strides, and Multiple Channels</strong>]</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-matrix-transposition">[<strong>Connection to Matrix Transposition</strong>]</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-strides-and-multiple-channels">Padding, Strides, and Multiple Channels</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-matrix-transposition">Connection to Matrix Transposition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-model-in-the-course">Check the model in the course</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
 </ul>
@@ -515,11 +520,9 @@ intermediate tensor corresponds to the position of the element
 in the input tensor used for the computation.
 In the end, all the intermediate results
 are summed over to produce the output.</p>
-<p>As an example,
-:numref:<code class="docutils literal notranslate"><span class="pre">fig_trans_conv</span></code> illustrates
+<p>As an example, the following figure illustrates
 how transposed convolution with a <span class="math notranslate nohighlight">\(2\times 2\)</span> kernel is computed for a <span class="math notranslate nohighlight">\(2\times 2\)</span> input tensor.</p>
-<p><img alt="Transposed convolution with a  kernel. The shaded portions are a portion of an intermediate tensor as well as the input and kernel tensor elements used for the  computation." src="http://d2l.ai/_images/trans_conv.svg" />
-:label:<code class="docutils literal notranslate"><span class="pre">fig_trans_conv</span></code></p>
+<p><img alt="Transposed convolution with a  kernel. The shaded portions are a portion of an intermediate tensor as well as the input and kernel tensor elements used for the  computation." src="_images/trans_conv.png" /></p>
 <p>We can (<strong>implement this basic transposed convolution operation</strong>) <code class="docutils literal notranslate"><span class="pre">trans_conv</span></code> for a input matrix <code class="docutils literal notranslate"><span class="pre">X</span></code> and a kernel matrix <code class="docutils literal notranslate"><span class="pre">K</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -541,7 +544,7 @@ the transposed convolution
 via the kernel, thereby
 producing an output
 that is larger than the input.
-We can construct the input tensor <code class="docutils literal notranslate"><span class="pre">X</span></code> and the kernel tensor <code class="docutils literal notranslate"><span class="pre">K</span></code> from :numref:<code class="docutils literal notranslate"><span class="pre">fig_trans_conv</span></code> to [<strong>validate the output of the above implementation</strong>] of the basic two-dimensional transposed convolution operation.</p>
+We can construct the input tensor <code class="docutils literal notranslate"><span class="pre">X</span></code> and the kernel tensor <code class="docutils literal notranslate"><span class="pre">K</span></code> from :numref:<code class="docutils literal notranslate"><span class="pre">fig_trans_conv</span></code> to validate the output of the above implementation of the basic two-dimensional transposed convolution operation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]])</span>
@@ -561,7 +564,7 @@ We can construct the input tensor <code class="docutils literal notranslate"><sp
 <p>Alternatively,
 when the input <code class="docutils literal notranslate"><span class="pre">X</span></code> and kernel <code class="docutils literal notranslate"><span class="pre">K</span></code> are both
 four-dimensional tensors,
-we can [<strong>use high-level APIs to obtain the same results</strong>].</p>
+we can use high-level APIs to obtain the same results.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">K</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -581,7 +584,7 @@ we can [<strong>use high-level APIs to obtain the same results</strong>].</p>
 </div>
 </section>
 <section id="padding-strides-and-multiple-channels">
-<h2>[<strong>Padding, Strides, and Multiple Channels</strong>]<a class="headerlink" href="#padding-strides-and-multiple-channels" title="Link to this heading">#</a></h2>
+<h2>Padding, Strides, and Multiple Channels<a class="headerlink" href="#padding-strides-and-multiple-channels" title="Link to this heading">#</a></h2>
 <p>Different from in the regular convolution
 where padding is applied to input,
 it is applied to output
@@ -608,15 +611,13 @@ will be removed from the transposed convolution output.</p>
 </div>
 <p>In the transposed convolution,
 strides are specified for intermediate results (thus output), not for input.
-Using the same input and kernel tensors
-from :numref:<code class="docutils literal notranslate"><span class="pre">fig_trans_conv</span></code>,
+Using the same input and kernel tensors as before,
 changing the stride from 1 to 2
 increases both the height and weight
 of intermediate tensors, hence the output tensor
-in :numref:<code class="docutils literal notranslate"><span class="pre">fig_trans_conv_stride2</span></code>.</p>
-<p><img alt="Transposed convolution with a  kernel with stride of 2. The shaded portions are a portion of an intermediate tensor as well as the input and kernel tensor elements used for the  computation." src="http://d2l.ai/_images/trans_conv_stride2.svg" />
-:label:<code class="docutils literal notranslate"><span class="pre">fig_trans_conv_stride2</span></code></p>
-<p>The following code snippet can validate the transposed convolution output for stride of 2 in :numref:<code class="docutils literal notranslate"><span class="pre">fig_trans_conv_stride2</span></code>.</p>
+in the following figure.</p>
+<p><img alt="Transposed convolution with a  kernel with stride of 2. The shaded portions are a portion of an intermediate tensor as well as the input and kernel tensor elements used for the  computation." src="_images/trans_conv_stride2.png" /></p>
+<p>The following code snippet can validate the transposed convolution output for stride of 2.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tconv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -667,8 +668,7 @@ This can be illustrated in the following example.</p>
 </div>
 </section>
 <section id="connection-to-matrix-transposition">
-<h2>[<strong>Connection to Matrix Transposition</strong>]<a class="headerlink" href="#connection-to-matrix-transposition" title="Link to this heading">#</a></h2>
-<p>:label:<code class="docutils literal notranslate"><span class="pre">subsec-connection-to-mat-transposition</span></code></p>
+<h2>Connection to Matrix Transposition<a class="headerlink" href="#connection-to-matrix-transposition" title="Link to this heading">#</a></h2>
 <p>The transposed convolution is named after
 the matrix transposition.
 To explain,
@@ -817,6 +817,161 @@ and backpropagation functions
 multiply their input vector with
 <span class="math notranslate nohighlight">\(\mathbf{W}^\top\)</span> and <span class="math notranslate nohighlight">\(\mathbf{W}\)</span>, respectively.</p>
 </section>
+<section id="check-the-model-in-the-course">
+<h2>Check the model in the course<a class="headerlink" href="#check-the-model-in-the-course" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+<span class="k">def</span> <span class="nf">conv_block</span><span class="p">(</span><span class="n">input_channels</span><span class="p">,</span> <span class="n">output_channels</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">input_channels</span><span class="p">,</span> <span class="n">output_channels</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">deconv_block</span><span class="p">(</span><span class="n">input_channels</span><span class="p">,</span> <span class="n">output_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="n">input_channels</span><span class="p">,</span> <span class="n">output_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">autoencoder</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">conv_block</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+            <span class="n">conv_block</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span>
+            <span class="n">conv_block</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">deconv_block</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="n">deconv_block</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">deconv_block</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+<span class="c1"># Test with different input sizes</span>
+<span class="n">test_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">28</span><span class="p">]</span><span class="c1">#, 32, 64, 128]  # Common image sizes (MNIST, CIFAR, etc.)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">autoencoder</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>  <span class="c1"># Set to eval mode for testing</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Testing dimension flow through autoencoder&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">test_sizes</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Input size: </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="c1"># Create random input</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input shape: </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Forward pass with shape tracking</span>
+    <span class="n">encoder_out</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After encoder: </span><span class="si">{</span><span class="n">encoder_out</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">decoder_out</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">encoder_out</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After decoder (before sigmoid): </span><span class="si">{</span><span class="n">decoder_out</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">final_out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">decoder_out</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final output: </span><span class="si">{</span><span class="n">final_out</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Check if dimensions match</span>
+    <span class="k">if</span> <span class="n">final_out</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ PASS: Output </span><span class="si">{</span><span class="n">final_out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">final_out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2"> matches input </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ FAIL: Output size </span><span class="si">{</span><span class="n">final_out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">final_out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2"> != Input size </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Calculate what went wrong</span>
+        <span class="n">expected_after_encoder</span> <span class="o">=</span> <span class="n">size</span> <span class="o">//</span> <span class="mi">8</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Expected bottleneck size: </span><span class="si">{</span><span class="n">expected_after_encoder</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">expected_after_encoder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Actual bottleneck size: </span><span class="si">{</span><span class="n">encoder_out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">encoder_out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Detailed layer-by-layer analysis for 28x28 input&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Detailed breakdown for a specific problematic size</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input: </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Encoder</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- ENCODER ---&quot;</span><span class="p">)</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">conv_block</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After conv_block(1→32): </span><span class="si">{</span><span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">x2</span> <span class="o">=</span> <span class="n">conv_block</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">)(</span><span class="n">x1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After conv_block(32→16): </span><span class="si">{</span><span class="n">x2</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">x3</span> <span class="o">=</span> <span class="n">conv_block</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">)(</span><span class="n">x2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After conv_block(16→8): </span><span class="si">{</span><span class="n">x3</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Decoder</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- DECODER ---&quot;</span><span class="p">)</span>
+<span class="n">d1</span> <span class="o">=</span> <span class="n">deconv_block</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)(</span><span class="n">x3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After deconv_block(8→8, k=3): </span><span class="si">{</span><span class="n">d1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">d2</span> <span class="o">=</span> <span class="n">deconv_block</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">)(</span><span class="n">d1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After deconv_block(8→16, k=2): </span><span class="si">{</span><span class="n">d2</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">d3</span> <span class="o">=</span> <span class="n">deconv_block</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">2</span><span class="p">)(</span><span class="n">d2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After deconv_block(16→32, k=2): </span><span class="si">{</span><span class="n">d3</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">d4</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)(</span><span class="n">d3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After final conv(32→1): </span><span class="si">{</span><span class="n">d4</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Final output size: </span><span class="si">{</span><span class="n">d4</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">d4</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original input size: 28x28&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match: </span><span class="si">{</span><span class="n">d4</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">28</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">d4</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">28</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+Testing dimension flow through autoencoder
+============================================================
+
+Input size: 28x28
+----------------------------------------
+Input shape: torch.Size([1, 1, 28, 28])
+After encoder: torch.Size([1, 8, 3, 3])
+After decoder (before sigmoid): torch.Size([1, 1, 28, 28])
+Final output: torch.Size([1, 1, 28, 28])
+✅ PASS: Output 28x28 matches input 28x28
+
+============================================================
+Detailed layer-by-layer analysis for 28x28 input
+============================================================
+Input: torch.Size([1, 1, 28, 28])
+
+--- ENCODER ---
+After conv_block(1→32): torch.Size([1, 32, 14, 14])
+After conv_block(32→16): torch.Size([1, 16, 7, 7])
+After conv_block(16→8): torch.Size([1, 8, 3, 3])
+
+--- DECODER ---
+After deconv_block(8→8, k=3): torch.Size([1, 8, 7, 7])
+After deconv_block(8→16, k=2): torch.Size([1, 16, 14, 14])
+After deconv_block(16→32, k=2): torch.Size([1, 32, 28, 28])
+After final conv(32→1): torch.Size([1, 1, 28, 28])
+
+Final output size: 28x28
+Original input size: 28x28
+Match: True
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -908,8 +1063,9 @@ multiply their input vector with
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-operation">Basic Operation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-strides-and-multiple-channels">[<strong>Padding, Strides, and Multiple Channels</strong>]</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-matrix-transposition">[<strong>Connection to Matrix Transposition</strong>]</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-strides-and-multiple-channels">Padding, Strides, and Multiple Channels</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-matrix-transposition">Connection to Matrix Transposition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-model-in-the-course">Check the model in the course</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
 </ul>

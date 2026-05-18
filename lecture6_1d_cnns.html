@@ -207,6 +207,10 @@
 <li class="toctree-l1"><a class="reference internal" href="appendixG_bitmoji-CNN.html">Appendix G: Creating a CNN to Predict Bitmojis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="appendixH_transposed_conv.html">Appendix H: Transposed Convolution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="appendixI_floating-point.html">Appendix I: Floating Point Numbers</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="hws/index.html">Home Works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="hws/HW-2D-CNN-learn-filters.html">Exercise: Learning and Inverting Image Filters with CNNs</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -467,33 +471,42 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-design-your-own-detector">Exercise: Design Your Own Detector</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#separating-mixed-signals-with-multi-output-convolution">6. Separating Mixed Signals with Multi-Output Convolution</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-a-mixed-signal">6.1 Creating a Mixed Signal</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#designing-two-selective-filters">6.2 Designing Two Selective Filters</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-and-visualizing-separation">6.3 Applying and Visualizing Separation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-filter-banks-and-feature-channels">6.4 Summary: Filter Banks and Feature Channels</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-output-convolution-detecting-multiple-patterns">6. Multi-Output Convolution: Detecting Multiple Patterns</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-setup-a-signal-with-two-different-patterns">6.1 The Setup: A Signal with Two Different Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-a-two-channel-detector">6.2 Creating a Two-Channel Detector</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-and-visualizing-detection">6.3 Applying and Visualizing Detection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-means-for-deep-learning">6.4 What This Means for Deep Learning</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-1d-cnn-classifier">7. Building a 1D CNN Classifier</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">7.1 Architecture</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-loop-structure">7.2 Training Loop Structure</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#application-learn-the-moving-average-kernel">7.3 Application: Learn the Moving Average Kernel</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-pattern-detection-to-frequency-filtering">7. From Pattern Detection to Frequency Filtering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuition-what-s-slow-vs-fast">7.1 Intuition: What’s “Slow” vs “Fast”?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-moving-average-a-simple-low-pass-filter">7.2 The Moving Average: A Simple Low-Pass Filter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kernel-size-matters">7.3 Why Kernel Size Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#high-pass-filter-keeping-only-fast-changes">7.4 High-Pass Filter: Keeping Only Fast Changes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-pattern-detection">7.5 Connection to Pattern Detection</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-ecg-heartbeat-detection-further-reading">8. Application: ECG Heartbeat Detection (Further Reading)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-ecg-signals">8.1 Understanding ECG Signals</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulating-ecg-data">8.2 Simulating ECG Data</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detecting-r-peaks-with-convolution">8.3 Detecting R-peaks with Convolution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-1d-cnn-classifier">8. Building a 1D CNN Classifier</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">8.1 Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-loop-structure">8.2 Training Loop Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#application-learn-the-moving-average-kernel">8.3 Application: Learn the Moving Average Kernel</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-channels-and-filters-further-reading">9. Multiple Channels and Filters (Further Reading)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-channel-input">9.1 Multi-Channel Input</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-output-convolution">9.2 Multi-Output Convolution</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-learned-filters">9.3 Visualizing Learned Filters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-ecg-heartbeat-detection-further-reading">9. Application: ECG Heartbeat Detection (Further Reading)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-ecg-signals">9.1 Understanding ECG Signals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulating-ecg-data">9.2 Simulating ECG Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detecting-r-peaks-with-convolution">9.3 Detecting R-peaks with Convolution</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-2d-cnns">10. Connection to 2D CNNs</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">11. Summary</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-channels-and-filters-further-reading">10. Multiple Channels and Filters (Further Reading)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-channel-input">10.1 Multi-Channel Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-output-convolution">10.2 Multi-Output Convolution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-learned-filters">10.3 Visualizing Learned Filters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-2d-cnns">11. Connection to 2D CNNs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Summary</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">Key Takeaways</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further Reading</a></li>
 </ul>
@@ -735,7 +748,7 @@ Output: [3. 4. 5.]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/bc21ea2a9c3f996cd9a73702bc2c1da8cb0bd927fc191aa28b99f024ab9507ba.png" src="_images/bc21ea2a9c3f996cd9a73702bc2c1da8cb0bd927fc191aa28b99f024ab9507ba.png" />
+<img alt="_images/760c47bc30ed05855d92e39f57fe3ef339ffc26199d95107492d0ef490f5a87c.png" src="_images/760c47bc30ed05855d92e39f57fe3ef339ffc26199d95107492d0ef490f5a87c.png" />
 </div>
 </div>
 </section>
@@ -794,7 +807,7 @@ Output: [3. 4. 5.]
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/5f3769c5aeb9c83bb160b56c173efc2b0ee7a448ee7e6cb22dd1e9b670f341fe.png" src="_images/5f3769c5aeb9c83bb160b56c173efc2b0ee7a448ee7e6cb22dd1e9b670f341fe.png" />
+<img alt="_images/13cd4533004185c4572a6d61b2f2768b7839f7da1a1fe373a4277ffedb4b1b88.png" src="_images/13cd4533004185c4572a6d61b2f2768b7839f7da1a1fe373a4277ffedb4b1b88.png" />
 </div>
 </div>
 </section>
@@ -872,7 +885,7 @@ Output: [3. 4. 5.]
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/07be95091768d90e76767c7d04b7ed38436e05a1fcb6128688eb698e7b73d50f.png" src="_images/07be95091768d90e76767c7d04b7ed38436e05a1fcb6128688eb698e7b73d50f.png" />
+<img alt="_images/3e3e9adbed77f447a0a6425a96c3960514fb45b5527fb3b4c5e067b611b624cc.png" src="_images/3e3e9adbed77f447a0a6425a96c3960514fb45b5527fb3b4c5e067b611b624cc.png" />
 </div>
 </div>
 <!-- ### Key Takeaways
@@ -1024,7 +1037,7 @@ Output: [3. 4. 5.]
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/92ef5888911048cce49a944c190b09f43dacbfa94407e9bbb90bf1452a0eeb70.png" src="_images/92ef5888911048cce49a944c190b09f43dacbfa94407e9bbb90bf1452a0eeb70.png" />
+<img alt="_images/f05cdb2136e88563f98b4fcb1a7072230204e61a622b95df5ffc4fd48b56905d.png" src="_images/f05cdb2136e88563f98b4fcb1a7072230204e61a622b95df5ffc4fd48b56905d.png" />
 </div>
 </div>
 </section>
@@ -1114,15 +1127,15 @@ Output: [3. 4. 5.]
 
 <span class="c1"># Show all responses for comparison</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">All peak responses:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Position 40 (target, amp=1.0):  </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="mi">40</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Position 40 (target, amp=0.7):  </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="mi">40</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Position 94 (distractor):       </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="n">distractor_center</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Position 140 (target, amp=0.7): </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="mi">140</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Position 140 (target, amp=0.5): </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="mi">140</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/9d3df411f1e55ed0107b4009aab69e56072e1a97446196b638b03b714d8422c3.png" src="_images/9d3df411f1e55ed0107b4009aab69e56072e1a97446196b638b03b714d8422c3.png" />
+<img alt="_images/0797a79b2cab1427f2aacbf091d62086303c73e856296eae8684d119e11610bd.png" src="_images/0797a79b2cab1427f2aacbf091d62086303c73e856296eae8684d119e11610bd.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
 TEMPLATE MATCHING RESULTS
 ============================================================
@@ -1134,7 +1147,7 @@ Detected peaks at positions: [ 40 140]
 Peak values (match strength): [&#39;1.225&#39;, &#39;0.940&#39;]
 
 Expected pattern positions: [40, 140]
-Actual detected positions: [40, 140]
+Actual detected positions: [np.int64(40), np.int64(140)]
 
 Correct detections: 2/2
 
@@ -1143,9 +1156,9 @@ Detection threshold: 0.8
 Distractor correctly rejected: True
 
 All peak responses:
-  Position 40 (target, amp=1.0):  1.225
+  Position 40 (target, amp=0.7):  1.225
   Position 94 (distractor):       0.599
-  Position 140 (target, amp=0.7): 0.940
+  Position 140 (target, amp=0.5): 0.940
 </pre></div>
 </div>
 </div>
@@ -1153,7 +1166,7 @@ All peak responses:
 </section>
 <section id="why-this-works-the-mathematics">
 <h3>5.4 Why This Works: The Mathematics<a class="headerlink" href="#why-this-works-the-mathematics" title="Link to this heading">#</a></h3>
-<p>The convolution output at position <span class="math notranslate nohighlight">\(i\)</span> computes the <strong>normalized cross-correlation</strong> between the template and the signal window starting at <span class="math notranslate nohighlight">\(i\)</span>:</p>
+<p>The convolution output at position <span class="math notranslate nohighlight">\(i\)</span> computes the <em>cross-correlation</em> between the normalized template and the signal window starting at <span class="math notranslate nohighlight">\(i\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\text{Response}[i] = \sum_{j} \text{Signal}[i+j] \times \text{Template}[j]\]</div>
 <ul class="simple">
@@ -1176,10 +1189,10 @@ All peak responses:
 <td><p>Template detected at both insertion points</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Peak heights differ</strong></p></td>
-<td><p>0.7 amplitude pattern produces weaker response than 1.0</p></td>
+<td><p>0.5 amplitude pattern produces weaker response than 0.7</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Distractor rejected</strong></p></td>
-<td><p>Flat shape doesn’t match triangular template</p></td>
+<td><p>Distractor shape doesn’t match triangular template</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Peak width</strong></p></td>
 <td><p>Related to template length; broader templates = broader peaks</p></td>
@@ -1229,16 +1242,18 @@ All peak responses:
 <p>Observe how the convolution response changes with each template shape.</p>
 </section>
 </section>
-<section id="separating-mixed-signals-with-multi-output-convolution">
-<h2>6. Separating Mixed Signals with Multi-Output Convolution<a class="headerlink" href="#separating-mixed-signals-with-multi-output-convolution" title="Link to this heading">#</a></h2>
-<p>Real-world signals often contain <strong>overlapping frequency components</strong>. A single convolution cannot separate them, but multiple output channels can act as <strong>frequency-selective filters</strong>.</p>
-<section id="creating-a-mixed-signal">
-<h3>6.1 Creating a Mixed Signal<a class="headerlink" href="#creating-a-mixed-signal" title="Link to this heading">#</a></h3>
-<p>We’ll generate a signal containing:</p>
+<hr class="docutils" />
+<section id="multi-output-convolution-detecting-multiple-patterns">
+<h2>6. Multi-Output Convolution: Detecting Multiple Patterns<a class="headerlink" href="#multi-output-convolution-detecting-multiple-patterns" title="Link to this heading">#</a></h2>
+<p>In previous sections, we used a single filter to detect one pattern (triangle or sawtooth). Real signals often contain <strong>multiple types of patterns</strong>. Instead of running separate convolutions, we can use a single layer with <strong>multiple output channels</strong>—each channel acts as an independent detector.</p>
+<section id="the-setup-a-signal-with-two-different-patterns">
+<h3>6.1 The Setup: A Signal with Two Different Patterns<a class="headerlink" href="#the-setup-a-signal-with-two-different-patterns" title="Link to this heading">#</a></h3>
+<p>We’ll create a signal containing:</p>
 <ul class="simple">
-<li><p>A <strong>low-frequency sine wave</strong> (baseline drift, 2 Hz)</p></li>
-<li><p><strong>High-frequency sawtooth pulses</strong> (events, 20 Hz) appearing at specific times</p></li>
+<li><p><strong>Pattern A</strong>: A triangular pulse (appears at position 60)</p></li>
+<li><p><strong>Pattern B</strong>: A rectangular pulse (appears at position 220)</p></li>
 </ul>
+<p>Both are “events” but have different shapes. We want to detect each type separately.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1250,51 +1265,22 @@ All peak responses:
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
-<span class="c1"># Time vector</span>
-<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
-<span class="n">signal_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="c1"># Define TWO different patterns to detect</span>
+<span class="n">template_triangle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">template_rectangle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 
-<span class="c1"># Component 1: Low-frequency sine (baseline)</span>
-<span class="n">sine_component</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
-<span class="c1"># Component 2: Sawtooth pulses (high-frequency events)</span>
-<span class="n">sawtooth_template</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">signal</span><span class="o">.</span><span class="n">sawtooth</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
-<span class="n">template_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sawtooth_template</span><span class="p">)</span>
-
-<span class="c1"># Create signal with sawtooth at positions 200 and 700</span>
-<span class="n">mixed_signal</span> <span class="o">=</span> <span class="n">sine_component</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">mixed_signal</span><span class="p">[</span><span class="mi">200</span><span class="p">:</span><span class="mi">200</span><span class="o">+</span><span class="n">template_length</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sawtooth_template</span>
-<span class="n">mixed_signal</span><span class="p">[</span><span class="mi">700</span><span class="p">:</span><span class="mi">700</span><span class="o">+</span><span class="n">template_length</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sawtooth_template</span> <span class="o">*</span> <span class="mf">0.7</span>  <span class="c1"># Smaller amplitude</span>
-
-<span class="c1"># Add small noise</span>
-<span class="n">mixed_signal</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">signal_length</span><span class="p">)</span>
-
-<span class="c1"># Visualize</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">sine_component</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;COMPONENT 1: Low-Frequency Sine (2 Hz)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_triangle</span><span class="p">,</span> <span class="s1">&#39;r-o&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Filter 0: Triangle Detector&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">template_length</span><span class="p">),</span> <span class="n">sawtooth_template</span><span class="p">,</span> <span class="s1">&#39;r-o&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;COMPONENT 2: Sawtooth Pulse Template (20 Hz)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_rectangle</span><span class="p">,</span> <span class="s1">&#39;b-o&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Filter 1: Rectangle Detector&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">mixed_signal</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mixed Signal&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">200</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">200</span><span class="o">+</span><span class="n">template_length</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Sawtooth 1&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">700</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">700</span><span class="o">+</span><span class="n">template_length</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Sawtooth 2&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">sine_component</span><span class="p">,</span> <span class="s1">&#39;b--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Underlying Sine&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;MIXED SIGNAL: Sine + Sawtooth Events + Noise&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -1303,69 +1289,7 @@ All peak responses:
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/698065da9d5646430cf1d364c5f64346132dda9cdbdb119f55e627dd7f682c29.png" src="_images/698065da9d5646430cf1d364c5f64346132dda9cdbdb119f55e627dd7f682c29.png" />
-</div>
-</div>
-</section>
-<section id="designing-two-selective-filters">
-<h3>6.2 Designing Two Selective Filters<a class="headerlink" href="#designing-two-selective-filters" title="Link to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter 0: Large kernel moving average → extracts LOW frequencies (sine)</span>
-<span class="n">sine_kernel_size</span> <span class="o">=</span> <span class="mi">51</span>
-<span class="n">sine_kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">sine_kernel_size</span><span class="p">)</span> <span class="o">/</span> <span class="n">sine_kernel_size</span>
-
-<span class="c1"># Filter 1: Matched filter for sawtooth → extracts HIGH frequencies (events)</span>
-<span class="c1"># Use the sawtooth template itself as kernel</span>
-<span class="n">sawtooth_kernel</span> <span class="o">=</span> <span class="n">sawtooth_template</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sawtooth_template</span><span class="p">)</span>
-<span class="n">sawtooth_kernel</span> <span class="o">=</span> <span class="n">sawtooth_kernel</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sawtooth_kernel</span><span class="p">)</span>
-
-<span class="c1"># Pad kernels to same length for Conv1d</span>
-<span class="n">max_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sine_kernel</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">sawtooth_kernel</span><span class="p">))</span>
-<span class="n">sine_padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_length</span><span class="p">)</span>
-<span class="n">sine_padded</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">sine_kernel</span><span class="p">)]</span> <span class="o">=</span> <span class="n">sine_kernel</span>
-
-<span class="n">sawtooth_padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_length</span><span class="p">)</span>
-<span class="n">start_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_length</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">sawtooth_kernel</span><span class="p">))</span> <span class="o">//</span> <span class="mi">2</span>
-<span class="n">sawtooth_padded</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">start_idx</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">sawtooth_kernel</span><span class="p">)]</span> <span class="o">=</span> <span class="n">sawtooth_kernel</span>
-
-<span class="c1"># Stack: shape (2, 1, max_length)</span>
-<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">sine_padded</span><span class="p">,</span> <span class="n">sawtooth_padded</span><span class="p">])</span>
-
-<span class="c1"># Create Conv1d: 1 input → 2 output channels</span>
-<span class="n">conv_sep</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">max_length</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">conv_sep</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filter 0 (Sine extractor): Moving average, size </span><span class="si">{</span><span class="n">sine_kernel_size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filter 1 (Sawtooth detector): Template matching, size </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sawtooth_kernel</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Conv1d weights shape: </span><span class="si">{</span><span class="n">conv_sep</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filter 0 (Sine extractor): Moving average, size 51
-Filter 1 (Sawtooth detector): Template matching, size 50
-
-Conv1d weights shape: torch.Size([2, 1, 51])
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="applying-and-visualizing-separation">
-<h3>6.3 Applying and Visualizing Separation<a class="headerlink" href="#applying-and-visualizing-separation" title="Link to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply convolution</span>
-<span class="n">signal_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">mixed_signal</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
-<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">conv_sep</span><span class="p">(</span><span class="n">signal_tensor</span><span class="p">)</span>
-
-<span class="c1"># Extract channels</span>
-<span class="n">response_sine</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>   <span class="c1"># Channel 0: Low-pass (sine)</span>
-<span class="n">response_sawtooth</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>  <span class="c1"># Channel 1: Matched filter (sawtooth)</span>
-</pre></div>
-</div>
+<img alt="_images/15917e5f2865040a36da3925da145d73cd2af6748b2d969b58268e53c2ef3be7.png" src="_images/15917e5f2865040a36da3925da145d73cd2af6748b2d969b58268e53c2ef3be7.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1375,95 +1299,504 @@ Conv1d weights shape: torch.Size([2, 1, 51])
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Adjust time axis (valid convolution shortens signal)# Calculate offsets for valid convolution</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pattern_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">template_triangle</span><span class="p">)</span>
+
+<span class="c1"># Create a long signal</span>
+<span class="n">signal_length</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">signal_length</span><span class="p">)</span>
+<span class="n">signal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">signal_length</span><span class="p">)</span>
+
+<span class="c1"># Insert triangle at position 60</span>
+<span class="n">signal</span><span class="p">[</span><span class="mi">60</span><span class="p">:</span><span class="mi">60</span><span class="o">+</span><span class="n">pattern_length</span><span class="p">]</span> <span class="o">+=</span> <span class="n">template_triangle</span> <span class="o">*</span> <span class="mf">0.8</span>
+
+<span class="c1"># Insert rectangle at position 220</span>
+<span class="n">signal</span><span class="p">[</span><span class="mi">220</span><span class="p">:</span><span class="mi">220</span><span class="o">+</span><span class="n">pattern_length</span><span class="p">]</span> <span class="o">+=</span> <span class="n">template_rectangle</span> <span class="o">*</span> <span class="mf">0.9</span>
+
+<span class="c1"># Visualize</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mixed Signal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">60</span><span class="o">+</span><span class="n">pattern_length</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Triangle&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">220</span><span class="o">+</span><span class="n">pattern_length</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Rectangle&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;SIGNAL: Contains Both Patterns + Noise&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Sample Index&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/1adc155f6a6f232fed17abcd2205b5c0cc047382dbe979045f1d4c078b41cd0d.png" src="_images/1adc155f6a6f232fed17abcd2205b5c0cc047382dbe979045f1d4c078b41cd0d.png" />
+</div>
+</div>
+</section>
+<section id="creating-a-two-channel-detector">
+<h3>6.2 Creating a Two-Channel Detector<a class="headerlink" href="#creating-a-two-channel-detector" title="Link to this heading">#</a></h3>
+<p>Now we create ONE convolution layer with TWO output channels:</p>
+<ul class="simple">
+<li><p><strong>Channel 0</strong>: Detects triangles</p></li>
+<li><p><strong>Channel 1</strong>: Detects rectangles</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normalize both templates</span>
+<span class="n">tri_norm</span> <span class="o">=</span> <span class="n">template_triangle</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">template_triangle</span><span class="p">)</span>
+<span class="n">tri_norm</span> <span class="o">=</span> <span class="n">tri_norm</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">tri_norm</span><span class="p">)</span>
+
+<span class="n">rect_norm</span> <span class="o">=</span> <span class="n">template_rectangle</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">template_rectangle</span><span class="p">)</span>
+<span class="n">rect_norm</span> <span class="o">=</span> <span class="n">rect_norm</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rect_norm</span><span class="p">)</span>
+
+<span class="c1"># Pad to same length (needed for Conv1d)</span>
+<span class="n">max_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tri_norm</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">rect_norm</span><span class="p">))</span>
+<span class="n">tri_padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_length</span><span class="p">)</span>
+<span class="n">tri_padded</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">tri_norm</span><span class="p">)]</span> <span class="o">=</span> <span class="n">tri_norm</span>
+
+<span class="n">rect_padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_length</span><span class="p">)</span>
+<span class="n">start_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_length</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">rect_norm</span><span class="p">))</span> <span class="o">//</span> <span class="mi">2</span>
+<span class="n">rect_padded</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">start_idx</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">rect_norm</span><span class="p">)]</span> <span class="o">=</span> <span class="n">rect_norm</span>
+
+<span class="c1"># Stack as two filters: shape (2, 1, max_length)</span>
+<span class="c1"># Dimension 0 = output channels (2 filters)</span>
+<span class="c1"># Dimension 1 = input channels (1 signal)</span>
+<span class="c1"># Dimension 2 = kernel size</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">tri_padded</span><span class="p">,</span> <span class="n">rect_padded</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Weights shape: </span><span class="si">{</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  → 2 output channels (one per pattern)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  → 1 input channel (single signal)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  → kernel size </span><span class="si">{</span><span class="n">max_length</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create Conv1d with 1 input → 2 output channels</span>
+<span class="n">conv_detector</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span>
+    <span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>      <span class="c1"># One input signal</span>
+    <span class="n">out_channels</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>     <span class="c1"># Two detectors (triangle + rectangle)</span>
+    <span class="n">kernel_size</span><span class="o">=</span><span class="n">max_length</span><span class="p">,</span>
+    <span class="n">bias</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="c1"># Load our hand-designed weights</span>
+<span class="n">conv_detector</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Conv1d weight shape: </span><span class="si">{</span><span class="n">conv_detector</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [0, 0, :] = Triangle detector&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [1, 0, :] = Rectangle detector&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights shape: (2, 9)
+  → 2 output channels (one per pattern)
+  → 1 input channel (single signal)
+  → kernel size 9
+
+Conv1d weight shape: torch.Size([2, 1, 9])
+  [0, 0, :] = Triangle detector
+  [1, 0, :] = Rectangle detector
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="applying-and-visualizing-detection">
+<h3>6.3 Applying and Visualizing Detection<a class="headerlink" href="#applying-and-visualizing-detection" title="Link to this heading">#</a></h3>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Prepare input</span>
+<span class="n">signal_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+<span class="c1"># Apply convolution</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">conv_detector</span><span class="p">(</span><span class="n">signal_tensor</span><span class="p">)</span>
+
+<span class="c1"># Extract both channels</span>
+<span class="n">response_triangle</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>     <span class="c1"># Channel 0</span>
+<span class="n">response_rectangle</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>   <span class="c1"># Channel 1</span>
+
+<span class="c1"># Adjust time axis for valid convolution</span>
 <span class="n">offset</span> <span class="o">=</span> <span class="n">max_length</span> <span class="o">//</span> <span class="mi">2</span>
-<span class="n">t_out_centered</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">offset</span><span class="p">:</span><span class="n">offset</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">response_sine</span><span class="p">)]</span>
+<span class="n">t_out</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">offset</span><span class="p">:</span><span class="n">offset</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">response_triangle</span><span class="p">)]</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 
-<span class="c1"># Input</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">mixed_signal</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;INPUT: Mixed Signal&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="c1"># Input signal</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">60</span><span class="o">+</span><span class="n">pattern_length</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">220</span><span class="o">+</span><span class="n">pattern_length</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;INPUT SIGNAL&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
-<span class="c1"># Channel 0: Sine extraction (WITH offset correction)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_out_centered</span><span class="p">,</span> <span class="n">response_sine</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Channel 0 Output&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">sine_component</span><span class="p">,</span> <span class="s1">&#39;b--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True Sine Component&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;CHANNEL 0: Low-Pass Filter → Recovers Sine Baseline&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">)</span>
+<span class="c1"># Channel 0: Triangle detector</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_out</span><span class="p">,</span> <span class="n">response_triangle</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Channel 0 Output&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">find_peaks</span>
+<span class="n">peaks_tri</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">find_peaks</span><span class="p">(</span><span class="n">response_triangle</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="n">max_length</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_out</span><span class="p">[</span><span class="n">peaks_tri</span><span class="p">],</span> <span class="n">response_triangle</span><span class="p">[</span><span class="n">peaks_tri</span><span class="p">],</span> <span class="s1">&#39;r^&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+             <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Detected Triangles (n=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">peaks_tri</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;CHANNEL 0: Triangle Pattern Detector&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Match Strength&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
-<span class="c1"># Channel 1: Sawtooth detection (WITH offset correction)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_out_centered</span><span class="p">,</span> <span class="n">response_sawtooth</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Channel 1 Output&#39;</span><span class="p">)</span>
-<span class="n">peaks</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">find_peaks</span><span class="p">(</span><span class="n">response_sawtooth</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="n">template_length</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_out_centered</span><span class="p">[</span><span class="n">peaks</span><span class="p">],</span> <span class="n">response_sawtooth</span><span class="p">[</span><span class="n">peaks</span><span class="p">],</span> <span class="s1">&#39;r^&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
-             <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-             <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Detected Sawtooth Events (n=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">peaks</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;CHANNEL 1: Matched Filter → Detects Sawtooth Events&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="c1"># Channel 1: Rectangle detector</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_out</span><span class="p">,</span> <span class="n">response_rectangle</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Channel 1 Output&#39;</span><span class="p">)</span>
+<span class="n">peaks_rect</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">find_peaks</span><span class="p">(</span><span class="n">response_rectangle</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="n">max_length</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_out</span><span class="p">[</span><span class="n">peaks_rect</span><span class="p">],</span> <span class="n">response_rectangle</span><span class="p">[</span><span class="n">peaks_rect</span><span class="p">],</span> <span class="s1">&#39;bs&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+             <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Detected Rectangles (n=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">peaks_rect</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;CHANNEL 1: Rectangle Pattern Detector&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Sample Index&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Match Strength&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-
-<span class="c1"># Reconstruction (aligned with centered time)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">mixed_signal</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original Mixed&#39;</span><span class="p">)</span>
-<span class="n">reconstructed</span> <span class="o">=</span> <span class="n">response_sine</span> <span class="o">+</span> <span class="n">response_sawtooth</span> <span class="o">*</span> <span class="mf">0.3</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_out_centered</span><span class="p">,</span> <span class="n">reconstructed</span><span class="p">,</span> <span class="s1">&#39;m-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Reconstructed (Ch0 + Ch1)&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;RECONSTRUCTION: Sum of Both Channels&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="c1"># Analysis</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FREQUENCY SEPARATION RESULTS&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MULTI-PATTERN DETECTION RESULTS&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Channel 0 (Low-Pass Filter):&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Recovers sine baseline with smoothing&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Suppresses high-frequency sawtooth components&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Channel 0 (Triangle Filter):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Detected at positions: </span><span class="si">{</span><span class="n">t_out</span><span class="p">[</span><span class="n">peaks_tri</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Expected: 60&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Peak strength: </span><span class="si">{</span><span class="n">response_triangle</span><span class="p">[</span><span class="n">peaks_tri</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Channel 1 (Matched Filter):&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Detected peaks at times: </span><span class="si">{</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">t</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">t_out</span><span class="p">[</span><span class="n">peaks</span><span class="p">]]</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Expected: ~</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s and ~</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="mi">700</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Peak strengths: </span><span class="si">{</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">response_sawtooth</span><span class="p">[</span><span class="n">peaks</span><span class="p">]]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Channel 1 (Rectangle Filter):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Detected at positions: </span><span class="si">{</span><span class="n">t_out</span><span class="p">[</span><span class="n">peaks_rect</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Expected: 220&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Peak strength: </span><span class="si">{</span><span class="n">response_rectangle</span><span class="p">[</span><span class="n">peaks_rect</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Key Insight:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Each channel specializes in one frequency band&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  → This is the foundation of CNN feature extraction!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Key Observation:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Each channel responds ONLY to its specific pattern&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Triangle filter ignores rectangles, rectangle filter ignores triangles&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/2e063ea3e5ad6b28cdbf294f3f909ddcdbbcf86ab4711cd323f2fb1cad3441be.png" src="_images/2e063ea3e5ad6b28cdbf294f3f909ddcdbbcf86ab4711cd323f2fb1cad3441be.png" />
+<img alt="_images/a556493a7e564309b79f1e09d64c4b70e29fd3564296138ab6f70ca636b9c8d0.png" src="_images/a556493a7e564309b79f1e09d64c4b70e29fd3564296138ab6f70ca636b9c8d0.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
-FREQUENCY SEPARATION RESULTS
+MULTI-PATTERN DETECTION RESULTS
 ============================================================
 
-Channel 0 (Low-Pass Filter):
-  Recovers sine baseline with smoothing
-  Suppresses high-frequency sawtooth components
+Channel 0 (Triangle Filter):
+  Detected at positions: [ 64 227]
+  Expected: 60
+  Peak strength: 1.302
 
-Channel 1 (Matched Filter):
-  Detected peaks at times: [&#39;0.19&#39;, &#39;0.21&#39;, &#39;0.24&#39;, &#39;0.69&#39;, &#39;0.71&#39;, &#39;0.74&#39;]s
-  Expected: ~0.40s and ~1.40s
-  Peak strengths: [&#39;0.45&#39;, &#39;1.27&#39;, &#39;0.53&#39;, &#39;0.30&#39;, &#39;0.90&#39;, &#39;0.34&#39;]
+Channel 1 (Rectangle Filter):
+  Detected at positions: [224]
+  Expected: 220
+  Peak strength: 1.044
 
-Key Insight:
-  Each channel specializes in one frequency band
-  → This is the foundation of CNN feature extraction!
+Key Observation:
+  Each channel responds ONLY to its specific pattern
+  Triangle filter ignores rectangles, rectangle filter ignores triangles
 </pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="what-this-means-for-deep-learning">
+<h3>6.4 What This Means for Deep Learning<a class="headerlink" href="#what-this-means-for-deep-learning" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Concept</p></th>
+<th class="head"><p>In This Example</p></th>
+<th class="head"><p>In Deep CNNs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Output channels</strong></p></td>
+<td><p>2 (triangle, rectangle)</p></td>
+<td><p>64, 128, 256…</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>What each channel detects</strong></p></td>
+<td><p>Hand-designed pattern</p></td>
+<td><p>Learned automatically</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>How weights are set</strong></p></td>
+<td><p>We designed them</p></td>
+<td><p>Backpropagation learns them</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>The big idea</strong>: Instead of us designing triangle/rectangle detectors, a deep network <strong>learns</strong> what to detect. Early layers might learn edges, middle layers learn shapes, late layers learn objects.</p>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Stage</p></th>
+<th class="head"><p>What We Did</p></th>
+<th class="head"><p>Channels</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Section 5</strong></p></td>
+<td><p>Detect one pattern (triangle)</p></td>
+<td><p>1 → 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>This section</strong></p></td>
+<td><p>Detect two patterns (triangle + rectangle)</p></td>
+<td><p>1 → 2</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Next (Section 7)</strong></p></td>
+<td><p>Full classifier with many channels</p></td>
+<td><p>1 → 16 → 32 → 64</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Key takeaway</strong>: Multiple output channels = multiple detectors working in parallel. In deep learning, these detectors are learned, not hand-designed.</p>
+</section>
+<hr class="docutils" />
+<section id="from-pattern-detection-to-frequency-filtering">
+<h2>7. From Pattern Detection to Frequency Filtering<a class="headerlink" href="#from-pattern-detection-to-frequency-filtering" title="Link to this heading">#</a></h2>
+<p>So far, we’ve used convolution to detect <strong>specific shapes</strong> (triangles and rectangles). Another powerful use of convolution is <strong>frequency filtering</strong>—separating slow-varying components from rapid changes.</p>
+<section id="intuition-what-s-slow-vs-fast">
+<h3>7.1 Intuition: What’s “Slow” vs “Fast”?<a class="headerlink" href="#intuition-what-s-slow-vs-fast" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Signal Type</p></th>
+<th class="head"><p>Visual Description</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Slow (Low Frequency)</strong></p></td>
+<td><p>Changes gradually over many samples</p></td>
+<td><p>Baseline drift, trends</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Fast (High Frequency)</strong></p></td>
+<td><p>Changes rapidly, many oscillations</p></td>
+<td><p>Noise, sharp edges, fine details</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Think of a temperature sensor:</p>
+<ul class="simple">
+<li><p><strong>Slow</strong>: Daily temperature cycle (rises in morning, falls at night)</p></li>
+<li><p><strong>Fast</strong>: Random measurement noise (jumps between consecutive readings)</p></li>
+</ul>
+</section>
+<section id="the-moving-average-a-simple-low-pass-filter">
+<h3>7.2 The Moving Average: A Simple Low-Pass Filter<a class="headerlink" href="#the-moving-average-a-simple-low-pass-filter" title="Link to this heading">#</a></h3>
+<p>A <strong>low-pass filter</strong> lets slow components pass through and blocks fast components. The simplest version is the <strong>moving average</strong>:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Create a signal with slow + fast components</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">slow_component</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>      <span class="c1"># 1 Hz - slow</span>
+<span class="n">fast_component</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>  <span class="c1"># 20 Hz - fast</span>
+
+<span class="n">mixed_signal</span> <span class="o">=</span> <span class="n">slow_component</span> <span class="o">+</span> <span class="n">fast_component</span>
+
+<span class="c1"># Moving average kernel (low-pass filter)</span>
+<span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">21</span>
+<span class="n">lowpass_kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span> <span class="o">/</span> <span class="n">kernel_size</span>
+
+<span class="c1"># Apply using numpy convolution</span>
+<span class="n">smoothed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">mixed_signal</span><span class="p">,</span> <span class="n">lowpass_kernel</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+
+<span class="c1"># Visualize</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">slow_component</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;SLOW COMPONENT (1 Hz)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">fast_component</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;FAST COMPONENT (20 Hz)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">mixed_signal</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mixed Signal&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">smoothed</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;After Moving Average&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;MOVING AVERAGE RECOVERS SLOW COMPONENT&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/f710fe29c01339b9761bed7c2257f12497583396d534b68195ac4803b58401ed.png" src="_images/f710fe29c01339b9761bed7c2257f12497583396d534b68195ac4803b58401ed.png" />
+</div>
+</div>
+<p><strong>What happened?</strong></p>
+<ul class="simple">
+<li><p>The moving average computes the local mean over 21 samples</p></li>
+<li><p>Fast oscillations cancel out (positive and negative values average to ~0)</p></li>
+<li><p>Slow variations survive because they don’t change much within the window</p></li>
+</ul>
+</section>
+<section id="why-kernel-size-matters">
+<h3>7.3 Why Kernel Size Matters<a class="headerlink" href="#why-kernel-size-matters" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kernel Size</p></th>
+<th class="head"><p>Effect</p></th>
+<th class="head"><p>Output</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Small (3)</p></td>
+<td><p>Weak smoothing, some fast components remain</p></td>
+<td><p>Closer to original</p></td>
+</tr>
+<tr class="row-odd"><td><p>Medium (11)</p></td>
+<td><p>Moderate smoothing</p></td>
+<td><p>Balanced</p></td>
+</tr>
+<tr class="row-even"><td><p>Large (51)</p></td>
+<td><p>Strong smoothing, only very slow components remain</p></td>
+<td><p>Very smooth</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compare different kernel sizes</span>
+<span class="n">kernel_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">51</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">mixed_signal</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Original Mixed Signal&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kernel_sizes</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[(</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="k">2</span>]
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">/</span> <span class="n">k</span>
+    <span class="n">smoothed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">mixed_signal</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">mixed_signal</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">smoothed</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Smoothed (k=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Kernel Size = </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/f06b8173e57ba3491b269668e214cef7ffcb37f3024b90cd29fb0159cf62fdcd.png" src="_images/f06b8173e57ba3491b269668e214cef7ffcb37f3024b90cd29fb0159cf62fdcd.png" />
+</div>
+</div>
+</section>
+<section id="high-pass-filter-keeping-only-fast-changes">
+<h3>7.4 High-Pass Filter: Keeping Only Fast Changes<a class="headerlink" href="#high-pass-filter-keeping-only-fast-changes" title="Link to this heading">#</a></h3>
+<p>A <strong>high-pass filter</strong> does the opposite: it removes slow components and keeps rapid changes.</p>
+<p>The trick: <strong>Original − Smoothed = Detail</strong></p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># High-pass via spectral subtraction</span>
+<span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">21</span>
+<span class="n">lowpass_kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span> <span class="o">/</span> <span class="n">kernel_size</span>
+<span class="n">smoothed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">mixed_signal</span><span class="p">,</span> <span class="n">lowpass_kernel</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+
+<span class="c1"># High-pass = original minus low-pass</span>
+<span class="n">highpass</span> <span class="o">=</span> <span class="n">mixed_signal</span> <span class="o">-</span> <span class="n">smoothed</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">mixed_signal</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ORIGINAL SIGNAL&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">smoothed</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;LOW-PASS: Slow Component (Moving Average)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">highpass</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;HIGH-PASS: Fast Component (Original − Smoothed)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/9d3e8e3e7a9397c6109e61d9889223156186bd9d2f1dfa03dbcfc52e6e5c6f0d.png" src="_images/9d3e8e3e7a9397c6109e61d9889223156186bd9d2f1dfa03dbcfc52e6e5c6f0d.png" />
+</div>
+</div>
+</section>
+<section id="connection-to-pattern-detection">
+<h3>7.5 Connection to Pattern Detection<a class="headerlink" href="#connection-to-pattern-detection" title="Link to this heading">#</a></h3>
+<p>You might notice: these filters look like “patterns” too!</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Filter</p></th>
+<th class="head"><p>Kernel Shape</p></th>
+<th class="head"><p>What It Detects</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Triangle detector</p></td>
+<td><p>Triangle shape</p></td>
+<td><p>Specific pattern at specific location</p></td>
+</tr>
+<tr class="row-odd"><td><p>Moving average</p></td>
+<td><p>Flat/constant</p></td>
+<td><p>Slow, unchanging regions</p></td>
+</tr>
+<tr class="row-even"><td><p>High-pass (derivative)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">0,</span> <span class="pre">1]</span></code></p></td>
+<td><p>Rapid changes (edges)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The difference:</p>
+<ul class="simple">
+<li><p><strong>Pattern detection</strong>: Kernel = shape we’re looking for</p></li>
+<li><p><strong>Frequency filtering</strong>: Kernel = mathematical operation that selects speed of variation</p></li>
+</ul>
 <blockquote>
 <div><p><strong>Note on Filter Design</strong></p>
-<p>In this educational example, we hand-designed the filters using prior knowledge of the signal components (moving average for sine, template matching for sawtooth).</p>
+<p>In this educational example, we hand-designed the filters using prior knowledge of the signal components.</p>
 <p>In real-world scenarios where components are unknown, we rely on:</p>
 <ul class="simple">
 <li><p><strong>Learned filters in CNNs</strong>: Network discovers optimal filters through backpropagation</p></li>
@@ -1473,53 +1806,13 @@ Key Insight:
 <p><strong>Further Reading</strong>: Blind Deconvolution, Independent Component Analysis (ICA), and ARIMA models for time series decomposition.</p>
 </div></blockquote>
 </section>
-<hr class="docutils" />
-<section id="summary-filter-banks-and-feature-channels">
-<h3>6.4 Summary: Filter Banks and Feature Channels<a class="headerlink" href="#summary-filter-banks-and-feature-channels" title="Link to this heading">#</a></h3>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Filter</p></th>
-<th class="head"><p>Kernel Type</p></th>
-<th class="head"><p>Detects</p></th>
-<th class="head"><p>Output</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><strong>Channel 0</strong></p></td>
-<td><p>Large moving average (low-pass)</p></td>
-<td><p>Slow variations</p></td>
-<td><p>Baseline sine</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Channel 1</strong></p></td>
-<td><p>Template matching (band-pass)</p></td>
-<td><p>Sharp edges</p></td>
-<td><p>Sawtooth events</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><strong>Connection to Deep Learning:</strong></p>
-<ul class="simple">
-<li><p>Hand-designed filters → <strong>Classical signal processing</strong></p></li>
-<li><p>Learned filters → <strong>Deep CNNs</strong> (next section)</p></li>
-<li><p>Multiple channels → <strong>Feature maps</strong> (each detects different patterns)</p></li>
-</ul>
-<hr class="docutils" />
-<p>This version:</p>
-<ul class="simple">
-<li><p>Uses familiar sawtooth from your uploaded code</p></li>
-<li><p>Demonstrates clear frequency separation</p></li>
-<li><p>Maintains pedagogical progression (single → multi-output)</p></li>
-<li><p>Prepares students for learned filters in Section 7</p></li>
-</ul>
-</section>
 </section>
 <hr class="docutils" />
 <section id="building-a-1d-cnn-classifier">
-<h2>7. Building a 1D CNN Classifier<a class="headerlink" href="#building-a-1d-cnn-classifier" title="Link to this heading">#</a></h2>
+<h2>8. Building a 1D CNN Classifier<a class="headerlink" href="#building-a-1d-cnn-classifier" title="Link to this heading">#</a></h2>
 <p>Let’s build a complete 1D CNN for classifying different types of signals.</p>
 <section id="architecture">
-<h3>7.1 Architecture<a class="headerlink" href="#architecture" title="Link to this heading">#</a></h3>
+<h3>8.1 Architecture<a class="headerlink" href="#architecture" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SignalClassifier</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
@@ -1595,7 +1888,7 @@ Output shape: torch.Size([4, 3])
 </div>
 </section>
 <section id="training-loop-structure">
-<h3>7.2 Training Loop Structure<a class="headerlink" href="#training-loop-structure" title="Link to this heading">#</a></h3>
+<h3>8.2 Training Loop Structure<a class="headerlink" href="#training-loop-structure" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
@@ -1618,7 +1911,7 @@ Output shape: torch.Size([4, 3])
 </div>
 </section>
 <section id="application-learn-the-moving-average-kernel">
-<h3>7.3 Application: Learn the Moving Average Kernel<a class="headerlink" href="#application-learn-the-moving-average-kernel" title="Link to this heading">#</a></h3>
+<h3>8.3 Application: Learn the Moving Average Kernel<a class="headerlink" href="#application-learn-the-moving-average-kernel" title="Link to this heading">#</a></h3>
 <p>Task: Learn the kernel weights through training instead of hand-designing.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1689,21 +1982,25 @@ Output shape: torch.Size([4, 3])
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\m.amintoosi\AppData\Local\Temp\ipykernel_14464\2001567032.py:30: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\builder\windows\pytorch\torch\csrc\utils\tensor_new.cpp:281.)
+  X = torch.tensor(X).float().view(n_samples, 1, signal_length)
+</pre></div>
+</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.Size([500, 1, 30])
-Initial kernel: [ 0.4156338  -0.24659362  0.3497005 ]
+Initial kernel: [ 0.23811197 -0.44154182 -0.10843295]
 Target kernel: [0.333, 0.333, 0.333]
-Epoch 0, Loss: 0.346503
-  Learned kernel: [ 0.4056338  -0.23659362  0.33970052]
-Epoch 20, Loss: 0.149662
-  Learned kernel: [ 0.30775172 -0.04245146  0.32407022]
-Epoch 40, Loss: 0.048288
-  Learned kernel: [0.33728126 0.12145492 0.33068085]
-Epoch 60, Loss: 0.010396
-  Learned kernel: [0.33221686 0.23613878 0.33281395]
-Epoch 80, Loss: 0.001246
-  Learned kernel: [0.33197954 0.3003356  0.33280262]
+Epoch 0, Loss: 0.798964
+  Learned kernel: [ 0.24811196 -0.43154183 -0.09843295]
+Epoch 20, Loss: 0.395849
+  Learned kernel: [ 0.34302208 -0.2356088   0.09336054]
+Epoch 40, Loss: 0.171167
+  Learned kernel: [ 0.3243526  -0.06021212  0.24031174]
+Epoch 60, Loss: 0.067036
+  Learned kernel: [0.3293367  0.08185966 0.31694666]
+Epoch 80, Loss: 0.023052
+  Learned kernel: [0.33287185 0.18639144 0.33751038]
 
-Final learned kernel: [0.33355832 0.32660776 0.33330235]
+Final learned kernel: [0.3325661  0.25310472 0.3359231 ]
 Target kernel:        [0.333, 0.333, 0.333]
 </pre></div>
 </div>
@@ -1713,10 +2010,10 @@ Target kernel:        [0.333, 0.333, 0.333]
 </section>
 <hr class="docutils" />
 <section id="application-ecg-heartbeat-detection-further-reading">
-<h2>8. Application: ECG Heartbeat Detection (Further Reading)<a class="headerlink" href="#application-ecg-heartbeat-detection-further-reading" title="Link to this heading">#</a></h2>
+<h2>9. Application: ECG Heartbeat Detection (Further Reading)<a class="headerlink" href="#application-ecg-heartbeat-detection-further-reading" title="Link to this heading">#</a></h2>
 <p>Let’s apply 1D CNN concepts to a more realistic problem: detecting heartbeats in ECG data.</p>
 <section id="understanding-ecg-signals">
-<h3>8.1 Understanding ECG Signals<a class="headerlink" href="#understanding-ecg-signals" title="Link to this heading">#</a></h3>
+<h3>9.1 Understanding ECG Signals<a class="headerlink" href="#understanding-ecg-signals" title="Link to this heading">#</a></h3>
 <p>An ECG (electrocardiogram) measures electrical activity of the heart. Key features include:</p>
 <ul class="simple">
 <li><p><strong>P wave:</strong> Atrial depolarization</p></li>
@@ -1725,7 +2022,7 @@ Target kernel:        [0.333, 0.333, 0.333]
 </ul>
 </section>
 <section id="simulating-ecg-data">
-<h3>8.2 Simulating ECG Data<a class="headerlink" href="#simulating-ecg-data" title="Link to this heading">#</a></h3>
+<h3>9.2 Simulating ECG Data<a class="headerlink" href="#simulating-ecg-data" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_ecg_signal</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">heart_rate</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
@@ -1770,12 +2067,12 @@ Target kernel:        [0.333, 0.333, 0.333]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/6277c2643d5cc107545c648382cb2b46f50f288408a62c764c5b4fd67bc5b2bd.png" src="_images/6277c2643d5cc107545c648382cb2b46f50f288408a62c764c5b4fd67bc5b2bd.png" />
+<img alt="_images/359882d617163d7727e823756bc11f42bb77ed44e8e80c6253f7f201747bef00.png" src="_images/359882d617163d7727e823756bc11f42bb77ed44e8e80c6253f7f201747bef00.png" />
 </div>
 </div>
 </section>
 <section id="detecting-r-peaks-with-convolution">
-<h3>8.3 Detecting R-peaks with Convolution<a class="headerlink" href="#detecting-r-peaks-with-convolution" title="Link to this heading">#</a></h3>
+<h3>9.3 Detecting R-peaks with Convolution<a class="headerlink" href="#detecting-r-peaks-with-convolution" title="Link to this heading">#</a></h3>
 <p>We can design a kernel that responds strongly to QRS complexes:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1822,7 +2119,7 @@ Target kernel:        [0.333, 0.333, 0.333]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/97a624df905f4215107eb3accedb41a978189d2120052d4aa1fadcc63b2bdf5a.png" src="_images/97a624df905f4215107eb3accedb41a978189d2120052d4aa1fadcc63b2bdf5a.png" />
+<img alt="_images/cec72d731f141dd2abc810f7f5cc45d62548fce8fd2ed4e19800ab62477484ba.png" src="_images/cec72d731f141dd2abc810f7f5cc45d62548fce8fd2ed4e19800ab62477484ba.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Detected 9 heartbeats
 </pre></div>
 </div>
@@ -1832,10 +2129,10 @@ Target kernel:        [0.333, 0.333, 0.333]
 </section>
 <hr class="docutils" />
 <section id="multiple-channels-and-filters-further-reading">
-<h2>9. Multiple Channels and Filters (Further Reading)<a class="headerlink" href="#multiple-channels-and-filters-further-reading" title="Link to this heading">#</a></h2>
+<h2>10. Multiple Channels and Filters (Further Reading)<a class="headerlink" href="#multiple-channels-and-filters-further-reading" title="Link to this heading">#</a></h2>
 <p>Real-world applications often use multiple input channels and learn multiple features simultaneously.</p>
 <section id="multi-channel-input">
-<h3>9.1 Multi-Channel Input<a class="headerlink" href="#multi-channel-input" title="Link to this heading">#</a></h3>
+<h3>10.1 Multi-Channel Input<a class="headerlink" href="#multi-channel-input" title="Link to this heading">#</a></h3>
 <p>Consider a traffic monitoring system with multiple sensors:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1924,7 +2221,7 @@ Tensor shape: torch.Size([1, 3, 100])
 </div>
 </section>
 <section id="multi-output-convolution">
-<h3>9.2 Multi-Output Convolution<a class="headerlink" href="#multi-output-convolution" title="Link to this heading">#</a></h3>
+<h3>10.2 Multi-Output Convolution<a class="headerlink" href="#multi-output-convolution" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define layer: 3 input channels -&gt; 5 output channels (filters)</span>
@@ -1951,7 +2248,7 @@ Tensor shape: torch.Size([1, 3, 100])
 </div>
 </section>
 <section id="visualizing-learned-filters">
-<h3>9.3 Visualizing Learned Filters<a class="headerlink" href="#visualizing-learned-filters" title="Link to this heading">#</a></h3>
+<h3>10.3 Visualizing Learned Filters<a class="headerlink" href="#visualizing-learned-filters" title="Link to this heading">#</a></h3>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Examine the learned weights</span>
@@ -1980,7 +2277,7 @@ Tensor shape: torch.Size([1, 3, 100])
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Weights shape: torch.Size([5, 3, 5])
 </pre></div>
 </div>
-<img alt="_images/9a188eb91c65f6a2101bcda05390bb9bb3f9623402ba84cd3dde154a9180b53d.png" src="_images/9a188eb91c65f6a2101bcda05390bb9bb3f9623402ba84cd3dde154a9180b53d.png" />
+<img alt="_images/a3bcde0a4d0ff17eaf1452d17624272c562be95f1299a6bc639ec7447750af51.png" src="_images/a3bcde0a4d0ff17eaf1452d17624272c562be95f1299a6bc639ec7447750af51.png" />
 </div>
 </details>
 </div>
@@ -1988,7 +2285,7 @@ Tensor shape: torch.Size([1, 3, 100])
 </section>
 <hr class="docutils" />
 <section id="connection-to-2d-cnns">
-<h2>10. Connection to 2D CNNs<a class="headerlink" href="#connection-to-2d-cnns" title="Link to this heading">#</a></h2>
+<h2>11. Connection to 2D CNNs<a class="headerlink" href="#connection-to-2d-cnns" title="Link to this heading">#</a></h2>
 <p>The concepts you’ve learned directly extend to 2D convolution for images:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2024,8 +2321,8 @@ Tensor shape: torch.Size([1, 3, 100])
 <p>The key insight is that <strong>convolution is pattern matching</strong>: in 1D we match temporal patterns, in 2D we match spatial patterns.</p>
 </section>
 <hr class="docutils" />
-<section id="summary">
-<h2>11. Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h2>Summary<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <section id="key-takeaways">
 <h3>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
@@ -2157,33 +2454,42 @@ Tensor shape: torch.Size([1, 3, 100])
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-design-your-own-detector">Exercise: Design Your Own Detector</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#separating-mixed-signals-with-multi-output-convolution">6. Separating Mixed Signals with Multi-Output Convolution</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-a-mixed-signal">6.1 Creating a Mixed Signal</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#designing-two-selective-filters">6.2 Designing Two Selective Filters</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-and-visualizing-separation">6.3 Applying and Visualizing Separation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-filter-banks-and-feature-channels">6.4 Summary: Filter Banks and Feature Channels</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-output-convolution-detecting-multiple-patterns">6. Multi-Output Convolution: Detecting Multiple Patterns</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-setup-a-signal-with-two-different-patterns">6.1 The Setup: A Signal with Two Different Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-a-two-channel-detector">6.2 Creating a Two-Channel Detector</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-and-visualizing-detection">6.3 Applying and Visualizing Detection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-means-for-deep-learning">6.4 What This Means for Deep Learning</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-1d-cnn-classifier">7. Building a 1D CNN Classifier</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">7.1 Architecture</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-loop-structure">7.2 Training Loop Structure</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#application-learn-the-moving-average-kernel">7.3 Application: Learn the Moving Average Kernel</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-pattern-detection-to-frequency-filtering">7. From Pattern Detection to Frequency Filtering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuition-what-s-slow-vs-fast">7.1 Intuition: What’s “Slow” vs “Fast”?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-moving-average-a-simple-low-pass-filter">7.2 The Moving Average: A Simple Low-Pass Filter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kernel-size-matters">7.3 Why Kernel Size Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#high-pass-filter-keeping-only-fast-changes">7.4 High-Pass Filter: Keeping Only Fast Changes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-pattern-detection">7.5 Connection to Pattern Detection</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-ecg-heartbeat-detection-further-reading">8. Application: ECG Heartbeat Detection (Further Reading)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-ecg-signals">8.1 Understanding ECG Signals</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulating-ecg-data">8.2 Simulating ECG Data</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detecting-r-peaks-with-convolution">8.3 Detecting R-peaks with Convolution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-1d-cnn-classifier">8. Building a 1D CNN Classifier</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">8.1 Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-loop-structure">8.2 Training Loop Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#application-learn-the-moving-average-kernel">8.3 Application: Learn the Moving Average Kernel</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-channels-and-filters-further-reading">9. Multiple Channels and Filters (Further Reading)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-channel-input">9.1 Multi-Channel Input</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-output-convolution">9.2 Multi-Output Convolution</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-learned-filters">9.3 Visualizing Learned Filters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-ecg-heartbeat-detection-further-reading">9. Application: ECG Heartbeat Detection (Further Reading)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-ecg-signals">9.1 Understanding ECG Signals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulating-ecg-data">9.2 Simulating ECG Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detecting-r-peaks-with-convolution">9.3 Detecting R-peaks with Convolution</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-2d-cnns">10. Connection to 2D CNNs</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">11. Summary</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-channels-and-filters-further-reading">10. Multiple Channels and Filters (Further Reading)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-channel-input">10.1 Multi-Channel Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-output-convolution">10.2 Multi-Output Convolution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-learned-filters">10.3 Visualizing Learned Filters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-2d-cnns">11. Connection to 2D CNNs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Summary</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">Key Takeaways</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further Reading</a></li>
 </ul>
