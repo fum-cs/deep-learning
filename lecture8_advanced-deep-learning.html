@@ -1256,7 +1256,6 @@ Wall time: 2min 33s
     <span class="k">return</span> <span class="n">acc_real</span><span class="p">,</span> <span class="n">acc_fake</span><span class="p">,</span> <span class="n">x_real</span><span class="p">,</span> <span class="n">x_fake</span>
 
 <span class="c1"># Train the generator and discriminator together (GAN)</span>
-<span class="c1"># Train the generator and discriminator together (GAN)</span>
 <span class="k">def</span> <span class="nf">train_gan</span><span class="p">(</span><span class="n">g_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">,</span> <span class="n">n_epochs</span><span class="o">=</span><span class="mi">15000</span><span class="p">,</span> <span class="n">n_batch</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> 
               <span class="n">eval_epochs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">3000</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">6000</span><span class="p">,</span> <span class="mi">9000</span><span class="p">,</span> <span class="mi">12000</span><span class="p">,</span> <span class="mi">15000</span><span class="p">]):</span>
     <span class="c1"># Use better learning rates and beta values for GANs</span>
@@ -1265,11 +1264,7 @@ Wall time: 2min 33s
     
     <span class="c1"># Loss criterion</span>
     <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">()</span>
-    
-    <span class="c1"># Label smoothing for better training</span>
-    <span class="n">real_label_smooth</span> <span class="o">=</span> <span class="mf">0.9</span>
-    <span class="n">fake_label_smooth</span> <span class="o">=</span> <span class="mf">0.1</span>
-    
+      
     <span class="n">half_batch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_batch</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
     
     <span class="c1"># Storage for history</span>
@@ -1300,32 +1295,25 @@ Wall time: 2min 33s
         <span class="n">history</span><span class="p">[</span><span class="s1">&#39;g_loss&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
     
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
-        <span class="c1"># Train discriminator more often in early stages</span>
-        <span class="n">d_train_steps</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5000</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">d_model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
         
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d_train_steps</span><span class="p">):</span>
-            <span class="c1"># Train discriminator</span>
-            <span class="n">d_model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
-            
-            <span class="c1"># Prepare real samples with label smoothing</span>
-            <span class="n">x_real</span><span class="p">,</span> <span class="n">y_real</span> <span class="o">=</span> <span class="n">generate_real_samples</span><span class="p">(</span><span class="n">half_batch</span><span class="p">)</span>
-            <span class="n">y_real_smooth</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y_real</span><span class="p">)</span> <span class="o">*</span> <span class="n">real_label_smooth</span>
-            
-            <span class="c1"># Prepare fake samples (from generator)</span>
-            <span class="n">x_fake</span><span class="p">,</span> <span class="n">y_fake</span> <span class="o">=</span> <span class="n">generate_fake_samples</span><span class="p">(</span><span class="n">g_model</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">,</span> <span class="n">half_batch</span><span class="p">)</span>
-            <span class="n">y_fake_smooth</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y_fake</span><span class="p">)</span> <span class="o">*</span> <span class="n">fake_label_smooth</span>
-            
-            <span class="c1"># Update discriminator on real samples</span>
-            <span class="n">d_optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
-            <span class="n">y_pred_real</span> <span class="o">=</span> <span class="n">d_model</span><span class="p">(</span><span class="n">x_real</span><span class="p">)</span>
-            <span class="n">d_loss_real</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">y_pred_real</span><span class="p">,</span> <span class="n">y_real_smooth</span><span class="p">)</span>
-            <span class="n">d_loss_real</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
-            
-            <span class="c1"># Update discriminator on fake samples</span>
-            <span class="n">y_pred_fake</span> <span class="o">=</span> <span class="n">d_model</span><span class="p">(</span><span class="n">x_fake</span><span class="p">)</span>
-            <span class="n">d_loss_fake</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">y_pred_fake</span><span class="p">,</span> <span class="n">y_fake_smooth</span><span class="p">)</span>
-            <span class="n">d_loss_fake</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
-            <span class="n">d_optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="c1"># Prepare real samples with label smoothing</span>
+        <span class="n">x_real</span><span class="p">,</span> <span class="n">y_real</span> <span class="o">=</span> <span class="n">generate_real_samples</span><span class="p">(</span><span class="n">half_batch</span><span class="p">)</span>
+        
+        <span class="c1"># Prepare fake samples (from generator)</span>
+        <span class="n">x_fake</span><span class="p">,</span> <span class="n">y_fake</span> <span class="o">=</span> <span class="n">generate_fake_samples</span><span class="p">(</span><span class="n">g_model</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">,</span> <span class="n">half_batch</span><span class="p">)</span>
+        
+        <span class="c1"># Update discriminator on real samples</span>
+        <span class="n">d_optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">y_pred_real</span> <span class="o">=</span> <span class="n">d_model</span><span class="p">(</span><span class="n">x_real</span><span class="p">)</span>
+        <span class="n">d_loss_real</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">y_pred_real</span><span class="p">,</span> <span class="n">y_real</span><span class="p">)</span>
+        <span class="n">d_loss_real</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        
+        <span class="c1"># Update discriminator on fake samples</span>
+        <span class="n">y_pred_fake</span> <span class="o">=</span> <span class="n">d_model</span><span class="p">(</span><span class="n">x_fake</span><span class="p">)</span>
+        <span class="n">d_loss_fake</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">y_pred_fake</span><span class="p">,</span> <span class="n">y_fake</span><span class="p">)</span>
+        <span class="n">d_loss_fake</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">d_optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
         
         <span class="c1"># Train generator</span>
         <span class="n">g_model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
@@ -1333,7 +1321,7 @@ Wall time: 2min 33s
         <span class="c1"># Prepare points in latent space</span>
         <span class="n">x_gan</span> <span class="o">=</span> <span class="n">generate_latent_points</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">n_batch</span><span class="p">)</span>
         <span class="c1"># Create labels that generator wants to fool discriminator (all real)</span>
-        <span class="n">y_gan</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_batch</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="o">*</span> <span class="n">real_label_smooth</span>
+        <span class="n">y_gan</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_batch</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> 
         
         <span class="c1"># Update the generator via the discriminator&#39;s error</span>
         <span class="n">g_optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
@@ -1409,60 +1397,60 @@ Batch size: 32
 === Starting GAN Training ===
 
 --- Evaluation at epoch 1000 ---
-Discriminator Loss (Real): 0.5313, (Fake): 0.7299
-Generator Loss: 1.0047
-Real Accuracy = 0.9500, Fake Accuracy = 0.3233
+Discriminator Loss (Real): 0.5939, (Fake): 0.4936
+Generator Loss: 1.0158
+Real Accuracy = 0.6800, Fake Accuracy = 0.1967
 
 --- Evaluation at epoch 2000 ---
-Discriminator Loss (Real): 0.6437, (Fake): 0.7158
-Generator Loss: 0.7498
-Real Accuracy = 0.7767, Fake Accuracy = 0.5367
+Discriminator Loss (Real): 0.6599, (Fake): 0.7145
+Generator Loss: 0.6635
+Real Accuracy = 0.6200, Fake Accuracy = 0.6367
 
 --- Evaluation at epoch 3000 ---
-Discriminator Loss (Real): 0.6732, (Fake): 0.6625
-Generator Loss: 0.7263
-Real Accuracy = 0.7633, Fake Accuracy = 0.3967
+Discriminator Loss (Real): 0.6687, (Fake): 0.7018
+Generator Loss: 0.6843
+Real Accuracy = 0.8233, Fake Accuracy = 0.7933
 
 --- Evaluation at epoch 4000 ---
-Discriminator Loss (Real): 0.6771, (Fake): 0.6682
-Generator Loss: 0.7152
-Real Accuracy = 0.9133, Fake Accuracy = 0.3100
+Discriminator Loss (Real): 0.6722, (Fake): 0.6872
+Generator Loss: 0.6992
+Real Accuracy = 0.7467, Fake Accuracy = 0.3600
 
 --- Evaluation at epoch 5000 ---
-Discriminator Loss (Real): 0.6777, (Fake): 0.6826
-Generator Loss: 0.7207
-Real Accuracy = 0.8167, Fake Accuracy = 0.3533
+Discriminator Loss (Real): 0.6838, (Fake): 0.6880
+Generator Loss: 0.7114
+Real Accuracy = 0.7400, Fake Accuracy = 0.4633
 
 --- Evaluation at epoch 6000 ---
-Discriminator Loss (Real): 0.6629, (Fake): 0.6837
-Generator Loss: 0.7298
-Real Accuracy = 0.7267, Fake Accuracy = 0.3667
+Discriminator Loss (Real): 0.6811, (Fake): 0.6849
+Generator Loss: 0.6965
+Real Accuracy = 0.6800, Fake Accuracy = 0.4167
 
 --- Evaluation at epoch 9000 ---
-Discriminator Loss (Real): 0.6895, (Fake): 0.7002
-Generator Loss: 0.6937
-Real Accuracy = 0.6067, Fake Accuracy = 0.4600
+Discriminator Loss (Real): 0.6832, (Fake): 0.6912
+Generator Loss: 0.6988
+Real Accuracy = 0.6933, Fake Accuracy = 0.5033
 
 --- Evaluation at epoch 12000 ---
-Discriminator Loss (Real): 0.6869, (Fake): 0.6799
-Generator Loss: 0.6973
-Real Accuracy = 0.5967, Fake Accuracy = 0.5233
+Discriminator Loss (Real): 0.6811, (Fake): 0.6939
+Generator Loss: 0.7029
+Real Accuracy = 0.6400, Fake Accuracy = 0.5200
 
 --- Evaluation at epoch 15000 ---
-Discriminator Loss (Real): 0.6959, (Fake): 0.6929
-Generator Loss: 0.6971
-Real Accuracy = 0.6167, Fake Accuracy = 0.5733
+Discriminator Loss (Real): 0.6883, (Fake): 0.6865
+Generator Loss: 0.6956
+Real Accuracy = 0.6400, Fake Accuracy = 0.4767
 
 === Plotting Epoch Results ===
 </pre></div>
 </div>
-<img alt="_images/4c59372bc60570fb922a33043730767286200e0b0f67673db2fee916982f8c1f.png" src="_images/4c59372bc60570fb922a33043730767286200e0b0f67673db2fee916982f8c1f.png" />
+<img alt="_images/3c975431e60f2b98a702905f21c7b2fd864a6265b846fea5345b9389e295cfd9.png" src="_images/3c975431e60f2b98a702905f21c7b2fd864a6265b846fea5345b9389e295cfd9.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Plotting Training History ===
 </pre></div>
 </div>
-<img alt="_images/a3870d5a710d957b22cb6bf89d3c418dc0cad5d25f781f813f387c02890ce3c6.png" src="_images/a3870d5a710d957b22cb6bf89d3c418dc0cad5d25f781f813f387c02890ce3c6.png" />
+<img alt="_images/93928d2afbd1f6bda394fbb8d0766645d0677b6a576ac7e84672d32acdf7f8c0.png" src="_images/93928d2afbd1f6bda394fbb8d0766645d0677b6a576ac7e84672d32acdf7f8c0.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Final Evaluation ===
-Final - Real Accuracy: 0.6340, Fake Accuracy: 0.5100
+Final - Real Accuracy: 0.6060, Fake Accuracy: 0.4540
 </pre></div>
 </div>
 </div>
