@@ -24,4 +24,5 @@ chapters:
 - file: hws/index
   sections:
   - file: hws/HW-2D-CNN-learn-filters
+  - file: hws/Modeling-a-Harmonic-Oscillator-with-MLP-and-GAN
 
