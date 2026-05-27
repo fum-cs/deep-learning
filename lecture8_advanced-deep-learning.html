@@ -57,6 +57,8 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'lecture8_advanced-deep-learning';</script>
     <link rel="icon" href="_static/fum-logo.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -207,6 +209,7 @@
 <li class="toctree-l1"><a class="reference internal" href="appendixI_floating-point.html">Appendix I: Floating Point Numbers</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="hws/index.html">Home Works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="hws/HW-2D-CNN-learn-filters.html">Exercise: Learning and Inverting Image Filters with CNNs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hws/Modeling-a-Harmonic-Oscillator-with-MLP-and-GAN.html">Exercise: Modeling a Harmonic Oscillator with MLP and GAN</a></li>
 </ul>
 </details></li>
 </ul>
@@ -445,9 +448,17 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-adversarial-networks-gans">2. Generative Adversarial Networks (GANs)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-gans">2.1. What are GANs?</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources:</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-generative-adversarial-network-from-scratch">2.2. 1D Generative Adversarial Network From Scratch</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-gan-generating-bitmojis">2.3. 2D GAN: Generating Bitmojis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-formulation">2.2. Mathematical Formulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-generative-adversarial-network-from-scratch">2.3. 1D Generative Adversarial Network From Scratch</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#gan-algorithm-for-learning-a-parabola-function-y-x-2">GAN Algorithm for Learning a Parabola Function <span class="math notranslate nohighlight">\( y = x^2 \)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#detailed-procedure">Detailed Procedure</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#gan-training-algorithm-key-concepts">GAN Training Algorithm: Key Concepts</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-pseudocode">Algorithm Pseudocode</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-gan-generating-bitmojis">2.4. 2D GAN: Generating Bitmojis</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-input-networks">3. Multi-input Networks</a></li>
@@ -818,9 +829,11 @@ Downloading https://ossci-datasets.s3.amazonaws.com/mnist/t10k-labels-idx1-ubyte
 <li><p>One ingredient you’ll need to know to do this is “transposed convolutional layers”. These are just like “convolutional layers” but for the purpose of “upsampling” (increasing the size of) our data. Rather than simply expanding the size of our data and interpolating, we use
 <code class="docutils literal notranslate"><span class="pre">nn.ConvTranspose2d()</span></code> layers to help us learn how to best upsample our data:</p></li>
 </ul>
-<p><img alt="" src="_images/conv_trans_1.gif" /></p>
-<p><img alt="" src="_images/conv_trans_2.gif" /></p>
-<p>Source: modified from <a class="reference external" href="https://arxiv.org/abs/1603.07285">A guide to convolution arithmetic for deep learning, Vincent Dumoulin (2018)</a></p>
+<!-- ![](img/conv_trans_1.gif)
+
+![](img/conv_trans_2.gif)
+
+Source: modified from [A guide to convolution arithmetic for deep learning, Vincent Dumoulin (2018)](https://arxiv.org/abs/1603.07285) -->
 <p>See <a class="reference internal" href="appendixH_transposed_conv.html"><span class="std std-doc">Transposed Convolution</span></a> in appendices.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1020,20 +1033,175 @@ Wall time: 2min 33s
 </li>
 </ul>
 </section>
-<section id="additional-resources">
-<h3>Additional Resources:<a class="headerlink" href="#additional-resources" title="Link to this heading">#</a></h3>
+<hr class="docutils" />
+<section id="mathematical-formulation">
+<h3>2.2. Mathematical Formulation<a class="headerlink" href="#mathematical-formulation" title="Link to this heading">#</a></h3>
+<p><strong>Objective Function (Value Function V):</strong></p>
+<div class="math notranslate nohighlight">
+\[
+\min_G \max_D V(D,G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z}[\log(1 - D(G(z)))]
+\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( p_{data} \)</span>: Distribution of real points on <span class="math notranslate nohighlight">\( y = x^2 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( p_z \)</span>: Standard normal distribution in latent space</p></li>
+<li><p><span class="math notranslate nohighlight">\( D(x) \)</span>: Discriminator output (probability x is real)</p></li>
+<li><p><span class="math notranslate nohighlight">\( G(z) \)</span>: Generator output mapping latent vector to 2D point</p></li>
+</ul>
+<p><em>Additional Resources</em>:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://howsam.org/generative-adversarial-network/">Generative Adversarial Networks (Persian)</a></p></li>
+</ul>
+</section>
+<section id="d-generative-adversarial-network-from-scratch">
+<h3>2.3. 1D Generative Adversarial Network From Scratch<a class="headerlink" href="#d-generative-adversarial-network-from-scratch" title="Link to this heading">#</a></h3>
+<ul class="simple">
 <li><p><a class="reference external" href="https://machinelearningmastery.com/how-to-develop-a-generative-adversarial-network-for-a-1-dimensional-function-from-scratch-in-keras/">How to Develop a 1D Generative Adversarial Network From Scratch in Keras</a></p>
 <ul>
 <li><p><strong>Colab</strong> <a class="reference external" href="https://colab.research.google.com/github/fum-cs/dl-fall-2023/blob/main/code/GAN/GAN-01.ipynb">GAN-01</a></p></li>
 </ul>
 </li>
 </ul>
-<p>Enough talk, let’s code it up!</p>
+<section id="gan-algorithm-for-learning-a-parabola-function-y-x-2">
+<h4>GAN Algorithm for Learning a Parabola Function <span class="math notranslate nohighlight">\( y = x^2 \)</span><a class="headerlink" href="#gan-algorithm-for-learning-a-parabola-function-y-x-2" title="Link to this heading">#</a></h4>
+<p>This GAN learns to generate points <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> that lie on the parabola <span class="math notranslate nohighlight">\( y = x^2 \)</span>, where <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">∈</span> <span class="pre">[-0.5,</span> <span class="pre">0.5]</span></code>. The generator creates fake points, and the discriminator learns to distinguish real parabola points from fake ones.</p>
+<hr class="docutils" />
+<section id="detailed-procedure">
+<h5>Detailed Procedure<a class="headerlink" href="#detailed-procedure" title="Link to this heading">#</a></h5>
+<p><em>Phase 1: Data Generation (Real Samples)</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Input: Number of samples n
+Output: Real points (x, x²) where x ∈ [-0.5, 0.5]
+
+Procedure:
+1. Generate n random numbers uniformly from [-0.5, 0.5] → x values
+2. Compute y = x² for each x
+3. Stack x and y into shape (n, 2)
+4. Assign label 1 (real) to all samples
+</pre></div>
+</div>
+<p><em>Phase 2: Discriminator Training</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Input: Batch size B
+Procedure for each batch:
+1. Get B/2 real samples (x, x²) with label 1
+2. Generate B/2 random latent vectors z ~ N(0, I)
+3. Generate B/2 fake samples via G(z)
+4. Compute discriminator outputs for real and fake
+5. Calculate binary cross-entropy losses
+6. Update discriminator weights to maximize:
+   - D(real) → 1 (high probability)
+   - D(fake) → 0 (low probability)
+</pre></div>
+</div>
+<p><em>Phase 3: Generator Training</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Input</span><span class="p">:</span> <span class="n">Batch</span> <span class="n">size</span> <span class="n">B</span>
+<span class="n">Procedure</span><span class="p">:</span>
+<span class="mf">1.</span> <span class="n">Generate</span> <span class="n">B</span> <span class="n">random</span> <span class="n">latent</span> <span class="n">vectors</span> <span class="n">z</span> <span class="o">~</span> <span class="n">N</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">I</span><span class="p">)</span>
+<span class="mf">2.</span> <span class="n">Generate</span> <span class="n">B</span> <span class="n">fake</span> <span class="n">samples</span> <span class="n">via</span> <span class="n">G</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="mf">3.</span> <span class="n">Pass</span> <span class="n">fake</span> <span class="n">samples</span> <span class="n">through</span> <span class="n">discriminator</span> <span class="p">(</span><span class="n">weights</span> <span class="n">frozen</span><span class="p">)</span>
+<span class="mf">4.</span> <span class="n">Calculate</span> <span class="n">loss</span><span class="p">:</span> <span class="n">BCE</span><span class="p">(</span><span class="n">D</span><span class="p">(</span><span class="n">G</span><span class="p">(</span><span class="n">z</span><span class="p">)),</span> <span class="mi">1</span><span class="p">)</span>
+   <span class="p">(</span><span class="n">Generator</span> <span class="n">wants</span> <span class="n">discriminator</span> <span class="n">to</span> <span class="n">classify</span> <span class="n">fakes</span> <span class="k">as</span> <span class="n">real</span><span class="p">)</span>
+<span class="mf">5.</span> <span class="n">Update</span> <span class="n">generator</span> <span class="n">weights</span> <span class="n">to</span> <span class="n">minimize</span> <span class="n">this</span> <span class="n">loss</span>
+</pre></div>
+</div>
 </section>
-<section id="d-generative-adversarial-network-from-scratch">
-<h3>2.2. 1D Generative Adversarial Network From Scratch<a class="headerlink" href="#d-generative-adversarial-network-from-scratch" title="Link to this heading">#</a></h3>
+<section id="gan-training-algorithm-key-concepts">
+<h5>GAN Training Algorithm: Key Concepts<a class="headerlink" href="#gan-training-algorithm-key-concepts" title="Link to this heading">#</a></h5>
+<p><strong>Important Notes Before the Algorithm:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Adversarial Training</strong>: The Generator (G) and Discriminator (D) are trained alternately, not simultaneously</p></li>
+<li><p><strong>Parameter Freezing</strong>: When training one network, the other network’s parameters must be frozen (no gradient updates)</p></li>
+<li><p><strong>Why Freeze?</strong> If both networks update simultaneously, they’d chase a moving target and never converge</p></li>
+<li><p><strong>Training Signal</strong>: The Generator learns through the Discriminator’s feedback, not directly from the real data</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="algorithm-pseudocode">
+<h5>Algorithm Pseudocode<a class="headerlink" href="#algorithm-pseudocode" title="Link to this heading">#</a></h5>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>INPUT: 
+  - Real data distribution: points (x, x²) where x ∈ [-0.5, 0.5]
+  - Latent dimension: z_dim (e.g., 5)
+  - Number of epochs: 15000
+  - Batch size: 32
+
+INITIALIZE:
+  - Generator network G(z_dim → 2 outputs) with random weights
+  - Discriminator network D(2 inputs → 1 output) with random weights
+
+FOR each training epoch:
+    
+    // ============================================
+    // STEP 1: TRAIN DISCRIMINATOR
+    // FREEZE Generator parameters (no gradients to G)
+    // UNFREEZE Discriminator parameters
+    // ============================================
+    
+    FOR each discriminator training step:
+        // Process REAL samples
+        Sample batch of real points (x, x²) from dataset
+        Label these as REAL (1)
+        D_real_output = D(real_points)
+        D_real_loss = BCE(D_real_output, REAL_labels)
+        
+        // Process FAKE samples
+        Sample random noise z from normal distribution
+        Generate fake_points = G(z)  # G is frozen
+        Label these as FAKE (0)
+        D_fake_output = D(fake_points)
+        D_fake_loss = BCE(D_fake_output, FAKE_labels)
+        
+        // Update Discriminator
+        D_total_loss = D_real_loss + D_fake_loss
+        Backpropagate D_total_loss through D ONLY
+        Update D parameters using optimizer
+    
+    
+    // ============================================
+    // STEP 2: TRAIN GENERATOR
+    // FREEZE Discriminator parameters (no gradients to D)
+    // UNFREEZE Generator parameters
+    // ============================================
+    
+    FOR each generator training step:
+        // Generator wants to fool Discriminator
+        Sample random noise z from normal distribution
+        Generate fake_points = G(z)
+        
+        // Trick Discriminator: label fakes as REAL (1)
+        D_output_on_fakes = D(fake_points)  # D is frozen
+        G_loss = BCE(D_output_on_fakes, REAL_labels)
+        
+        // Update Generator
+        Backpropagate G_loss through G ONLY
+        Update G parameters using optimizer
+    
+    
+    // ============================================
+    // STEP 3: PERIODIC EVALUATION (optional)
+    // ============================================
+    
+    IF epoch in evaluation_epochs:
+        Compute real_accuracy = D correctly classifies real_points
+        Compute fake_accuracy = D correctly classifies fake_points
+        Visualize generated points
+    
+END FOR
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><strong>Training Dynamics</strong></p>
+<p>The GAN learns through adversarial competition:</p>
+<ol class="arabic simple">
+<li><p><strong>Initial phase</strong>: Discriminator easily distinguishes real vs fake</p></li>
+<li><p><strong>Middle phase</strong>: Generator learns to produce points near the parabola</p></li>
+<li><p><strong>Final phase</strong>:</p>
+<ul class="simple">
+<li><p>Discriminator accuracy approaches 50% (cannot distinguish)</p></li>
+<li><p>Generator produces convincing (x, x²) pairs</p></li>
+<li><p>Fake accuracy ≈ Real accuracy ≈ 0.5</p></li>
+</ul>
+</li>
+</ol>
+<p>Enough talk, let’s code it up!</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1134,7 +1302,12 @@ Wall time: 2min 33s
 </div>
 </details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># train a generative adversarial network on a one-dimensional function</span>
 <span class="kn">import</span> <span class="nn">torch</span>
@@ -1390,6 +1563,7 @@ Wall time: 2min 33s
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using device: cuda
 Latent dimension: 5
@@ -1456,8 +1630,10 @@ Final - Real Accuracy: 0.6060, Fake Accuracy: 0.4540
 </div>
 </div>
 </section>
+</section>
+</section>
 <section id="d-gan-generating-bitmojis">
-<h3>2.3. 2D GAN: Generating Bitmojis<a class="headerlink" href="#d-gan-generating-bitmojis" title="Link to this heading">#</a></h3>
+<h3>2.4. 2D GAN: Generating Bitmojis<a class="headerlink" href="#d-gan-generating-bitmojis" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>I’m going to use our favourite bitmoji dataset to try and develop a GAN (this may or may not go well):</p></li>
 </ul>
@@ -2221,9 +2397,17 @@ Initializing weights of a Linear layer!
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-adversarial-networks-gans">2. Generative Adversarial Networks (GANs)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-gans">2.1. What are GANs?</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources:</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-generative-adversarial-network-from-scratch">2.2. 1D Generative Adversarial Network From Scratch</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-gan-generating-bitmojis">2.3. 2D GAN: Generating Bitmojis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-formulation">2.2. Mathematical Formulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-generative-adversarial-network-from-scratch">2.3. 1D Generative Adversarial Network From Scratch</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#gan-algorithm-for-learning-a-parabola-function-y-x-2">GAN Algorithm for Learning a Parabola Function <span class="math notranslate nohighlight">\( y = x^2 \)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#detailed-procedure">Detailed Procedure</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#gan-training-algorithm-key-concepts">GAN Training Algorithm: Key Concepts</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-pseudocode">Algorithm Pseudocode</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-gan-generating-bitmojis">2.4. 2D GAN: Generating Bitmojis</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-input-networks">3. Multi-input Networks</a></li>

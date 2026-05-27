@@ -1,0 +1,1056 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Exercise: Modeling a Harmonic Oscillator with MLP and GAN &#8212; DL</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'hws/Modeling-a-Harmonic-Oscillator-with-MLP-and-GAN';</script>
+    <link rel="icon" href="../_static/fum-logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Exercise: Learning and Inverting Image Filters with CNNs" href="HW-2D-CNN-learn-filters.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/fum-cs-logo.png" class="logo__image only-light" alt="DL - Home"/>
+    <script>document.write(`<img src="../_static/fum-cs-logo.png" class="logo__image only-dark" alt="DL - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Deep Learning
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../lecture1_introduction.html">Introduction to the Course</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_1_regression.html">Regression</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_2_gradient-descent.html">Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_3_stochastic-gradient-descent.html">Stochastic Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture3_neural-networks-basics.html">Introduction to Pytorch &amp; Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture4_neural-networks-for-classification.html">Neural Networks for Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture5_neural-networks-regularization.html">Regularization and Dropout in Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_1d_cnns.html">Introduction to 1D Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_cnns-pt1.html">Introduction to Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture7_cnns-pt2.html">Advanced Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture8_advanced-deep-learning.html">Advanced Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixA_gradients.html">Appendix A: Gradients Review</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../appendixB_logistic-loss.html">Appendix B: Logistic Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixC_computing-derivatives.html">Appendix C: Computing Derivatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixD_tensor-basics.html">Appendix D: Basics of Numpy and Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixE_pytorch-autograd.html">Appendix E: Auto Differentiation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixF_pytorch-optimizers.html">Appendix F: Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixG_bitmoji-CNN.html">Appendix G: Creating a CNN to Predict Bitmojis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixH_transposed_conv.html">Appendix H: Transposed Convolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixI_floating-point.html">Appendix I: Floating Point Numbers</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Home Works</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="HW-2D-CNN-learn-filters.html">Exercise: Learning and Inverting Image Filters with CNNs</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Exercise: Modeling a Harmonic Oscillator with MLP and GAN</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/fum-cs/deep-learning/blob/main/notebooks/hws/Modeling-a-Harmonic-Oscillator-with-MLP-and-GAN.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning/issues/new?title=Issue%20on%20page%20%2Fhws/Modeling-a-Harmonic-Oscillator-with-MLP-and-GAN.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/hws/Modeling-a-Harmonic-Oscillator-with-MLP-and-GAN.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Exercise: Modeling a Harmonic Oscillator with MLP and GAN</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objective">Objective</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-description">Problem Description</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-overview">Task Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task-1-mlp-standard-neural-network">Task 1: MLP (Standard Neural Network)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task-2-gan">Task 2: GAN</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#starter-code-and-data-setup">Starter Code and Data Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-1-imports-and-analytical-solution">Cell 1: Imports and analytical solution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-1-mlp-model">Task 1: MLP Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#starter-mlp-code">Starter MLP Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#your-tasks-mlp">Your Tasks (MLP)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-2-gan-model">Task 2: GAN Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#starter-gan-code">Starter GAN Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation-for-gan">Data preparation for GAN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#your-tasks-gan">Your Tasks (GAN)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deliverables">Deliverables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-criteria">Evaluation Criteria</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="exercise-modeling-a-harmonic-oscillator-with-mlp-and-gan">
+<h1>Exercise: Modeling a Harmonic Oscillator with MLP and GAN<a class="headerlink" href="#exercise-modeling-a-harmonic-oscillator-with-mlp-and-gan" title="Link to this heading">#</a></h1>
+<p><strong>Course:</strong> Deep Learning<br />
+<strong>Submission format:</strong> A single executed Jupyter Notebook (<code class="docutils literal notranslate"><span class="pre">.ipynb</span></code>) with all outputs visible</p>
+<hr class="docutils" />
+<section id="objective">
+<h2>Objective<a class="headerlink" href="#objective" title="Link to this heading">#</a></h2>
+<p>In this exercise, you will explore the capabilities and limitations of two types of neural networks—<strong>MLP (Multilayer Perceptron)</strong> and <strong>GAN (Generative Adversarial Network)</strong>—for learning the <strong>1D damped harmonic oscillator</strong> solution.</p>
+<p>You will train each model on a <strong>subset</strong> of the domain and evaluate it on the <strong>full domain</strong> to observe how well they generalize beyond the training region.</p>
+</section>
+<hr class="docutils" />
+<section id="problem-description">
+<h2>Problem Description<a class="headerlink" href="#problem-description" title="Link to this heading">#</a></h2>
+<p>The <strong>1D damped harmonic oscillator</strong> is governed by:</p>
+<div class="math notranslate nohighlight">
+\[
+m \frac{d^2 x}{d t^2} + \mu \frac{d x}{d t} + kx = 0
+\]</div>
+<p>with initial conditions:</p>
+<div class="math notranslate nohighlight">
+\[
+x(0) = 1, \quad \frac{dx}{dt}(0) = 0
+\]</div>
+<p>We use the <strong>under-damped</strong> case with parameters:</p>
+<ul class="simple">
+<li><p>Damping coefficient: <span class="math notranslate nohighlight">\(\delta = 2\)</span></p></li>
+<li><p>Natural frequency: <span class="math notranslate nohighlight">\(\omega_0 = 20\)</span></p></li>
+</ul>
+<p>The exact analytical solution is:</p>
+<div class="math notranslate nohighlight">
+\[
+x(t) = e^{-\delta t} \left( 2A \cos(\phi + \omega t) \right)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omega = \sqrt{\omega_0^2 - \delta^2}\)</span> and <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(\phi\)</span> are constants determined by initial conditions.</p>
+<p>The domain is <span class="math notranslate nohighlight">\(t \in [0, 1]\)</span>.</p>
+</section>
+<hr class="docutils" />
+<section id="task-overview">
+<h2>Task Overview<a class="headerlink" href="#task-overview" title="Link to this heading">#</a></h2>
+<p>You will complete <strong>two separate training tasks</strong>:</p>
+<section id="task-1-mlp-standard-neural-network">
+<h3>Task 1: MLP (Standard Neural Network)<a class="headerlink" href="#task-1-mlp-standard-neural-network" title="Link to this heading">#</a></h3>
+<p>Train a fully connected network (provided in the starter code) to fit the harmonic oscillator solution using <strong>only the first half</strong> of the time domain as training data. Then evaluate on the <strong>full domain</strong> and analyze results.</p>
+</section>
+<section id="task-2-gan">
+<h3>Task 2: GAN<a class="headerlink" href="#task-2-gan" title="Link to this heading">#</a></h3>
+<p>Train a GAN (generator + discriminator) on the same problem, using the <strong>first half</strong> of the domain for training. Evaluate the generator on the <strong>full domain</strong> and compare performance with the MLP.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="starter-code-and-data-setup">
+<h2>Starter Code and Data Setup<a class="headerlink" href="#starter-code-and-data-setup" title="Link to this heading">#</a></h2>
+<p>Run the following setup cells in your notebook.</p>
+<section id="cell-1-imports-and-analytical-solution">
+<h3>Cell 1: Imports and analytical solution<a class="headerlink" href="#cell-1-imports-and-analytical-solution" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Exercise: Modeling a Harmonic Oscillator with MLP and GAN</span>
+<span class="sd">Course: Deep Learning</span>
+
+<span class="sd">This code demonstrates the limitations of standard neural networks (MLP and GAN)</span>
+<span class="sd">when trained on limited data from the first half of the domain [0, 0.5],</span>
+<span class="sd">and then tested on the full domain [0, 1].</span>
+
+<span class="sd">Both models receive the SAME 50 training points for fair comparison.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># Analytical solution of the harmonic oscillator</span>
+<span class="c1"># ============================================</span>
+
+<span class="k">def</span> <span class="nf">oscillator</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">w0</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exact solution for 1D underdamped harmonic oscillator.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    d (float): Damping coefficient (delta)</span>
+<span class="sd">    w0 (float): Natural frequency (omega_0)</span>
+<span class="sd">    t (torch.Tensor): Time points</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    torch.Tensor: Exact solution x(t)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">w0</span><span class="p">,</span> <span class="s2">&quot;Underdamped condition requires d &lt; w0&quot;</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">w0</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="o">-</span><span class="n">d</span> <span class="o">/</span> <span class="n">w</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">d</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">A</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span> <span class="o">+</span> <span class="n">w</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+
+
+<span class="c1"># ============================================</span>
+<span class="c1"># Problem parameters</span>
+<span class="c1"># ============================================</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="mf">2.0</span>      <span class="c1"># Damping coefficient (delta)</span>
+<span class="n">w0</span> <span class="o">=</span> <span class="mf">20.0</span>    <span class="c1"># Natural frequency (omega_0)</span>
+
+<span class="c1"># Full domain [0, 1] for evaluation (500 points)</span>
+<span class="n">t_full</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">x_full</span> <span class="o">=</span> <span class="n">oscillator</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">w0</span><span class="p">,</span> <span class="n">t_full</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># First half domain [0, 0.5] (approximately 250 points)</span>
+<span class="n">t_half</span> <span class="o">=</span> <span class="n">t_full</span><span class="p">[</span><span class="n">t_full</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="n">x_half</span> <span class="o">=</span> <span class="n">x_full</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">t_half</span><span class="p">)]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HARMONIC OSCILLATOR PROBLEM&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameters: delta = </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">, omega_0 = </span><span class="si">{</span><span class="n">w0</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Full domain: t ∈ [0, 1] (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">t_full</span><span class="p">)</span><span class="si">}</span><span class="s2"> points) - used for TESTING&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training domain: t ∈ [0, 0.5] (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">t_half</span><span class="p">)</span><span class="si">}</span><span class="s2"> points)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test domain: t ∈ (0.5, 1] (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">t_full</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">t_half</span><span class="p">)</span><span class="si">}</span><span class="s2"> points)&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># ============================================</span>
+<span class="c1"># Training data: 50 uniformly spaced points from [0, 0.5]</span>
+<span class="c1"># BOTH MLP and GAN use the SAME training data</span>
+<span class="c1"># ============================================</span>
+
+<span class="n">n_train</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># Number of training points (same for both models)</span>
+
+<span class="c1"># Select 50 uniformly spaced indices from the first half</span>
+<span class="n">indices_train</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_half</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_train</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+
+<span class="c1"># Training data (same for both models)</span>
+<span class="n">t_train</span> <span class="o">=</span> <span class="n">t_half</span><span class="p">[</span><span class="n">indices_train</span><span class="p">]</span>  <span class="c1"># Shape: [50, 1]</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">x_half</span><span class="p">[</span><span class="n">indices_train</span><span class="p">]</span>  <span class="c1"># Shape: [50, 1]</span>
+
+<span class="c1"># Prepare real data for GAN: pairs of (t, x)</span>
+<span class="n">real_data_gan</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">t_train</span><span class="p">,</span> <span class="n">x_train</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Shape: [50, 2]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TRAINING DATA: </span><span class="si">{</span><span class="n">n_train</span><span class="si">}</span><span class="s2"> uniformly spaced points from t ∈ [0, 0.5]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;t range: [</span><span class="si">{</span><span class="n">t_train</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">t_train</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x range: [</span><span class="si">{</span><span class="n">x_train</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">x_train</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Both MLP and GAN will use these </span><span class="si">{</span><span class="n">n_train</span><span class="si">}</span><span class="s2"> points for training.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">First 10 training points (t, x(t)):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_train</span><span class="p">))):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">: t = </span><span class="si">{</span><span class="n">t_train</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">6.4f</span><span class="si">}</span><span class="s2">, x = </span><span class="si">{</span><span class="n">x_train</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">8.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># ============================================</span>
+<span class="c1"># Single plot: Training data distribution</span>
+<span class="c1"># ============================================</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># Plot exact solution over full domain</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_full</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">x_full</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Exact solution&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot training points (only from first half)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">t_train</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">x_train</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> 
+           <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;darkred&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+           <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Training data (</span><span class="si">{</span><span class="n">n_train</span><span class="si">}</span><span class="s1"> points from t ∈ [0, 0.5])&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;t (time)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;x(t) (displacement)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Harmonic Oscillator: </span><span class="si">{</span><span class="n">n_train</span><span class="si">}</span><span class="s1"> Training Points (First Half Only), Full Domain for Testing&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<span class="c1"># ============================================</span>
+<span class="c1"># Save data for later use</span>
+<span class="c1"># ============================================</span>
+
+<span class="c1"># Save tensors for use in MLP and GAN training notebooks</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">({</span>
+    <span class="s1">&#39;t_full&#39;</span><span class="p">:</span> <span class="n">t_full</span><span class="p">,</span>
+    <span class="s1">&#39;x_full&#39;</span><span class="p">:</span> <span class="n">x_full</span><span class="p">,</span>
+    <span class="s1">&#39;t_train&#39;</span><span class="p">:</span> <span class="n">t_train</span><span class="p">,</span>
+    <span class="s1">&#39;x_train&#39;</span><span class="p">:</span> <span class="n">x_train</span><span class="p">,</span>
+    <span class="s1">&#39;real_data_gan&#39;</span><span class="p">:</span> <span class="n">real_data_gan</span><span class="p">,</span>
+    <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span>
+    <span class="s1">&#39;w0&#39;</span><span class="p">:</span> <span class="n">w0</span><span class="p">,</span>
+    <span class="s1">&#39;n_train&#39;</span><span class="p">:</span> <span class="n">n_train</span>
+<span class="p">},</span> <span class="s1">&#39;harmonic_oscillator_data.pt&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DATA PREPARATION COMPLETE&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data saved to &#39;harmonic_oscillator_data.pt&#39;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Next steps:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1. Train MLP on these 50 points and evaluate on full domain&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2. Train GAN on these 50 points and evaluate on full domain&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3. Compare results and discuss limitations&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SAVED DATA STRUCTURE&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The saved file &#39;harmonic_oscillator_data.pt&#39; contains:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  - t_full: Full domain time points [500, 1] (for testing)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  - x_full: Exact solution at full domain [500, 1] (for testing)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  - t_train: Training time points [50, 1]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  - x_train: Training solution values [50, 1]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  - real_data_gan: Combined (t, x) for GAN [50, 2]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  - d, w0: Physical parameters&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  - n_train: Number of training points (50)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>======================================================================
+HARMONIC OSCILLATOR PROBLEM
+======================================================================
+Parameters: delta = 2.0, omega_0 = 20.0
+Full domain: t ∈ [0, 1] (500 points) - used for TESTING
+Training domain: t ∈ [0, 0.5] (250 points)
+Test domain: t ∈ (0.5, 1] (250 points)
+
+----------------------------------------------------------------------
+TRAINING DATA: 50 uniformly spaced points from t ∈ [0, 0.5]
+----------------------------------------------------------------------
+t range: [0.000, 0.499]
+x range: [-0.726, 1.000]
+Both MLP and GAN will use these 50 points for training.
+
+First 10 training points (t, x(t)):
+   1: t = 0.0000, x = 1.000000
+   2: t = 0.0100, x = 0.980251
+   3: t = 0.0200, x = 0.922819
+   4: t = 0.0301, x = 0.831436
+   5: t = 0.0401, x = 0.711022
+   6: t = 0.0501, x = 0.567443
+   7: t = 0.0601, x = 0.407240
+   8: t = 0.0701, x = 0.237354
+   9: t = 0.0802, x = 0.064829
+  10: t = 0.0902, x = -0.103460
+</pre></div>
+</div>
+<img alt="../_images/3e4a9cc2e63c64c2b09df92caa40dcff6c665670b87db40339846316bba7a869.png" src="../_images/3e4a9cc2e63c64c2b09df92caa40dcff6c665670b87db40339846316bba7a869.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>======================================================================
+DATA PREPARATION COMPLETE
+======================================================================
+Data saved to &#39;harmonic_oscillator_data.pt&#39;
+
+Next steps:
+1. Train MLP on these 50 points and evaluate on full domain
+2. Train GAN on these 50 points and evaluate on full domain
+3. Compare results and discuss limitations
+======================================================================
+
+======================================================================
+SAVED DATA STRUCTURE
+======================================================================
+The saved file &#39;harmonic_oscillator_data.pt&#39; contains:
+  - t_full: Full domain time points [500, 1] (for testing)
+  - x_full: Exact solution at full domain [500, 1] (for testing)
+  - t_train: Training time points [50, 1]
+  - x_train: Training solution values [50, 1]
+  - real_data_gan: Combined (t, x) for GAN [50, 2]
+  - d, w0: Physical parameters
+  - n_train: Number of training points (50)
+======================================================================
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="task-1-mlp-model">
+<h2>Task 1: MLP Model<a class="headerlink" href="#task-1-mlp-model" title="Link to this heading">#</a></h2>
+<p>You are given an MLP implementation. Train it <strong>only on t_train</strong> and then evaluate on the full domain.</p>
+<section id="starter-mlp-code">
+<h3>Starter MLP Code<a class="headerlink" href="#starter-mlp-code" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MLP</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple fully connected network&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_input</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_output</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_hidden</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_input</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_layers</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">n_output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_layer</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layers</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="your-tasks-mlp">
+<h3>Your Tasks (MLP)<a class="headerlink" href="#your-tasks-mlp" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Create an MLP with 3 hidden layers, 32 neurons each, Tanh activation.</p></li>
+<li><p>Train it using <strong>Adam optimizer</strong> (learning rate = 1e-3) and <strong>MSE loss</strong> for <strong>2000 epochs</strong>.</p></li>
+<li><p>Plot <strong>training loss vs epoch</strong>.</p></li>
+<li><p>Plot the <strong>MLP prediction on full domain</strong> together with the exact solution and training points.</p></li>
+<li><p><strong>Quantify error</strong>: Compute and print MSE on training region and on the unseen test region (t &gt; 0.5).</p></li>
+<li><p><strong>Discuss</strong>: Does the MLP generalize well beyond the training region? Why or why not?</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="task-2-gan-model">
+<h2>Task 2: GAN Model<a class="headerlink" href="#task-2-gan-model" title="Link to this heading">#</a></h2>
+<p>Now implement a GAN to learn the same distribution <span class="math notranslate nohighlight">\((t, x(t))\)</span>. The generator should produce points <span class="math notranslate nohighlight">\((t_{\text{fake}}, x_{\text{fake}})\)</span> that resemble the true oscillator curve.</p>
+<section id="starter-gan-code">
+<h3>Starter GAN Code<a class="headerlink" href="#starter-gan-code" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Generator</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latent_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">)</span>
+        <span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Discriminator</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+        <span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="data-preparation-for-gan">
+<h3>Data preparation for GAN<a class="headerlink" href="#data-preparation-for-gan" title="Link to this heading">#</a></h3>
+<p>For GAN, training data should be pairs <code class="docutils literal notranslate"><span class="pre">(t,</span> <span class="pre">x(t))</span></code> from the <strong>first half</strong> of the domain.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Real training data for GAN: (t, x) pairs from first half</span>
+<span class="n">real_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">t_train</span><span class="p">,</span> <span class="n">x_train</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># shape [N, 2]</span>
+</pre></div>
+</div>
+</section>
+<section id="your-tasks-gan">
+<h3>Your Tasks (GAN)<a class="headerlink" href="#your-tasks-gan" title="Link to this heading">#</a></h3>
+<ol class="arabic">
+<li><p>Implement a GAN with:</p>
+<ul class="simple">
+<li><p>Latent dimension = 10</p></li>
+<li><p>Generator output dimension = 2 (t and x)</p></li>
+<li><p>Discriminator input dimension = 2</p></li>
+<li><p>Adam optimizers (lr=0.0002, betas=(0.5, 0.999))</p></li>
+</ul>
+</li>
+<li><p>Train for <strong>15,000 epochs</strong> (or until reasonable convergence), batch size = 32.</p></li>
+<li><p>Every 1000 epochs, record generator and discriminator losses.</p></li>
+<li><p><strong>Important constraint</strong>: The generator must be forced to produce points with <code class="docutils literal notranslate"><span class="pre">t</span></code> in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>. You can apply a <code class="docutils literal notranslate"><span class="pre">torch.sigmoid</span></code> to the first output component of the generator to keep t in [0,1].</p>
+<p><em>Hint:</em> Modify the generator’s forward to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="n">t_out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">raw</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># constrain to [0,1]</span>
+<span class="n">x_out</span> <span class="o">=</span> <span class="n">raw</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>                 <span class="c1"># no constraint on x</span>
+<span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">t_out</span><span class="p">,</span> <span class="n">x_out</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<ol class="arabic simple" start="5">
+<li><p>At the end of training, generate <strong>500 fake samples</strong> and plot them:</p>
+<ul class="simple">
+<li><p>Scatter plot of fake points <code class="docutils literal notranslate"><span class="pre">(t_fake,</span> <span class="pre">x_fake)</span></code></p></li>
+<li><p>Overlay exact solution curve</p></li>
+<li><p>Overlay real training points</p></li>
+</ul>
+</li>
+<li><p><strong>Quantitative evaluation</strong>:</p>
+<ul class="simple">
+<li><p>Compute MSE between fake samples and exact solution at the same t values (interpolate or use nearest neighbor).</p></li>
+<li><p>Report MSE on training region (t ≤ 0.5) and test region (t &gt; 0.5).</p></li>
+</ul>
+</li>
+<li><p><strong>Discuss</strong>: How well does the GAN extrapolate beyond the training region compared to the MLP?</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="deliverables">
+<h2>Deliverables<a class="headerlink" href="#deliverables" title="Link to this heading">#</a></h2>
+<p>Your Jupyter Notebook should contain:</p>
+<ol class="arabic simple">
+<li><p><strong>All code cells</strong> (run and with visible outputs)</p></li>
+<li><p><strong>Plots</strong> for:</p>
+<ul class="simple">
+<li><p>MLP loss curve</p></li>
+<li><p>MLP prediction vs exact solution</p></li>
+<li><p>GAN loss curves (generator and discriminator)</p></li>
+<li><p>GAN-generated samples vs exact solution</p></li>
+</ul>
+</li>
+<li><p><strong>Printed error metrics</strong> (MSE on train/test regions for both models)</p></li>
+<li><p><strong>Discussion / short answers</strong> for:</p>
+<ul class="simple">
+<li><p>Why does the MLP fail (or succeed) outside the training region?</p></li>
+<li><p>Why does the GAN behave differently? Does it “imagine” plausible solutions?</p></li>
+<li><p>Which model gives better extrapolation? Why?</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="evaluation-criteria">
+<h2>Evaluation Criteria<a class="headerlink" href="#evaluation-criteria" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Criteria</p></th>
+<th class="head"><p>Weight</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Correct implementation of MLP training</p></td>
+<td><p>20%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Correct implementation of GAN training</p></td>
+<td><p>30%</p></td>
+</tr>
+<tr class="row-even"><td><p>Quality of plots and visualizations</p></td>
+<td><p>20%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Quantitative error reporting</p></td>
+<td><p>10%</p></td>
+</tr>
+<tr class="row-even"><td><p>Discussion and analysis</p></td>
+<td><p>20%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils" />
+<p>Good luck, and enjoy exploring the limits of standard neural networks!</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./hws"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="HW-2D-CNN-learn-filters.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Exercise: Learning and Inverting Image Filters with CNNs</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objective">Objective</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-description">Problem Description</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-overview">Task Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task-1-mlp-standard-neural-network">Task 1: MLP (Standard Neural Network)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task-2-gan">Task 2: GAN</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#starter-code-and-data-setup">Starter Code and Data Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-1-imports-and-analytical-solution">Cell 1: Imports and analytical solution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-1-mlp-model">Task 1: MLP Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#starter-mlp-code">Starter MLP Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#your-tasks-mlp">Your Tasks (MLP)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-2-gan-model">Task 2: GAN Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#starter-gan-code">Starter GAN Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation-for-gan">Data preparation for GAN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#your-tasks-gan">Your Tasks (GAN)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deliverables">Deliverables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-criteria">Evaluation Criteria</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Mahmood Amintoosi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. CC0 Licensed - Computer Science Dept., Ferdowsi University of Mashhad.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

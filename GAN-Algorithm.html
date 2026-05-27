@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Deep Learning &#8212; DL</title>
+    <title>&lt;no title&gt; &#8212; DL</title>
   
   
   
@@ -57,13 +57,10 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'GAN-Algorithm';</script>
     <link rel="icon" href="_static/fum-logo.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Introduction to the Course" href="lecture1_introduction.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -146,7 +143,7 @@
     
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="index.html">
   
   
   
@@ -177,8 +174,8 @@
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
                     Deep Learning
                 </a>
             </li>
@@ -284,7 +281,7 @@
       
       
       
-      <li><a href="https://github.com/fum-cs/deep-learning/issues/new?title=Issue%20on%20page%20%2Findex.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/fum-cs/deep-learning/issues/new?title=Issue%20on%20page%20%2FGAN-Algorithm.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -314,7 +311,7 @@
       
       
       
-      <li><a href="_sources/index.md" target="_blank"
+      <li><a href="_sources/GAN-Algorithm.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -398,7 +395,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Deep Learning</h1>
+    <h1><no title></h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -407,17 +404,7 @@ document.write(`
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Deep Learning</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#course-staff">Course Staff</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructors">Instructors</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teaching-assistants">Teaching Assistants</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questions">Questions?</a></li>
-</ul>
-</li>
+                <ul class="simple visible nav section-nav flex-column">
 </ul>
 
             </nav>
@@ -430,51 +417,71 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="deep-learning">
-<h1>Deep Learning<a class="headerlink" href="#deep-learning" title="Link to this heading">#</a></h1>
-<p><strong>Mahmood Amintoosi, Spring 2026</strong></p>
-<p>Computer Science Dept, Ferdowsi University of Mashhad</p>
-<p>In this exciting journey, we’ll delve into the fascinating world of <strong>Neural Networks</strong> and <strong>Deep Learning</strong> with Python and Pytorch, where machines learn, adapt, and make decisions based on data. Topics that are covered are optmization, neural networks basics, perceptron model, mulit-layer perceptrons, convolutional neural networks, and advanced topics such as autoencoders and generative adversarial networks.</p>
-<section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+  <ol class="arabic">
+<li><p>INITIALIZATION</p>
 <ul class="simple">
-<li><p><strong>Programming Skills</strong>: Familiarity with Python programming. A great starting point is <a class="reference external" href="https://allendowney.github.io/ThinkPython/">Think Python</a>, which offers a deep dive into the language’s essentials.</p></li>
-<li><p><strong>Mathematics</strong>: Basic understanding of calculus and statistics at the undergraduate level.</p></li>
+<li><p>Set device (CPU/GPU)</p></li>
+<li><p>Define latent dimension z_dim = 5</p></li>
+<li><p>Define batch size = 32</p></li>
+<li><p>Initialize Generator G (z_dim → 2D output)</p></li>
+<li><p>Initialize Discriminator D (2D input → 1D output [0,1])</p></li>
+<li><p>Initialize optimizers (Adam, lr=0.0002, betas=(0.5, 0.999))</p></li>
+<li><p>Define loss function (Binary Cross Entropy)</p></li>
 </ul>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="course-staff">
-<h1>Course Staff<a class="headerlink" href="#course-staff" title="Link to this heading">#</a></h1>
-<section id="instructors">
-<h2>Instructors<a class="headerlink" href="#instructors" title="Link to this heading">#</a></h2>
-<p><a class="reference external" href="https://mamintoosi.github.io/">Mahmood Amintoosi</a>, Email: m.amintoosi AT <a class="reference external" href="http://um.ac.ir">um.ac.ir</a></p>
-</section>
-<hr class="docutils" />
-<section id="teaching-assistants">
-<h2>Teaching Assistants<a class="headerlink" href="#teaching-assistants" title="Link to this heading">#</a></h2>
-<p><a class="reference external" href="https://github.com/Taraneh-trk">Tarane Kordi</a>, TA Head</p>
-</section>
-<section id="questions">
-<h2>Questions?<a class="headerlink" href="#questions" title="Link to this heading">#</a></h2>
-<p>I will be having office hours for this course on Saturday (10:00 AM–11:30 AM). If this is not convenient, email me at m dot amintoosi AT <a class="reference external" href="http://um.ac.ir">um.ac.ir</a>, talk to me after class or <a class="reference external" href="https://calendly.com/m-amintoosi/30min">schedule an appointment via Calendly</a>. Also you can find me at <a class="reference external" href="https://web.bale.ai/chat">Bale</a>, <a class="reference external" href="https://web.rubika.ir/">Rubika</a>, <a class="reference external" href="https://web.eitaa.com/">Eitaa</a> and <a class="reference external" href="https://vu.um.ac.ir/">FUM-VU</a>.</p>
-<!-- ## Our Slack workspace
-
-Come and [join our Slack](https://join.slack.com/t/fum-cs/shared_invite/zt-1zntzuw2t-JOWbsyQdGASNz~40AhWy_Q) group of Computer Science Dept, Ferdowsi University of Mashhad, to engage in course discussions. -->
-<hr class="docutils" />
-<p>I should mention that the original material was from <a class="reference external" href="https://ubc-mds.github.io/DSCI_572_sup-learn-2">Tomas Beuzen’s course</a>. I have forked his repository and modified it to suit my own needs and preferences. I would like to thank him for his great work and generosity.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>These lectures were built using the new Sphinx-based <a class="reference external" href="https://jupyterbook.org/">Jupyter Book
-2.0</a> tool set, as part of the
-<a class="reference external" href="https://ebp.jupyterbook.org/en/latest/">ExecutableBookProject</a>.  They are
-intended mainly as a demonstration of these tools.
-Instructions for how to build them from source can be found in the Jupyter
-Book documentation.</p>
-</div>
-</section>
-<div class="toctree-wrapper compound">
-</div>
-</section>
+</li>
+<li><p>FOR each training epoch (1 to 15000):</p>
+<p>// Step 1: Train Discriminator</p>
+<ul class="simple">
+<li><p>Generate real samples:</p>
+<ul>
+<li><p>Sample n = batch/2 = 16 random x values from [-0.5, 0.5]</p></li>
+<li><p>Compute y = x²</p></li>
+<li><p>Create real labels = 1</p></li>
+</ul>
+</li>
+<li><p>Generate fake samples:</p>
+<ul>
+<li><p>Sample z from standard normal distribution (batch/2 samples)</p></li>
+<li><p>Generate X_fake = G(z)</p></li>
+<li><p>Create fake labels = 0</p></li>
+</ul>
+</li>
+<li><p>Update Discriminator:</p>
+<ul>
+<li><p>D_loss_real = BCE(D(X_real), real_labels)</p></li>
+<li><p>D_loss_fake = BCE(D(X_fake), fake_labels)</p></li>
+<li><p>D_loss = D_loss_real + D_loss_fake</p></li>
+<li><p>Backpropagate and update D</p></li>
+</ul>
+</li>
+</ul>
+<p>// Step 2: Train Generator</p>
+<ul class="simple">
+<li><p>Sample z from standard normal distribution (batch size samples)</p></li>
+<li><p>Create target labels = 1 (fool discriminator into thinking fake is real)</p></li>
+<li><p>Generate X_fake = G(z)</p></li>
+<li><p>G_loss = BCE(D(X_fake), target_labels)</p></li>
+<li><p>Backpropagate and update G</p></li>
+</ul>
+<p>// Step 3: Periodic Evaluation</p>
+<ul class="simple">
+<li><p>At specified epochs [0,1000,2000,…,15000]:</p>
+<ul>
+<li><p>Compute real accuracy: D correctly classifies real points as real</p></li>
+<li><p>Compute fake accuracy: D correctly classifies fake points as fake</p></li>
+<li><p>Store generated samples for visualization</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>OUTPUT:</p>
+<ul class="simple">
+<li><p>Trained Generator that produces points approximating y = x²</p></li>
+<li><p>Training history (losses, accuracies)</p></li>
+<li><p>Visualization of generated samples at different training stages</p></li>
+</ul>
+</li>
+</ol>
 
     <script type="text/x-thebe-config">
     {
@@ -506,15 +513,6 @@ Book documentation.</p>
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="right-next"
-       href="lecture1_introduction.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Introduction to the Course</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -530,17 +528,7 @@ Book documentation.</p>
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Deep Learning</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#course-staff">Course Staff</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructors">Instructors</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teaching-assistants">Teaching Assistants</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questions">Questions?</a></li>
-</ul>
-</li>
+    <ul class="simple visible nav section-nav flex-column">
 </ul>
 
   </nav></div>
