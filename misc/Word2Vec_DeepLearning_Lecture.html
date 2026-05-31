@@ -1,0 +1,1055 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Word2Vec: Learning Distributed Word Representations &#8212; DL</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'misc/Word2Vec_DeepLearning_Lecture';</script>
+    <link rel="icon" href="../_static/fum-logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/fum-cs-logo.png" class="logo__image only-light" alt="DL - Home"/>
+    <script>document.write(`<img src="../_static/fum-cs-logo.png" class="logo__image only-dark" alt="DL - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Deep Learning
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../lecture1_introduction.html">Introduction to the Course</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_1_regression.html">Regression</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_2_gradient-descent.html">Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_3_stochastic-gradient-descent.html">Stochastic Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture3_neural-networks-basics.html">Introduction to Pytorch &amp; Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture4_neural-networks-for-classification.html">Neural Networks for Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture5_neural-networks-regularization.html">Regularization and Dropout in Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_1d_cnns.html">Introduction to 1D Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_cnns-pt1.html">Introduction to Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture7_cnns-pt2.html">Advanced Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture8_advanced-deep-learning.html">Advanced Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixA_gradients.html">Appendix A: Gradients Review</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../appendixB_logistic-loss.html">Appendix B: Logistic Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixC_computing-derivatives.html">Appendix C: Computing Derivatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixD_tensor-basics.html">Appendix D: Basics of Numpy and Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixE_pytorch-autograd.html">Appendix E: Auto Differentiation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixF_pytorch-optimizers.html">Appendix F: Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixG_bitmoji-CNN.html">Appendix G: Creating a CNN to Predict Bitmojis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixH_transposed_conv.html">Appendix H: Transposed Convolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixI_floating-point.html">Appendix I: Floating Point Numbers</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hws/index.html">Home Works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hws/HW-2D-CNN-learn-filters.html">Exercise: Learning and Inverting Image Filters with CNNs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hws/Modeling-a-Harmonic-Oscillator-with-MLP-and-GAN.html">Exercise: Modeling a Harmonic Oscillator with MLP and GAN</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/fum-cs/deep-learning/blob/main/notebooks/misc/Word2Vec_DeepLearning_Lecture.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning/issues/new?title=Issue%20on%20page%20%2Fmisc/Word2Vec_DeepLearning_Lecture.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/misc/Word2Vec_DeepLearning_Lecture.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Word2Vec: Learning Distributed Word Representations</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Word2Vec: Learning Distributed Word Representations</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#why-do-we-need-word-embeddings">1. Why Do We Need Word Embeddings?</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#distributional-hypothesis">2. Distributional Hypothesis</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#word2vec-as-an-encoderdecoder-model">3. Word2Vec as an Encoder–Decoder Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoencoder">Autoencoder</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#word2vec">Word2Vec</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skip-gram">Skip-Gram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cbow">CBOW</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#skip-gram-and-cbow">4. Skip-Gram and CBOW</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">CBOW</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#preparing-training-samples">5. Preparing Training Samples</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-anne-of-green-gables">6. Working with <em>Anne of Green Gables</em></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#training-word2vec-with-gensim">7. Training Word2Vec with Gensim</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-the-learned-embeddings">8. Exploring the Learned Embeddings</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-embeddings">9. Visualizing Embeddings</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#using-spacy-word-vectors">10. Using spaCy Word Vectors</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">11. Key Takeaways</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="word2vec-learning-distributed-word-representations">
+<h1>Word2Vec: Learning Distributed Word Representations<a class="headerlink" href="#word2vec-learning-distributed-word-representations" title="Link to this heading">#</a></h1>
+<p><strong>Deep Learning – <a class="reference external" href="http://B.Sc">B.Sc</a>. Computer Science</strong></p>
+<p>This notebook introduces Word2Vec from a modern deep-learning perspective. The emphasis is on:</p>
+<ul class="simple">
+<li><p>Understanding <strong>distributed representations</strong></p></li>
+<li><p>Understanding how <strong>training samples are constructed</strong></p></li>
+<li><p>Relating Word2Vec to the <strong>Encoder–Decoder</strong> idea discussed in the Autoencoders lecture</p></li>
+<li><p>Training and using Word2Vec with <strong>Gensim</strong></p></li>
+<li><p>Exploring pre-trained embeddings with <strong>spaCy</strong></p></li>
+</ul>
+<p>We intentionally avoid implementing Word2Vec from scratch. In practice, students should understand the data flow, architecture, and learned representations rather than low-level implementation details.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="why-do-we-need-word-embeddings">
+<h1>1. Why Do We Need Word Embeddings?<a class="headerlink" href="#why-do-we-need-word-embeddings" title="Link to this heading">#</a></h1>
+<p>Traditional one-hot vectors suffer from three major problems:</p>
+<ol class="arabic simple">
+<li><p>Very high dimensionality</p></li>
+<li><p>Sparse representations</p></li>
+<li><p>No notion of semantic similarity</p></li>
+</ol>
+<p>For example, using one-hot encoding:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cat</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dog</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">computer</span></code></p></li>
+</ul>
+<p>are all equally distant from each other.</p>
+<p>Word embeddings solve this problem by learning dense vectors in which semantically related words tend to appear close together.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="distributional-hypothesis">
+<h1>2. Distributional Hypothesis<a class="headerlink" href="#distributional-hypothesis" title="Link to this heading">#</a></h1>
+<p>The central idea behind Word2Vec is:</p>
+<blockquote>
+<div><p>You shall know a word by the company it keeps.</p>
+</div></blockquote>
+<p>Words appearing in similar contexts tend to have similar meanings.</p>
+<p>Examples:</p>
+<ul class="simple">
+<li><p>“The <strong>cat</strong> chased the mouse.”</p></li>
+<li><p>“The <strong>dog</strong> chased the ball.”</p></li>
+</ul>
+<p>Since <strong>cat</strong> and <strong>dog</strong> occur in similar contexts, their vectors should become similar during training.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="word2vec-as-an-encoderdecoder-model">
+<h1>3. Word2Vec as an Encoder–Decoder Model<a class="headerlink" href="#word2vec-as-an-encoderdecoder-model" title="Link to this heading">#</a></h1>
+<p>Recall the encoder–decoder idea from the Autoencoders lecture.</p>
+<section id="autoencoder">
+<h2>Autoencoder<a class="headerlink" href="#autoencoder" title="Link to this heading">#</a></h2>
+<p>Input → Encoder → Latent Representation → Decoder → Reconstructed Input</p>
+<p>The hidden representation is the important part because it compresses useful information.</p>
+</section>
+<section id="word2vec">
+<h2>Word2Vec<a class="headerlink" href="#word2vec" title="Link to this heading">#</a></h2>
+<p>Word2Vec follows a very similar philosophy:</p>
+<section id="skip-gram">
+<h3>Skip-Gram<a class="headerlink" href="#skip-gram" title="Link to this heading">#</a></h3>
+<p>Center Word → Encoder (Embedding Layer) → Decoder → Context Words</p>
+</section>
+<section id="cbow">
+<h3>CBOW<a class="headerlink" href="#cbow" title="Link to this heading">#</a></h3>
+<p>Context Words → Encoder (Embedding Layer) → Decoder → Center Word</p>
+<p>The embedding layer acts as a <strong>latent representation space</strong>.</p>
+<p>Just as an autoencoder learns useful compressed features for images, Word2Vec learns useful compressed features for words.</p>
+<p>After training, we discard the decoder and keep only the learned embeddings.</p>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="skip-gram-and-cbow">
+<h1>4. Skip-Gram and CBOW<a class="headerlink" href="#skip-gram-and-cbow" title="Link to this heading">#</a></h1>
+<section id="id1">
+<h2>Skip-Gram<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Given a center word, predict nearby words.</p>
+<p>Sentence:</p>
+<blockquote>
+<div><p>Anne was very happy today</p>
+</div></blockquote>
+<p>Using a window size of 2:</p>
+<p>Center word:</p>
+<p><code class="docutils literal notranslate"><span class="pre">very</span></code></p>
+<p>Context words:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Anne</span></code>, <code class="docutils literal notranslate"><span class="pre">was</span></code>, <code class="docutils literal notranslate"><span class="pre">happy</span></code>, <code class="docutils literal notranslate"><span class="pre">today</span></code></p>
+<p>Training pairs:</p>
+<ul class="simple">
+<li><p>(very → Anne)</p></li>
+<li><p>(very → was)</p></li>
+<li><p>(very → happy)</p></li>
+<li><p>(very → today)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="id2">
+<h2>CBOW<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>Reverse the task.</p>
+<p>Input:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Anne</span></code>, <code class="docutils literal notranslate"><span class="pre">was</span></code>, <code class="docutils literal notranslate"><span class="pre">happy</span></code>, <code class="docutils literal notranslate"><span class="pre">today</span></code></p>
+<p>Target:</p>
+<p><code class="docutils literal notranslate"><span class="pre">very</span></code></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sentence</span> <span class="o">=</span> <span class="s2">&quot;Anne was very happy today&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+<span class="n">window_size</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">center</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">window_size</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="p">),</span> <span class="n">i</span><span class="o">+</span><span class="n">window_size</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sentence</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Center: </span><span class="si">{</span><span class="n">center</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2"> --&gt; Context: </span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Center:  Anne --&gt; Context: [&#39;was&#39;, &#39;very&#39;]
+Center:   was --&gt; Context: [&#39;Anne&#39;, &#39;very&#39;, &#39;happy&#39;]
+Center:  very --&gt; Context: [&#39;Anne&#39;, &#39;was&#39;, &#39;happy&#39;, &#39;today&#39;]
+Center: happy --&gt; Context: [&#39;was&#39;, &#39;very&#39;, &#39;today&#39;]
+Center: today --&gt; Context: [&#39;very&#39;, &#39;happy&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="preparing-training-samples">
+<h1>5. Preparing Training Samples<a class="headerlink" href="#preparing-training-samples" title="Link to this heading">#</a></h1>
+<p>The most important practical step in Word2Vec is creating training examples.</p>
+<p>Suppose we have:</p>
+<blockquote>
+<div><p>Anne was sitting by the window reading a book</p>
+</div></blockquote>
+<p>With a window size of 2:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Center Word</p></th>
+<th class="head"><p>Context Word</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sitting</p></td>
+<td><p>was</p></td>
+</tr>
+<tr class="row-odd"><td><p>sitting</p></td>
+<td><p>by</p></td>
+</tr>
+<tr class="row-even"><td><p>sitting</p></td>
+<td><p>Anne</p></td>
+</tr>
+<tr class="row-odd"><td><p>sitting</p></td>
+<td><p>the</p></td>
+</tr>
+<tr class="row-even"><td><p>window</p></td>
+<td><p>by</p></td>
+</tr>
+<tr class="row-odd"><td><p>window</p></td>
+<td><p>the</p></td>
+</tr>
+<tr class="row-even"><td><p>window</p></td>
+<td><p>reading</p></td>
+</tr>
+<tr class="row-odd"><td><p>window</p></td>
+<td><p>a</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>These center-context pairs become the supervised training data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_skipgram_pairs</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">center</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">window</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">),</span> <span class="n">i</span><span class="o">+</span><span class="n">window</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">center</span><span class="p">,</span> <span class="n">tokens</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">pairs</span>
+
+
+<span class="n">tokens</span> <span class="o">=</span> <span class="s2">&quot;Anne was sitting by the window reading a book&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+<span class="n">pairs</span> <span class="o">=</span> <span class="n">generate_skipgram_pairs</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">pairs</span><span class="p">[:</span><span class="mi">20</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;Anne&#39;, &#39;was&#39;),
+ (&#39;Anne&#39;, &#39;sitting&#39;),
+ (&#39;was&#39;, &#39;Anne&#39;),
+ (&#39;was&#39;, &#39;sitting&#39;),
+ (&#39;was&#39;, &#39;by&#39;),
+ (&#39;sitting&#39;, &#39;Anne&#39;),
+ (&#39;sitting&#39;, &#39;was&#39;),
+ (&#39;sitting&#39;, &#39;by&#39;),
+ (&#39;sitting&#39;, &#39;the&#39;),
+ (&#39;by&#39;, &#39;was&#39;),
+ (&#39;by&#39;, &#39;sitting&#39;),
+ (&#39;by&#39;, &#39;the&#39;),
+ (&#39;by&#39;, &#39;window&#39;),
+ (&#39;the&#39;, &#39;sitting&#39;),
+ (&#39;the&#39;, &#39;by&#39;),
+ (&#39;the&#39;, &#39;window&#39;),
+ (&#39;the&#39;, &#39;reading&#39;),
+ (&#39;window&#39;, &#39;by&#39;),
+ (&#39;window&#39;, &#39;the&#39;),
+ (&#39;window&#39;, &#39;reading&#39;)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="working-with-anne-of-green-gables">
+<h1>6. Working with <em>Anne of Green Gables</em><a class="headerlink" href="#working-with-anne-of-green-gables" title="Link to this heading">#</a></h1>
+<p>The course dataset is expected at:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>data/Anne_of_Green_Gables.txt
+</pre></div>
+</div>
+<p>The following code loads and preprocesses the corpus.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;data/Anne_of_Green_Gables.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^a-z\s]&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+<span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of tokens:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tokens</span><span class="p">[:</span><span class="mi">50</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of tokens: 107178
+[&#39;title&#39;, &#39;anne&#39;, &#39;of&#39;, &#39;green&#39;, &#39;gables&#39;, &#39;author&#39;, &#39;lucy&#39;, &#39;maud&#39;, &#39;montgomery&#39;, &#39;release&#39;, &#39;date&#39;, &#39;ebook&#39;, &#39;last&#39;, &#39;updated&#39;, &#39;october&#39;, &#39;language&#39;, &#39;english&#39;, &#39;anne&#39;, &#39;of&#39;, &#39;green&#39;, &#39;gables&#39;, &#39;by&#39;, &#39;lucy&#39;, &#39;maud&#39;, &#39;montgomery&#39;, &#39;table&#39;, &#39;of&#39;, &#39;contents&#39;, &#39;chapter&#39;, &#39;i&#39;, &#39;mrs&#39;, &#39;rachel&#39;, &#39;lynde&#39;, &#39;is&#39;, &#39;surprised&#39;, &#39;chapter&#39;, &#39;ii&#39;, &#39;matthew&#39;, &#39;cuthbert&#39;, &#39;is&#39;, &#39;surprised&#39;, &#39;chapter&#39;, &#39;iii&#39;, &#39;marilla&#39;, &#39;cuthbert&#39;, &#39;is&#39;, &#39;surprised&#39;, &#39;chapter&#39;, &#39;iv&#39;, &#39;morning&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="training-word2vec-with-gensim">
+<h1>7. Training Word2Vec with Gensim<a class="headerlink" href="#training-word2vec-with-gensim" title="Link to this heading">#</a></h1>
+<p>We use the industrial-strength implementation provided by Gensim.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">Word2Vec</span>
+
+<span class="n">sentences</span> <span class="o">=</span> <span class="p">[</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">50</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">),</span> <span class="mi">50</span><span class="p">)]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="p">(</span>
+    <span class="n">sentences</span><span class="p">,</span>
+    <span class="n">vector_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">min_count</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">sg</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+    <span class="n">sentences</span><span class="p">,</span>
+    <span class="n">total_examples</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">),</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\site-packages\google\api_core\_python_version_support.py:263: FutureWarning: You are using a Python version (3.10.16) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(671857, 1071780)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="exploring-the-learned-embeddings">
+<h1>8. Exploring the Learned Embeddings<a class="headerlink" href="#exploring-the-learned-embeddings" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="s2">&quot;anne&quot;</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;shortly&#39;, 0.6128869652748108),
+ (&#39;whatever&#39;, 0.6066677570343018),
+ (&#39;exclaimed&#39;, 0.5910108089447021),
+ (&#39;vexed&#39;, 0.5849132537841797),
+ (&#39;wistfully&#39;, 0.5798739194869995),
+ (&#39;seriously&#39;, 0.5781537294387817),
+ (&#39;solemnly&#39;, 0.5772078037261963),
+ (&#39;gravely&#39;, 0.5765380263328552),
+ (&#39;bitterly&#39;, 0.5700002908706665),
+ (&#39;indignantly&#39;, 0.568381130695343)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="s2">&quot;anne&quot;</span><span class="p">,</span> <span class="s2">&quot;marilla&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.55376774
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span>
+    <span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;woman&quot;</span><span class="p">,</span> <span class="s2">&quot;king&quot;</span><span class="p">],</span>
+    <span class="n">negative</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;man&quot;</span><span class="p">],</span>
+    <span class="n">topn</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyError</span><span class="g g-Whitespace">                                  </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;woman&quot;</span><span class="p">,</span> <span class="s2">&quot;king&quot;</span><span class="p">],</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">negative</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;man&quot;</span><span class="p">],</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">topn</span><span class="o">=</span><span class="mi">10</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="p">)</span>
+
+<span class="nn">File c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\site-packages\gensim\models\keyedvectors.py:841,</span> in <span class="ni">KeyedVectors.most_similar</span><span class="nt">(self, positive, negative, topn, clip_start, clip_end, restrict_vocab, indexer)</span>
+<span class="g g-Whitespace">    </span><span class="mi">838</span>         <span class="n">weight</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">840</span> <span class="c1"># compute the weighted average of all keys</span>
+<span class="ne">--&gt; </span><span class="mi">841</span> <span class="n">mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_vector</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">pre_normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">post_normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_missing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">842</span> <span class="n">all_keys</span> <span class="o">=</span> <span class="p">[</span>
+<span class="nn">    843     self.get_index(key) for key</span> in <span class="ni">keys if isinstance(key, _KEY_TYPES) and self.has_index_for</span><span class="nt">(key)</span>
+<span class="g g-Whitespace">    </span><span class="mi">844</span> <span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">846</span> <span class="k">if</span> <span class="n">indexer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">topn</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+
+<span class="nn">File c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\site-packages\gensim\models\keyedvectors.py:518,</span> in <span class="ni">KeyedVectors.get_mean_vector</span><span class="nt">(self, keys, weights, pre_normalize, post_normalize, ignore_missing)</span>
+<span class="g g-Whitespace">    </span><span class="mi">516</span>         <span class="n">total_weight</span> <span class="o">+=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+<span class="g g-Whitespace">    </span><span class="mi">517</span>     <span class="k">elif</span> <span class="ow">not</span> <span class="n">ignore_missing</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">518</span>         <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; not present in vocabulary&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">520</span> <span class="k">if</span> <span class="n">total_weight</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">521</span>     <span class="n">mean</span> <span class="o">=</span> <span class="n">mean</span> <span class="o">/</span> <span class="n">total_weight</span>
+
+<span class="ne">KeyError</span>: &quot;Key &#39;king&#39; not present in vocabulary&quot;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="visualizing-embeddings">
+<h1>9. Visualizing Embeddings<a class="headerlink" href="#visualizing-embeddings" title="Link to this heading">#</a></h1>
+<p>High-dimensional embeddings can be projected into two dimensions using t-SNE.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>
+
+<span class="n">words</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;anne&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;marilla&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;matthew&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;school&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;house&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;girl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;friend&quot;</span>
+<span class="p">]</span>
+
+<span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span> <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="p">]</span>
+
+<span class="n">vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">])</span>
+
+<span class="n">projection</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span>
+    <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">perplexity</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">words</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">projection</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">projection</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">word</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Word2Vec Embeddings&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="using-spacy-word-vectors">
+<h1>10. Using spaCy Word Vectors<a class="headerlink" href="#using-spacy-word-vectors" title="Link to this heading">#</a></h1>
+<p>Many NLP applications use pre-trained embeddings instead of training from scratch.</p>
+<p>Install:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>spacy
+python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
+
+<span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;en_core_web_md&quot;</span><span class="p">)</span>
+
+<span class="n">anne</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;anne&quot;</span><span class="p">)</span>
+<span class="n">girl</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;girl&quot;</span><span class="p">)</span>
+<span class="n">school</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;school&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;anne-girl similarity:&quot;</span><span class="p">,</span> <span class="n">anne</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="n">girl</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;anne-school similarity:&quot;</span><span class="p">,</span> <span class="n">anne</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="n">school</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">token</span> <span class="o">=</span> <span class="n">nlp</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="s2">&quot;teacher&quot;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">vector</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">vector</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="key-takeaways">
+<h1>11. Key Takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h1>
+<ol class="arabic simple">
+<li><p>Word2Vec learns dense vector representations of words.</p></li>
+<li><p>The training signal comes from neighboring words.</p></li>
+<li><p>Skip-Gram predicts context from a center word.</p></li>
+<li><p>CBOW predicts the center word from context.</p></li>
+<li><p>The embedding layer can be viewed as a latent representation similar to the encoder output in autoencoders.</p></li>
+<li><p>After training, we keep the encoder (embeddings) and discard the decoder.</p></li>
+<li><p>Pre-trained embeddings from spaCy and Gensim are widely used in real NLP systems.</p></li>
+<li><p>Word2Vec was an important step toward modern language models and transformers.</p></li>
+</ol>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./misc"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Word2Vec: Learning Distributed Word Representations</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#why-do-we-need-word-embeddings">1. Why Do We Need Word Embeddings?</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#distributional-hypothesis">2. Distributional Hypothesis</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#word2vec-as-an-encoderdecoder-model">3. Word2Vec as an Encoder–Decoder Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoencoder">Autoencoder</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#word2vec">Word2Vec</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skip-gram">Skip-Gram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cbow">CBOW</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#skip-gram-and-cbow">4. Skip-Gram and CBOW</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">CBOW</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#preparing-training-samples">5. Preparing Training Samples</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-anne-of-green-gables">6. Working with <em>Anne of Green Gables</em></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#training-word2vec-with-gensim">7. Training Word2Vec with Gensim</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-the-learned-embeddings">8. Exploring the Learned Embeddings</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-embeddings">9. Visualizing Embeddings</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#using-spacy-word-vectors">10. Using spaCy Word Vectors</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">11. Key Takeaways</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Mahmood Amintoosi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. CC0 Licensed - Computer Science Dept., Ferdowsi University of Mashhad.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

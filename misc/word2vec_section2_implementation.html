@@ -1,0 +1,2439 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Word2Vec: Mathematics and Implementation from Scratch &#8212; DL</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'misc/word2vec_section2_implementation';</script>
+    <link rel="icon" href="../_static/fum-logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/fum-cs-logo.png" class="logo__image only-light" alt="DL - Home"/>
+    <script>document.write(`<img src="../_static/fum-cs-logo.png" class="logo__image only-dark" alt="DL - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Deep Learning
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../lecture1_introduction.html">Introduction to the Course</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_1_regression.html">Regression</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_2_gradient-descent.html">Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_3_stochastic-gradient-descent.html">Stochastic Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture3_neural-networks-basics.html">Introduction to Pytorch &amp; Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture4_neural-networks-for-classification.html">Neural Networks for Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture5_neural-networks-regularization.html">Regularization and Dropout in Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_1d_cnns.html">Introduction to 1D Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_cnns-pt1.html">Introduction to Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture7_cnns-pt2.html">Advanced Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture8_advanced-deep-learning.html">Advanced Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixA_gradients.html">Appendix A: Gradients Review</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../appendixB_logistic-loss.html">Appendix B: Logistic Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixC_computing-derivatives.html">Appendix C: Computing Derivatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixD_tensor-basics.html">Appendix D: Basics of Numpy and Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixE_pytorch-autograd.html">Appendix E: Auto Differentiation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixF_pytorch-optimizers.html">Appendix F: Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixG_bitmoji-CNN.html">Appendix G: Creating a CNN to Predict Bitmojis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixH_transposed_conv.html">Appendix H: Transposed Convolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixI_floating-point.html">Appendix I: Floating Point Numbers</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hws/index.html">Home Works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hws/HW-2D-CNN-learn-filters.html">Exercise: Learning and Inverting Image Filters with CNNs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hws/Modeling-a-Harmonic-Oscillator-with-MLP-and-GAN.html">Exercise: Modeling a Harmonic Oscillator with MLP and GAN</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/fum-cs/deep-learning/blob/main/notebooks/misc/word2vec_section2_implementation.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning/issues/new?title=Issue%20on%20page%20%2Fmisc/word2vec_section2_implementation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/misc/word2vec_section2_implementation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Word2Vec: Mathematics and Implementation from Scratch</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">2.1 Mathematical Foundations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-hot-vectors-as-matrix-lookups">One-Hot Vectors as Matrix Lookups</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dot-product-and-similarity">Dot Product and Similarity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#softmax-function">Softmax Function</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#skip-gram-model-objective-function-and-gradients">2.2 Skip-gram Model: Objective Function and Gradients</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-formulation">Problem Formulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-objective-function">The Objective Function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-architecture">Understanding the Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-the-gradient">Computing the Gradient</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-computational-problem-full-softmax">The Computational Problem: Full Softmax</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-from-scratch-data-preparation">2.3 Implementation from Scratch: Data Preparation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-a-larger-corpus-for-better-results">Using a Larger Corpus for Better Results</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-from-scratch-model-building-and-training">2.4 Implementation from Scratch: Model Building and Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-skip-gram-model-class">The Skip-gram Model Class</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-the-model">Training the Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluating-the-trained-embeddings">Evaluating the Trained Embeddings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-learned-embeddings">Visualizing the Learned Embeddings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-comparison-center-vs-context-vs-average-embeddings">Complete Comparison: Center vs Context vs Average Embeddings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#saving-and-loading-the-model">Saving and Loading the Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-what-we-ve-implemented">Summary: What We’ve Implemented</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="word2vec-mathematics-and-implementation-from-scratch">
+<h1>Word2Vec: Mathematics and Implementation from Scratch<a class="headerlink" href="#word2vec-mathematics-and-implementation-from-scratch" title="Link to this heading">#</a></h1>
+<p><strong>Deep Learning Course</strong></p>
+<p>In this notebook, we dive into the mathematical foundations of Word2Vec and implement the <strong>Skip-gram model from scratch</strong> using only NumPy.</p>
+<p>We’ll cover:</p>
+<ol class="arabic simple">
+<li><p>Mathematical foundations (one-hot vectors, dot product, softmax)</p></li>
+<li><p>Skip-gram objective function and gradient derivation</p></li>
+<li><p>Data preparation for training</p></li>
+<li><p>Complete Skip-gram implementation from scratch</p></li>
+<li><p>Training and evaluating the model</p></li>
+</ol>
+<section id="mathematical-foundations">
+<h2>2.1 Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Link to this heading">#</a></h2>
+<section id="one-hot-vectors-as-matrix-lookups">
+<h3>One-Hot Vectors as Matrix Lookups<a class="headerlink" href="#one-hot-vectors-as-matrix-lookups" title="Link to this heading">#</a></h3>
+<p>A one-hot vector serves as an <strong>index selector</strong> for a row in a weight matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{x} = \begin{bmatrix} 0 \\ 0 \\ 1 \\ 0 \end{bmatrix}, \quad
+W = \begin{bmatrix} w_{11} &amp; w_{12} \\ w_{21} &amp; w_{22} \\ w_{31} &amp; w_{32} \\ w_{41} &amp; w_{42} \end{bmatrix}
+\end{split}\]</div>
+<p>The matrix multiplication <span class="math notranslate nohighlight">\(\mathbf{x}^T W\)</span> simply <strong>selects the 3rd row</strong>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{x}^T W = \begin{bmatrix} 0 &amp; 0 &amp; 1 &amp; 0 \end{bmatrix} \begin{bmatrix} w_{11} &amp; w_{12} \\ w_{21} &amp; w_{22} \\ w_{31} &amp; w_{32} \\ w_{41} &amp; w_{42} \end{bmatrix} = \begin{bmatrix} w_{31} &amp; w_{32} \end{bmatrix}
+\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Demonstrate one-hot as row selector</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;One-hot vector x:&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Weight matrix W:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">W</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">x @ W (selects 3rd row):&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">@</span> <span class="n">W</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Direct access W[2]:&quot;</span><span class="p">,</span> <span class="n">W</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>One-hot vector x: [0 0 1 0]
+Weight matrix W:
+[[1 2]
+ [3 4]
+ [5 6]
+ [7 8]]
+
+x @ W (selects 3rd row): [5 6]
+Direct access W[2]: [5 6]
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Key Insight</strong>: In Word2Vec, the embedding layer is essentially a lookup table. The “multiplication” by a one-hot vector is just selecting a row—this is why it’s so efficient!</p>
+</section>
+<section id="dot-product-and-similarity">
+<h3>Dot Product and Similarity<a class="headerlink" href="#dot-product-and-similarity" title="Link to this heading">#</a></h3>
+<p>The dot product measures the <strong>alignment</strong> between two vectors:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{u} \cdot \mathbf{v} = \sum_{i=1}^{n} u_i v_i = \|\mathbf{u}\| \|\mathbf{v}\| \cos(\theta)
+\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\theta\)</span> is the angle between the vectors.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dot_product</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">u</span> <span class="o">*</span> <span class="n">v</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">cosine_similarity</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalized dot product - ranges from -1 to 1&quot;&quot;&quot;</span>
+    <span class="n">norm_u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">norm_v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">norm_u</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">norm_v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">dot_product</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">norm_u</span> <span class="o">*</span> <span class="n">norm_v</span><span class="p">)</span>
+
+<span class="c1"># Example</span>
+<span class="n">v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">v3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;v1 = </span><span class="si">{</span><span class="n">v1</span><span class="si">}</span><span class="s2">, v2 = </span><span class="si">{</span><span class="n">v2</span><span class="si">}</span><span class="s2">, v3 = </span><span class="si">{</span><span class="n">v3</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dot(v1, v2) = </span><span class="si">{</span><span class="n">dot_product</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  (positive = same direction)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dot(v1, v3) = </span><span class="si">{</span><span class="n">dot_product</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span><span class="w"> </span><span class="n">v3</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  (negative = opposite direction)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cosine(v1, v2) = </span><span class="si">{</span><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cosine(v1, v3) = </span><span class="si">{</span><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span><span class="w"> </span><span class="n">v3</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v1 = [1 0], v2 = [1 1], v3 = [-1  0]
+dot(v1, v2) = 1.00  (positive = same direction)
+dot(v1, v3) = -1.00  (negative = opposite direction)
+cosine(v1, v2) = 0.7071
+cosine(v1, v3) = -1.0000
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="softmax-function">
+<h3>Softmax Function<a class="headerlink" href="#softmax-function" title="Link to this heading">#</a></h3>
+<p>Softmax converts a vector of scores into a <strong>probability distribution</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{softmax}(\mathbf{y})_i = \frac{e^{y_i}}{\sum_{j=1}^{K} e^{y_j}}
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">softmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute softmax with optional temperature scaling.&quot;&quot;&quot;</span>
+    <span class="n">y_scaled</span> <span class="o">=</span> <span class="n">y</span> <span class="o">/</span> <span class="n">temperature</span>
+    <span class="n">exp_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">y_scaled</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y_scaled</span><span class="p">))</span>  <span class="c1"># Numerical stability</span>
+    <span class="k">return</span> <span class="n">exp_y</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">exp_y</span><span class="p">)</span>
+
+<span class="c1"># Example</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="n">probs</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Raw scores:&quot;</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Softmax probabilities:&quot;</span><span class="p">,</span> <span class="n">probs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sum of probabilities:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">probs</span><span class="p">))</span>
+
+<span class="c1"># Effect of temperature</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Effect of temperature on [4.0, 2.0, 1.0]:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]:</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),</span> <span class="n">temperature</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  T=</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Raw scores: [4.  2.5 1. ]
+Softmax probabilities: [0.78559703 0.17529039 0.03911257]
+Sum of probabilities: 1.0
+
+Effect of temperature on [4.0, 2.0, 1.0]:
+  T=0.5: [0.97962921 0.01794253 0.00242826]
+  T=1.0: [0.84379473 0.1141952  0.04201007]
+  T=2.0: [0.62853172 0.2312239  0.14024438]
+  T=5.0: [0.45062671 0.30206411 0.24730918]
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Note</strong>: Lower temperature → sharper distribution (more confident). Higher temperature → flatter distribution (less confident).</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="skip-gram-model-objective-function-and-gradients">
+<h2>2.2 Skip-gram Model: Objective Function and Gradients<a class="headerlink" href="#skip-gram-model-objective-function-and-gradients" title="Link to this heading">#</a></h2>
+<section id="problem-formulation">
+<h3>Problem Formulation<a class="headerlink" href="#problem-formulation" title="Link to this heading">#</a></h3>
+<p>Given a corpus of <span class="math notranslate nohighlight">\(T\)</span> words, the Skip-gram model maximizes the probability of context words given a center word.</p>
+<p><strong>Notation</strong>:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(w_t\)</span>: word at position <span class="math notranslate nohighlight">\(t\)</span> in the corpus</p></li>
+<li><p><span class="math notranslate nohighlight">\(m\)</span>: window size (number of context words on each side)</p></li>
+<li><p><span class="math notranslate nohighlight">\(V\)</span>: vocabulary size</p></li>
+<li><p><span class="math notranslate nohighlight">\(d\)</span>: embedding dimension</p></li>
+</ul>
+</section>
+<section id="the-objective-function">
+<h3>The Objective Function<a class="headerlink" href="#the-objective-function" title="Link to this heading">#</a></h3>
+<p>For a single center word <span class="math notranslate nohighlight">\(w_t\)</span> and a single context word <span class="math notranslate nohighlight">\(w_{t+j}\)</span> (where <span class="math notranslate nohighlight">\(-m \leq j \leq m\)</span>, <span class="math notranslate nohighlight">\(j \neq 0\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[
+P(w_{t+j} | w_t) = \frac{\exp(\mathbf{u}_{w_{t+j}}^T \mathbf{v}_{w_t})}{\sum_{k=1}^{V} \exp(\mathbf{u}_k^T \mathbf{v}_{w_t})}
+\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathbf{v}_{w_t} \in \mathbb{R}^d\)</span>: <strong>center word embedding</strong> (input embedding)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{u}_{w_{t+j}} \in \mathbb{R}^d\)</span>: <strong>context word embedding</strong> (output embedding)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{u}_k\)</span>: embedding for the <span class="math notranslate nohighlight">\(k\)</span>-th word in vocabulary (as context)</p></li>
+</ul>
+<p><strong>The full objective</strong> (average negative log-likelihood):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+J(\theta) = -\frac{1}{T} \sum_{t=1}^{T} \sum_{\substack{-m \leq j \leq m \\ j \neq 0}} \log P(w_{t+j} | w_t)
+\end{split}\]</div>
+</section>
+<section id="understanding-the-architecture">
+<h3>Understanding the Architecture<a class="headerlink" href="#understanding-the-architecture" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         ┌─────────────────────────────────────┐
+         │  One-hot input: w_t (center word)   │
+         │  Dimension: V (vocabulary size)      │
+         └─────────────────┬───────────────────┘
+                           │
+                           ▼
+         ┌─────────────────────────────────────┐
+         │  Input Embedding Matrix W₁         │
+         │  Shape: V × d                       │
+         │  (Each row is a center word vector) │
+         └─────────────────┬───────────────────┘
+                           │
+                           ▼
+         ┌─────────────────────────────────────┐
+         │  Hidden representation: v_{w_t}     │
+         │  Dimension: d (e.g., 100-300)       │
+         └─────────────────┬───────────────────┘
+                           │
+                           ▼
+         ┌─────────────────────────────────────┐
+         │  Output Embedding Matrix W₂        │
+         │  Shape: d × V                       │
+         │  (Each column is a context vector)  │
+         └─────────────────┬───────────────────┘
+                           │
+                           ▼
+         ┌─────────────────────────────────────┐
+         │  Score vector: u_k^T · v_{w_t}     │
+         │  Dimension: V                       │
+         └─────────────────┬───────────────────┘
+                           │
+                           ▼
+         ┌─────────────────────────────────────┐
+         │  Softmax → Probability distribution │
+         │  Dimension: V                       │
+         └─────────────────────────────────────┘
+</pre></div>
+</div>
+</section>
+<section id="computing-the-gradient">
+<h3>Computing the Gradient<a class="headerlink" href="#computing-the-gradient" title="Link to this heading">#</a></h3>
+<p>For a single training pair (center word <span class="math notranslate nohighlight">\(c\)</span>, context word <span class="math notranslate nohighlight">\(o\)</span>), the loss is:</p>
+<div class="math notranslate nohighlight">
+\[
+L = -\log P(o | c) = -\mathbf{u}_o^T \mathbf{v}_c + \log \sum_{k=1}^{V} \exp(\mathbf{u}_k^T \mathbf{v}_c)
+\]</div>
+<p><strong>Gradient with respect to <span class="math notranslate nohighlight">\(\mathbf{v}_c\)</span> (center word embedding)</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial L}{\partial \mathbf{v}_c} = -\mathbf{u}_o + \sum_{k=1}^{V} P(k|c) \mathbf{u}_k
+\]</div>
+<p>This can be written as:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial L}{\partial \mathbf{v}_c} = \underbrace{(\text{predicted distribution})}_{\hat{\mathbf{y}}} \cdot \underbrace{W_2}_{\text{context embeddings}} - \underbrace{\mathbf{u}_o}_{\text{true context}}
+\]</div>
+<p><strong>Gradient with respect to <span class="math notranslate nohighlight">\(\mathbf{u}_k\)</span> (context word embedding)</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial L}{\partial \mathbf{u}_k} = (P(k|c) - \mathbb{1}[k=o]) \mathbf{v}_c
+\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\mathbb{1}[k=o]\)</span> is 1 if <span class="math notranslate nohighlight">\(k\)</span> is the true context word, 0 otherwise.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">compute_gradients</span><span class="p">(</span><span class="n">v_c</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">o_idx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute gradients for Skip-gram.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        v_c: Center word embedding (d,)</span>
+<span class="sd">        U: Context embedding matrix (V, d)</span>
+<span class="sd">        o_idx: Index of true context word</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        grad_v_c: Gradient for center embedding (d,)</span>
+<span class="sd">        grad_U: Gradient for context embeddings (V, d)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">V</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">shape</span>
+    
+    <span class="c1"># Compute scores</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">U</span> <span class="o">@</span> <span class="n">v_c</span>  <span class="c1"># (V,)</span>
+    
+    <span class="c1"># Compute softmax probabilities</span>
+    <span class="n">probs</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>  <span class="c1"># (V,)</span>
+    
+    <span class="c1"># Gradient for v_c: -u_o + sum_k P(k|c) * u_k</span>
+    <span class="n">grad_v_c</span> <span class="o">=</span> <span class="o">-</span><span class="n">U</span><span class="p">[</span><span class="n">o_idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">probs</span> <span class="o">@</span> <span class="n">U</span>  <span class="c1"># (d,)</span>
+    
+    <span class="c1"># Gradient for U: (P(k|c) - 1[k=o]) * v_c</span>
+    <span class="n">grad_U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">v_c</span><span class="p">)</span>  <span class="c1"># (V, d)</span>
+    <span class="n">grad_U</span><span class="p">[</span><span class="n">o_idx</span><span class="p">]</span> <span class="o">-=</span> <span class="n">v_c</span>  <span class="c1"># Subtract v_c for the true context word</span>
+    
+    <span class="k">return</span> <span class="n">grad_v_c</span><span class="p">,</span> <span class="n">grad_U</span>
+
+<span class="c1"># Example with small dimensions</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">V</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span>
+
+<span class="c1"># Random embeddings</span>
+<span class="n">v_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">o_idx</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># True context word index</span>
+
+<span class="n">grad_v_c</span><span class="p">,</span> <span class="n">grad_U</span> <span class="o">=</span> <span class="n">compute_gradients</span><span class="p">(</span><span class="n">v_c</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">o_idx</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Center embedding v_c: </span><span class="si">{</span><span class="n">v_c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Context matrix U shape: </span><span class="si">{</span><span class="n">U</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;True context word index: </span><span class="si">{</span><span class="n">o_idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Gradient for v_c: </span><span class="si">{</span><span class="n">grad_v_c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gradient for U shape: </span><span class="si">{</span><span class="n">grad_U</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Center embedding v_c: [ 0.49671415 -0.1382643   0.64768854]
+Context matrix U shape: (5, 3)
+True context word index: 2
+
+Gradient for v_c: [0.34411793 0.15870118 0.11123075]
+Gradient for U shape: (5, 3)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-computational-problem-full-softmax">
+<h3>The Computational Problem: Full Softmax<a class="headerlink" href="#the-computational-problem-full-softmax" title="Link to this heading">#</a></h3>
+<p>The issue with the standard softmax is that we must compute <span class="math notranslate nohighlight">\(\exp(\mathbf{u}_k^T \mathbf{v}_c)\)</span> for <strong>all</strong> <span class="math notranslate nohighlight">\(V\)</span> words in the vocabulary.</p>
+<p>For <span class="math notranslate nohighlight">\(V = 100,000\)</span> words:</p>
+<ul class="simple">
+<li><p>Each forward pass: 100,000 dot products</p></li>
+<li><p>Each backward pass: 100,000 gradient updates</p></li>
+</ul>
+<p>This is extremely slow!</p>
+<p><strong>Solutions in practice</strong>:</p>
+<ol class="arabic simple">
+<li><p><strong>Negative Sampling</strong>: Approximate softmax by only computing for a few “negative” samples</p></li>
+<li><p><strong>Hierarchical Softmax</strong>: Use a binary tree structure</p></li>
+</ol>
+<p>For educational purposes, we’ll implement the <strong>full softmax version</strong> to understand the fundamentals.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="implementation-from-scratch-data-preparation">
+<h2>2.3 Implementation from Scratch: Data Preparation<a class="headerlink" href="#implementation-from-scratch-data-preparation" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># STEP 1: CORPUS PREPARATION</span>
+<span class="c1"># ============================================</span>
+
+<span class="k">def</span> <span class="nf">load_and_preprocess</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load and preprocess text corpus.&quot;&quot;&quot;</span>
+    <span class="c1"># Convert to lowercase</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    
+    <span class="c1"># Remove punctuation</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^\w\s]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    
+    <span class="c1"># Split into words</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">words</span>
+
+<span class="c1"># Example corpus (in practice, use a much larger corpus)</span>
+<span class="n">corpus_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">The king sat on his throne. The queen sat beside the king. </span>
+<span class="s2">The prince and princess played in the garden. The royal family </span>
+<span class="s2">lived in a beautiful castle. The king ruled the kingdom wisely.</span>
+<span class="s2">The queen was loved by all the people. The prince learned to </span>
+<span class="s2">become a great ruler. The princess danced at the royal ball.</span>
+<span class="s2">The kingdom prospered under the king and queen. The castle </span>
+<span class="s2">stood tall on the hill overlooking the kingdom.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">words</span> <span class="o">=</span> <span class="n">load_and_preprocess</span><span class="p">(</span><span class="n">corpus_text</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Corpus size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span><span class="si">}</span><span class="s2"> words&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;First 20 words: </span><span class="si">{</span><span class="n">words</span><span class="p">[:</span><span class="mi">20</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Corpus size: 75 words
+First 20 words: [&#39;the&#39;, &#39;king&#39;, &#39;sat&#39;, &#39;on&#39;, &#39;his&#39;, &#39;throne&#39;, &#39;the&#39;, &#39;queen&#39;, &#39;sat&#39;, &#39;beside&#39;, &#39;the&#39;, &#39;king&#39;, &#39;the&#39;, &#39;prince&#39;, &#39;and&#39;, &#39;princess&#39;, &#39;played&#39;, &#39;in&#39;, &#39;the&#39;, &#39;garden&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># STEP 2: BUILD VOCABULARY</span>
+<span class="c1"># ============================================</span>
+
+<span class="k">def</span> <span class="nf">build_vocabulary</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">min_count</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build vocabulary with word-to-index mappings.&quot;&quot;&quot;</span>
+    <span class="c1"># Count word frequencies</span>
+    <span class="n">word_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+    
+    <span class="c1"># Filter by minimum count</span>
+    <span class="n">filtered_words</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span> <span class="k">if</span> <span class="n">word_counts</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_count</span><span class="p">]</span>
+    
+    <span class="c1"># Create vocabulary (sorted by frequency for consistency)</span>
+    <span class="n">vocab</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">filtered_words</span><span class="p">),</span> 
+                   <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="n">word_counts</span><span class="p">[</span><span class="n">w</span><span class="p">],</span> <span class="n">w</span><span class="p">))</span>
+    
+    <span class="c1"># Create mappings</span>
+    <span class="n">word2idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">word</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocab</span><span class="p">)}</span>
+    <span class="n">idx2word</span> <span class="o">=</span> <span class="p">{</span><span class="n">idx</span><span class="p">:</span> <span class="n">word</span> <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    
+    <span class="k">return</span> <span class="n">vocab</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">idx2word</span><span class="p">,</span> <span class="n">word_counts</span>
+
+<span class="n">vocab</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">idx2word</span><span class="p">,</span> <span class="n">word_counts</span> <span class="o">=</span> <span class="n">build_vocabulary</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">min_count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Vocabulary size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Word-to-index mapping (first 10):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">word2idx</span><span class="o">.</span><span class="n">keys</span><span class="p">())[:</span><span class="mi">10</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  &#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">word2idx</span><span class="p">[</span><span class="n">word</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Vocabulary size: 42
+Word-to-index mapping (first 10):
+  &#39;the&#39;: 0
+  &#39;king&#39;: 1
+  &#39;kingdom&#39;: 2
+  &#39;queen&#39;: 3
+  &#39;a&#39;: 4
+  &#39;and&#39;: 5
+  &#39;castle&#39;: 6
+  &#39;in&#39;: 7
+  &#39;on&#39;: 8
+  &#39;prince&#39;: 9
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># STEP 3: GENERATE TRAINING DATA FOR SKIP-GRAM</span>
+<span class="c1"># ============================================</span>
+
+<span class="k">def</span> <span class="nf">generate_skipgram_data</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate (center_word, context_word) pairs for Skip-gram.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        words: List of words in the corpus</span>
+<span class="sd">        word2idx: Word to index mapping</span>
+<span class="sd">        window_size: Number of context words on each side</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pairs: List of (center_idx, context_idx) tuples</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">center_word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">words</span><span class="p">):</span>
+        <span class="n">center_idx</span> <span class="o">=</span> <span class="n">word2idx</span><span class="p">[</span><span class="n">center_word</span><span class="p">]</span>
+        
+        <span class="c1"># Define context window</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="n">window_size</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">),</span> <span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>  <span class="c1"># Skip the center word itself</span>
+                <span class="n">context_word</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">context_idx</span> <span class="o">=</span> <span class="n">word2idx</span><span class="p">[</span><span class="n">context_word</span><span class="p">]</span>
+                <span class="n">pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">center_idx</span><span class="p">,</span> <span class="n">context_idx</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">pairs</span>
+
+<span class="c1"># Generate training pairs</span>
+<span class="n">window_size</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">training_pairs</span> <span class="o">=</span> <span class="n">generate_skipgram_data</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">window_size</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Training pairs generated: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">training_pairs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">First 15 training pairs (center → context):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">center_idx</span><span class="p">,</span> <span class="n">context_idx</span> <span class="ow">in</span> <span class="n">training_pairs</span><span class="p">[:</span><span class="mi">15</span><span class="p">]:</span>
+    <span class="n">center_word</span> <span class="o">=</span> <span class="n">idx2word</span><span class="p">[</span><span class="n">center_idx</span><span class="p">]</span>
+    <span class="n">context_word</span> <span class="o">=</span> <span class="n">idx2word</span><span class="p">[</span><span class="n">context_idx</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  &#39;</span><span class="si">{</span><span class="n">center_word</span><span class="si">}</span><span class="s2">&#39; → &#39;</span><span class="si">{</span><span class="n">context_word</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training pairs generated: 294
+
+First 15 training pairs (center → context):
+  &#39;the&#39; → &#39;king&#39;
+  &#39;the&#39; → &#39;sat&#39;
+  &#39;king&#39; → &#39;the&#39;
+  &#39;king&#39; → &#39;sat&#39;
+  &#39;king&#39; → &#39;on&#39;
+  &#39;sat&#39; → &#39;the&#39;
+  &#39;sat&#39; → &#39;king&#39;
+  &#39;sat&#39; → &#39;on&#39;
+  &#39;sat&#39; → &#39;his&#39;
+  &#39;on&#39; → &#39;king&#39;
+  &#39;on&#39; → &#39;sat&#39;
+  &#39;on&#39; → &#39;his&#39;
+  &#39;on&#39; → &#39;throne&#39;
+  &#39;his&#39; → &#39;sat&#39;
+  &#39;his&#39; → &#39;on&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># STEP 4: VISUALIZE THE WINDOW SLIDING</span>
+<span class="c1"># ============================================</span>
+
+<span class="k">def</span> <span class="nf">visualize_windows</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_examples</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Visualize how the sliding window generates training pairs.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Visualizing Skip-gram Window (size=</span><span class="si">{</span><span class="n">window_size</span><span class="si">}</span><span class="s2">):&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">start_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">num_examples</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">window_size</span><span class="p">)):</span>
+        <span class="n">center_pos</span> <span class="o">=</span> <span class="n">start_idx</span> <span class="o">+</span> <span class="n">window_size</span>
+        <span class="n">center_word</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="n">center_pos</span><span class="p">]</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sentence segment: ...&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_idx</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">center_pos</span> <span class="o">+</span> <span class="n">window_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">))):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">center_pos</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">words</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Center word: &#39;</span><span class="si">{</span><span class="n">center_word</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Context words: &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">center_pos</span> <span class="o">-</span> <span class="n">window_size</span><span class="p">),</span> 
+                       <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">),</span> <span class="n">center_pos</span> <span class="o">+</span> <span class="n">window_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">center_pos</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">words</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
+
+<span class="n">visualize_windows</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_examples</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Visualizing Skip-gram Window (size=2):
+============================================================
+
+Sentence segment: ... the king [sat] on his ...
+Center word: &#39;sat&#39;
+Context words: &#39;the&#39; &#39;king&#39; &#39;on&#39; &#39;his&#39; 
+
+Sentence segment: ... king sat [on] his throne ...
+Center word: &#39;on&#39;
+Context words: &#39;king&#39; &#39;sat&#39; &#39;his&#39; &#39;throne&#39; 
+
+Sentence segment: ... sat on [his] throne the ...
+Center word: &#39;his&#39;
+Context words: &#39;sat&#39; &#39;on&#39; &#39;throne&#39; &#39;the&#39; 
+</pre></div>
+</div>
+</div>
+</div>
+<section id="using-a-larger-corpus-for-better-results">
+<h3>Using a Larger Corpus for Better Results<a class="headerlink" href="#using-a-larger-corpus-for-better-results" title="Link to this heading">#</a></h3>
+<p>For meaningful embeddings, we need a larger corpus. Let’s use a sample from Alice in Wonderland:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># For a real implementation, download a larger corpus</span>
+<span class="n">alice_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Alice was beginning to get very tired of sitting by her sister on the bank </span>
+<span class="s2">and of having nothing to do once or twice she had peeped into the book her </span>
+<span class="s2">sister was reading but it had no pictures or conversations in it and what is </span>
+<span class="s2">the use of a book thought Alice without pictures or conversations So she was </span>
+<span class="s2">considering in her own mind as well as she could for the hot day made her feel </span>
+<span class="s2">very sleepy and stupid whether the pleasure of making a daisy chain would be </span>
+<span class="s2">worth the trouble of getting up and picking the daisies when suddenly a White </span>
+<span class="s2">Rabbit with pink eyes ran close by her There was nothing so very remarkable in </span>
+<span class="s2">that nor did Alice think it so very much out of the way to hear the Rabbit say </span>
+<span class="s2">to itself Oh dear Oh dear I shall be late When she thought it over afterwards </span>
+<span class="s2">it occurred to her that she ought to have wondered at this but at the time it </span>
+<span class="s2">all seemed quite natural But when the Rabbit actually took a watch out of its </span>
+<span class="s2">waistcoat pocket and looked at it and then hurried on Alice started to her feet </span>
+<span class="s2">for it flashed across her mind that she had never before seen a rabbit with </span>
+<span class="s2">either a waistcoat pocket or a watch to take out of it and burning with curiosity </span>
+<span class="s2">she ran across the field after it and fortunately was just in time to see it pop </span>
+<span class="s2">down a large rabbit hole under the hedge In another moment down went Alice after </span>
+<span class="s2">it never once considering how in the world she was to get out again The rabbit </span>
+<span class="s2">hole went straight on like a tunnel for some way and then dipped suddenly down </span>
+<span class="s2">so suddenly that Alice had not a moment to think about stopping herself before </span>
+<span class="s2">she found herself falling down a very deep well Either the well was very deep </span>
+<span class="s2">or she fell very slowly for she had plenty of time as she went down to look </span>
+<span class="s2">about her and to wonder what was going to happen next First she tried to look </span>
+<span class="s2">down and make out what she was coming to but it was too dark to see anything </span>
+<span class="s2">then she looked at the sides of the well and noticed that they were filled with </span>
+<span class="s2">cupboards and book shelves here and there she saw maps and pictures hung upon </span>
+<span class="s2">pegs She took down a jar from one of the shelves as she passed it was labelled </span>
+<span class="s2">ORANGE MARMALADE but to her great disappointment it was empty she did not like </span>
+<span class="s2">to drop the jar for fear of killing somebody underneath so managed to put it </span>
+<span class="s2">into one of the cupboards as she fell past it</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># Process the larger corpus</span>
+<span class="n">words</span> <span class="o">=</span> <span class="n">load_and_preprocess</span><span class="p">(</span><span class="n">alice_text</span><span class="p">)</span>
+<span class="n">vocab</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">idx2word</span><span class="p">,</span> <span class="n">word_counts</span> <span class="o">=</span> <span class="n">build_vocabulary</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">min_count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">training_pairs</span> <span class="o">=</span> <span class="n">generate_skipgram_data</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Corpus size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span><span class="si">}</span><span class="s2"> words&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vocabulary size (min_count=2): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">)</span><span class="si">}</span><span class="s2"> words&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training pairs: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">training_pairs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Top 10 most frequent words:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">word_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  &#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyError</span><span class="g g-Whitespace">                                  </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">line</span> <span class="mi">38</span>
+<span class="g g-Whitespace">     </span><span class="mi">36</span> <span class="n">words</span> <span class="o">=</span> <span class="n">load_and_preprocess</span><span class="p">(</span><span class="n">alice_text</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">37</span> <span class="n">vocab</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">idx2word</span><span class="p">,</span> <span class="n">word_counts</span> <span class="o">=</span> <span class="n">build_vocabulary</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">min_count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">38</span> <span class="n">training_pairs</span> <span class="o">=</span> <span class="n">generate_skipgram_data</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">40</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Corpus size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span><span class="si">}</span><span class="s2"> words&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">41</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vocabulary size (min_count=2): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">)</span><span class="si">}</span><span class="s2"> words&quot;</span><span class="p">)</span>
+
+<span class="nn">Cell In[7], line 29,</span> in <span class="ni">generate_skipgram_data</span><span class="nt">(words, word2idx, window_size)</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span>         <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>  <span class="c1"># Skip the center word itself</span>
+<span class="g g-Whitespace">     </span><span class="mi">28</span>             <span class="n">context_word</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+<span class="ne">---&gt; </span><span class="mi">29</span>             <span class="n">context_idx</span> <span class="o">=</span> <span class="n">word2idx</span><span class="p">[</span><span class="n">context_word</span><span class="p">]</span>
+<span class="g g-Whitespace">     </span><span class="mi">30</span>             <span class="n">pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">center_idx</span><span class="p">,</span> <span class="n">context_idx</span><span class="p">))</span>
+<span class="g g-Whitespace">     </span><span class="mi">32</span> <span class="k">return</span> <span class="n">pairs</span>
+
+<span class="ne">KeyError</span>: &#39;beginning&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="implementation-from-scratch-model-building-and-training">
+<h2>2.4 Implementation from Scratch: Model Building and Training<a class="headerlink" href="#implementation-from-scratch-model-building-and-training" title="Link to this heading">#</a></h2>
+<section id="the-skip-gram-model-class">
+<h3>The Skip-gram Model Class<a class="headerlink" href="#the-skip-gram-model-class" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SkipGramModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Skip-gram Word2Vec implementation from scratch.</span>
+<span class="sd">    </span>
+<span class="sd">    Architecture:</span>
+<span class="sd">        Input (one-hot) → Center Embedding (W1) → Output Scores (W2) → Softmax</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Skip-gram model.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            vocab_size: Size of vocabulary (V)</span>
+<span class="sd">            embedding_dim: Dimension of word embeddings (d)</span>
+<span class="sd">            seed: Random seed for reproducibility</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span> <span class="o">=</span> <span class="n">embedding_dim</span>
+        
+        <span class="c1"># Initialize weight matrices</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        
+        <span class="c1"># W1: Center word embeddings (V × d)</span>
+        <span class="c1"># Each row is the embedding for a word when it&#39;s the CENTER word</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.01</span>
+        
+        <span class="c1"># W2: Context word embeddings (V × d)  </span>
+        <span class="c1"># Each row is the embedding for a word when it&#39;s a CONTEXT word</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.01</span>
+        
+        <span class="c1"># For tracking training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_history</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center_idx</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass: compute probability distribution over vocabulary.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            center_idx: Index of center word</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            probs: Probability distribution (V,)</span>
+<span class="sd">            h: Hidden representation (d,)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get center word embedding (this is essentially a lookup)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W1</span><span class="p">[</span><span class="n">center_idx</span><span class="p">]</span>  <span class="c1"># (d,)</span>
+        
+        <span class="c1"># Compute scores: dot product with all context embeddings</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span> <span class="o">@</span> <span class="n">h</span>  <span class="c1"># (V,)</span>
+        
+        <span class="c1"># Apply softmax to get probabilities</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">probs</span><span class="p">,</span> <span class="n">h</span>
+    
+    <span class="k">def</span> <span class="nf">_softmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numerically stable softmax.&quot;&quot;&quot;</span>
+        <span class="n">x_shifted</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">exp_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x_shifted</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">exp_x</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">exp_x</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">compute_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center_idx</span><span class="p">,</span> <span class="n">context_idx</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute negative log-likelihood loss.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            center_idx: Index of center word</span>
+<span class="sd">            context_idx: Index of true context word</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            loss: Negative log-likelihood (scalar)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">probs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">center_idx</span><span class="p">)</span>
+        <span class="c1"># Avoid log(0) by clipping</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">probs</span><span class="p">[</span><span class="n">context_idx</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss</span>
+    
+    <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center_idx</span><span class="p">,</span> <span class="n">context_idx</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">probs</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Backward pass: compute gradients and update weights.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            center_idx: Index of center word</span>
+<span class="sd">            context_idx: Index of true context word</span>
+<span class="sd">            h: Hidden representation from forward pass</span>
+<span class="sd">            probs: Probability distribution from forward pass</span>
+<span class="sd">            learning_rate: Learning rate for gradient descent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create error vector: predicted - true (one-hot)</span>
+        <span class="c1"># e_i = P(i|c) - 1 if i is context word, else P(i|c)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">probs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">e</span><span class="p">[</span><span class="n">context_idx</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># Subtract 1 for the true context word</span>
+        
+        <span class="c1"># Gradient for W2 (context embeddings)</span>
+        <span class="c1"># dW2[i] = e[i] * h</span>
+        <span class="n">grad_W2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>  <span class="c1"># (V, d)</span>
+        
+        <span class="c1"># Gradient for W1 (center embedding)</span>
+        <span class="c1"># dW1[c] = W2^T @ e</span>
+        <span class="n">grad_W1_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">e</span>  <span class="c1"># (d,)</span>
+        
+        <span class="c1"># Update weights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W2</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">grad_W2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W1</span><span class="p">[</span><span class="n">center_idx</span><span class="p">]</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">grad_W1_center</span>
+    
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_pairs</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> 
+              <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">print_every</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train the Skip-gram model.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            training_pairs: List of (center_idx, context_idx) tuples</span>
+<span class="sd">            epochs: Number of training epochs</span>
+<span class="sd">            learning_rate: Learning rate</span>
+<span class="sd">            verbose: Whether to print progress</span>
+<span class="sd">            print_every: Print loss every N samples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_pairs</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+            <span class="c1"># Shuffle training pairs each epoch</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">training_pairs</span><span class="p">)</span>
+            
+            <span class="n">epoch_loss</span> <span class="o">=</span> <span class="mi">0</span>
+            
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">center_idx</span><span class="p">,</span> <span class="n">context_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">training_pairs</span><span class="p">):</span>
+                <span class="c1"># Forward pass</span>
+                <span class="n">probs</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">center_idx</span><span class="p">)</span>
+                
+                <span class="c1"># Compute loss</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">probs</span><span class="p">[</span><span class="n">context_idx</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">)</span>
+                <span class="n">epoch_loss</span> <span class="o">+=</span> <span class="n">loss</span>
+                
+                <span class="c1"># Backward pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">center_idx</span><span class="p">,</span> <span class="n">context_idx</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">probs</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">)</span>
+                
+                <span class="c1"># Print progress</span>
+                <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">print_every</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">avg_loss</span> <span class="o">=</span> <span class="n">epoch_loss</span> <span class="o">/</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">epochs</span><span class="si">}</span><span class="s2">, Step </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_samples</span><span class="si">}</span><span class="s2">, &quot;</span>
+                          <span class="sa">f</span><span class="s2">&quot;Avg Loss: </span><span class="si">{</span><span class="n">avg_loss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Record average loss for this epoch</span>
+            <span class="n">avg_epoch_loss</span> <span class="o">=</span> <span class="n">epoch_loss</span> <span class="o">/</span> <span class="n">n_samples</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avg_epoch_loss</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> completed. Average Loss: </span><span class="si">{</span><span class="n">avg_epoch_loss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">get_center_embedding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the center word embedding for a word.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39; not in vocabulary&quot;</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">word2idx</span><span class="p">[</span><span class="n">word</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">W1</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">get_context_embedding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the context word embedding for a word.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39; not in vocabulary&quot;</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">word2idx</span><span class="p">[</span><span class="n">word</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">get_embedding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get word embedding (can combine center and context embeddings).</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            word: The word to get embedding for</span>
+<span class="sd">            word2idx: Word to index mapping</span>
+<span class="sd">            combine: &#39;center&#39;, &#39;context&#39;, or &#39;average&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">combine</span> <span class="o">==</span> <span class="s1">&#39;center&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_center_embedding</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">combine</span> <span class="o">==</span> <span class="s1">&#39;context&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_context_embedding</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">combine</span> <span class="o">==</span> <span class="s1">&#39;average&#39;</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_center_embedding</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">)</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_context_embedding</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">u</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown combine method: </span><span class="si">{</span><span class="n">combine</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">most_similar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">idx2word</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;average&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find most similar words to a given word.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39; not in vocabulary&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Get embedding for query word</span>
+        <span class="n">query_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_embedding</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="n">combine</span><span class="p">)</span>
+        <span class="n">query_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">query_vec</span><span class="p">)</span>
+        
+        <span class="c1"># Compute similarities with all words</span>
+        <span class="n">similarities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">idx2word</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">==</span> <span class="n">word</span><span class="p">:</span>
+                <span class="k">continue</span>  <span class="c1"># Skip the query word itself</span>
+            
+            <span class="c1"># Get embedding for this word</span>
+            <span class="k">if</span> <span class="n">combine</span> <span class="o">==</span> <span class="s1">&#39;center&#39;</span><span class="p">:</span>
+                <span class="n">vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W1</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">combine</span> <span class="o">==</span> <span class="s1">&#39;context&#39;</span><span class="p">:</span>
+                <span class="n">vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vec</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">W1</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            
+            <span class="n">vec_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+            
+            <span class="c1"># Cosine similarity</span>
+            <span class="k">if</span> <span class="n">query_norm</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">vec_norm</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">query_vec</span><span class="p">,</span> <span class="n">vec</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">query_norm</span> <span class="o">*</span> <span class="n">vec_norm</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sim</span> <span class="o">=</span> <span class="mi">0</span>
+            
+            <span class="n">similarities</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">idx2word</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">sim</span><span class="p">))</span>
+        
+        <span class="c1"># Sort by similarity (descending)</span>
+        <span class="n">similarities</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">similarities</span><span class="p">[:</span><span class="n">topn</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">analogy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_a</span><span class="p">,</span> <span class="n">word_b</span><span class="p">,</span> <span class="n">word_c</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">idx2word</span><span class="p">,</span> 
+                <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;average&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Solve analogy: word_a is to word_b as word_c is to ?</span>
+<span class="sd">        Mathematically: ? = word_b - word_a + word_c</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vec_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_embedding</span><span class="p">(</span><span class="n">word_a</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">combine</span><span class="p">)</span>
+        <span class="n">vec_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_embedding</span><span class="p">(</span><span class="n">word_b</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">combine</span><span class="p">)</span>
+        <span class="n">vec_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_embedding</span><span class="p">(</span><span class="n">word_c</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">combine</span><span class="p">)</span>
+        
+        <span class="c1"># Compute target vector</span>
+        <span class="n">target_vec</span> <span class="o">=</span> <span class="n">vec_b</span> <span class="o">-</span> <span class="n">vec_a</span> <span class="o">+</span> <span class="n">vec_c</span>
+        <span class="n">target_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">target_vec</span><span class="p">)</span>
+        
+        <span class="c1"># Find closest words</span>
+        <span class="n">exclude</span> <span class="o">=</span> <span class="p">{</span><span class="n">word_a</span><span class="p">,</span> <span class="n">word_b</span><span class="p">,</span> <span class="n">word_c</span><span class="p">}</span>
+        <span class="n">similarities</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">):</span>
+            <span class="n">word</span> <span class="o">=</span> <span class="n">idx2word</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">exclude</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">combine</span> <span class="o">==</span> <span class="s1">&#39;center&#39;</span><span class="p">:</span>
+                <span class="n">vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W1</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">combine</span> <span class="o">==</span> <span class="s1">&#39;context&#39;</span><span class="p">:</span>
+                <span class="n">vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vec</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">W1</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            
+            <span class="n">vec_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">target_norm</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">vec_norm</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">target_vec</span><span class="p">,</span> <span class="n">vec</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">target_norm</span> <span class="o">*</span> <span class="n">vec_norm</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sim</span> <span class="o">=</span> <span class="mi">0</span>
+            
+            <span class="n">similarities</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">word</span><span class="p">,</span> <span class="n">sim</span><span class="p">))</span>
+        
+        <span class="n">similarities</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">similarities</span><span class="p">[:</span><span class="n">topn</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SkipGramModel class defined successfully!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SkipGramModel class defined successfully!
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="training-the-model">
+<h3>Training the Model<a class="headerlink" href="#training-the-model" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># TRAIN THE SKIP-GRAM MODEL</span>
+<span class="c1"># ============================================</span>
+
+<span class="c1"># Model parameters</span>
+<span class="n">embedding_dim</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.025</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">window_size</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SKIP-GRAM TRAINING&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vocabulary size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Embedding dimension: </span><span class="si">{</span><span class="n">embedding_dim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Learning rate: </span><span class="si">{</span><span class="n">learning_rate</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epochs: </span><span class="si">{</span><span class="n">epochs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training pairs: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">training_pairs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Initialize model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SkipGramModel</span><span class="p">(</span><span class="n">vocab_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">),</span> <span class="n">embedding_dim</span><span class="o">=</span><span class="n">embedding_dim</span><span class="p">)</span>
+
+<span class="c1"># Train</span>
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_pairs</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> 
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">print_every</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+SKIP-GRAM TRAINING
+============================================================
+Vocabulary size: 76
+Embedding dimension: 50
+Learning rate: 0.025
+Epochs: 100
+Training pairs: 294
+============================================================
+Epoch 1/100, Step 200/294, Avg Loss: 4.3307
+
+Epoch 1 completed. Average Loss: 4.3307
+
+Epoch 2/100, Step 200/294, Avg Loss: 4.3304
+
+Epoch 2 completed. Average Loss: 4.3304
+
+Epoch 3/100, Step 200/294, Avg Loss: 4.3300
+
+Epoch 3 completed. Average Loss: 4.3299
+
+Epoch 4/100, Step 200/294, Avg Loss: 4.3292
+
+Epoch 4 completed. Average Loss: 4.3291
+
+Epoch 5/100, Step 200/294, Avg Loss: 4.3277
+
+Epoch 5 completed. Average Loss: 4.3276
+
+Epoch 6/100, Step 200/294, Avg Loss: 4.3252
+
+Epoch 6 completed. Average Loss: 4.3247
+
+Epoch 7/100, Step 200/294, Avg Loss: 4.3209
+
+Epoch 7 completed. Average Loss: 4.3189
+
+Epoch 8/100, Step 200/294, Avg Loss: 4.3079
+
+Epoch 8 completed. Average Loss: 4.3072
+
+Epoch 9/100, Step 200/294, Avg Loss: 4.2859
+
+Epoch 9 completed. Average Loss: 4.2841
+
+Epoch 10/100, Step 200/294, Avg Loss: 4.2439
+
+Epoch 10 completed. Average Loss: 4.2405
+
+Epoch 11/100, Step 200/294, Avg Loss: 4.1904
+
+Epoch 11 completed. Average Loss: 4.1677
+
+Epoch 12/100, Step 200/294, Avg Loss: 4.1067
+
+Epoch 12 completed. Average Loss: 4.0745
+
+Epoch 13/100, Step 200/294, Avg Loss: 4.0175
+
+Epoch 13 completed. Average Loss: 3.9697
+
+Epoch 14/100, Step 200/294, Avg Loss: 3.8235
+
+Epoch 14 completed. Average Loss: 3.8608
+
+Epoch 15/100, Step 200/294, Avg Loss: 3.8049
+
+Epoch 15 completed. Average Loss: 3.7575
+
+Epoch 16/100, Step 200/294, Avg Loss: 3.6565
+
+Epoch 16 completed. Average Loss: 3.6748
+
+Epoch 17/100, Step 200/294, Avg Loss: 3.5020
+
+Epoch 17 completed. Average Loss: 3.6090
+
+Epoch 18/100, Step 200/294, Avg Loss: 3.5916
+
+Epoch 18 completed. Average Loss: 3.5600
+
+Epoch 19/100, Step 200/294, Avg Loss: 3.5570
+
+Epoch 19 completed. Average Loss: 3.5176
+
+Epoch 20/100, Step 200/294, Avg Loss: 3.4246
+
+Epoch 20 completed. Average Loss: 3.4894
+
+Epoch 21/100, Step 200/294, Avg Loss: 3.4769
+
+Epoch 21 completed. Average Loss: 3.4648
+
+Epoch 22/100, Step 200/294, Avg Loss: 3.5515
+
+Epoch 22 completed. Average Loss: 3.4421
+
+Epoch 23/100, Step 200/294, Avg Loss: 3.4522
+
+Epoch 23 completed. Average Loss: 3.4246
+
+Epoch 24/100, Step 200/294, Avg Loss: 3.3612
+
+Epoch 24 completed. Average Loss: 3.4094
+
+Epoch 25/100, Step 200/294, Avg Loss: 3.3767
+
+Epoch 25 completed. Average Loss: 3.3924
+
+Epoch 26/100, Step 200/294, Avg Loss: 3.4029
+
+Epoch 26 completed. Average Loss: 3.3782
+
+Epoch 27/100, Step 200/294, Avg Loss: 3.3696
+
+Epoch 27 completed. Average Loss: 3.3619
+
+Epoch 28/100, Step 200/294, Avg Loss: 3.3141
+
+Epoch 28 completed. Average Loss: 3.3515
+
+Epoch 29/100, Step 200/294, Avg Loss: 3.2810
+
+Epoch 29 completed. Average Loss: 3.3357
+
+Epoch 30/100, Step 200/294, Avg Loss: 3.3144
+
+Epoch 30 completed. Average Loss: 3.3228
+
+Epoch 31/100, Step 200/294, Avg Loss: 3.3180
+
+Epoch 31 completed. Average Loss: 3.3093
+
+Epoch 32/100, Step 200/294, Avg Loss: 3.2634
+
+Epoch 32 completed. Average Loss: 3.2950
+
+Epoch 33/100, Step 200/294, Avg Loss: 3.2939
+
+Epoch 33 completed. Average Loss: 3.2805
+
+Epoch 34/100, Step 200/294, Avg Loss: 3.2796
+
+Epoch 34 completed. Average Loss: 3.2673
+
+Epoch 35/100, Step 200/294, Avg Loss: 3.3006
+
+Epoch 35 completed. Average Loss: 3.2489
+
+Epoch 36/100, Step 200/294, Avg Loss: 3.2002
+
+Epoch 36 completed. Average Loss: 3.2329
+
+Epoch 37/100, Step 200/294, Avg Loss: 3.2021
+
+Epoch 37 completed. Average Loss: 3.2125
+
+Epoch 38/100, Step 200/294, Avg Loss: 3.2097
+
+Epoch 38 completed. Average Loss: 3.1933
+
+Epoch 39/100, Step 200/294, Avg Loss: 3.1840
+
+Epoch 39 completed. Average Loss: 3.1714
+
+Epoch 40/100, Step 200/294, Avg Loss: 3.1185
+
+Epoch 40 completed. Average Loss: 3.1473
+
+Epoch 41/100, Step 200/294, Avg Loss: 3.1533
+
+Epoch 41 completed. Average Loss: 3.1219
+
+Epoch 42/100, Step 200/294, Avg Loss: 3.0726
+
+Epoch 42 completed. Average Loss: 3.0959
+
+Epoch 43/100, Step 200/294, Avg Loss: 3.0719
+
+Epoch 43 completed. Average Loss: 3.0676
+
+Epoch 44/100, Step 200/294, Avg Loss: 2.9835
+
+Epoch 44 completed. Average Loss: 3.0351
+
+Epoch 45/100, Step 200/294, Avg Loss: 3.0077
+
+Epoch 45 completed. Average Loss: 3.0061
+
+Epoch 46/100, Step 200/294, Avg Loss: 3.0077
+
+Epoch 46 completed. Average Loss: 2.9734
+
+Epoch 47/100, Step 200/294, Avg Loss: 2.9818
+
+Epoch 47 completed. Average Loss: 2.9399
+
+Epoch 48/100, Step 200/294, Avg Loss: 2.8590
+
+Epoch 48 completed. Average Loss: 2.9085
+
+Epoch 49/100, Step 200/294, Avg Loss: 2.8901
+
+Epoch 49 completed. Average Loss: 2.8754
+
+Epoch 50/100, Step 200/294, Avg Loss: 2.8140
+
+Epoch 50 completed. Average Loss: 2.8422
+
+Epoch 51/100, Step 200/294, Avg Loss: 2.8044
+
+Epoch 51 completed. Average Loss: 2.8087
+
+Epoch 52/100, Step 200/294, Avg Loss: 2.7575
+
+Epoch 52 completed. Average Loss: 2.7758
+
+Epoch 53/100, Step 200/294, Avg Loss: 2.7646
+
+Epoch 53 completed. Average Loss: 2.7432
+
+Epoch 54/100, Step 200/294, Avg Loss: 2.7033
+
+Epoch 54 completed. Average Loss: 2.7109
+
+Epoch 55/100, Step 200/294, Avg Loss: 2.6416
+
+Epoch 55 completed. Average Loss: 2.6807
+
+Epoch 56/100, Step 200/294, Avg Loss: 2.6399
+
+Epoch 56 completed. Average Loss: 2.6493
+
+Epoch 57/100, Step 200/294, Avg Loss: 2.6551
+
+Epoch 57 completed. Average Loss: 2.6240
+
+Epoch 58/100, Step 200/294, Avg Loss: 2.5211
+
+Epoch 58 completed. Average Loss: 2.5954
+
+Epoch 59/100, Step 200/294, Avg Loss: 2.5654
+
+Epoch 59 completed. Average Loss: 2.5693
+
+Epoch 60/100, Step 200/294, Avg Loss: 2.4976
+
+Epoch 60 completed. Average Loss: 2.5463
+
+Epoch 61/100, Step 200/294, Avg Loss: 2.5283
+
+Epoch 61 completed. Average Loss: 2.5232
+
+Epoch 62/100, Step 200/294, Avg Loss: 2.5029
+
+Epoch 62 completed. Average Loss: 2.5030
+
+Epoch 63/100, Step 200/294, Avg Loss: 2.3931
+
+Epoch 63 completed. Average Loss: 2.4795
+
+Epoch 64/100, Step 200/294, Avg Loss: 2.4109
+
+Epoch 64 completed. Average Loss: 2.4653
+
+Epoch 65/100, Step 200/294, Avg Loss: 2.3672
+
+Epoch 65 completed. Average Loss: 2.4468
+
+Epoch 66/100, Step 200/294, Avg Loss: 2.3727
+
+Epoch 66 completed. Average Loss: 2.4328
+
+Epoch 67/100, Step 200/294, Avg Loss: 2.4989
+
+Epoch 67 completed. Average Loss: 2.4184
+
+Epoch 68/100, Step 200/294, Avg Loss: 2.3628
+
+Epoch 68 completed. Average Loss: 2.4043
+
+Epoch 69/100, Step 200/294, Avg Loss: 2.3351
+
+Epoch 69 completed. Average Loss: 2.3913
+
+Epoch 70/100, Step 200/294, Avg Loss: 2.3071
+
+Epoch 70 completed. Average Loss: 2.3786
+
+Epoch 71/100, Step 200/294, Avg Loss: 2.4291
+
+Epoch 71 completed. Average Loss: 2.3690
+
+Epoch 72/100, Step 200/294, Avg Loss: 2.3441
+
+Epoch 72 completed. Average Loss: 2.3571
+
+Epoch 73/100, Step 200/294, Avg Loss: 2.3206
+
+Epoch 73 completed. Average Loss: 2.3499
+
+Epoch 74/100, Step 200/294, Avg Loss: 2.3127
+
+Epoch 74 completed. Average Loss: 2.3443
+
+Epoch 75/100, Step 200/294, Avg Loss: 2.3171
+
+Epoch 75 completed. Average Loss: 2.3362
+
+Epoch 76/100, Step 200/294, Avg Loss: 2.3325
+
+Epoch 76 completed. Average Loss: 2.3289
+
+Epoch 77/100, Step 200/294, Avg Loss: 2.2585
+
+Epoch 77 completed. Average Loss: 2.3201
+
+Epoch 78/100, Step 200/294, Avg Loss: 2.3066
+
+Epoch 78 completed. Average Loss: 2.3117
+
+Epoch 79/100, Step 200/294, Avg Loss: 2.2546
+
+Epoch 79 completed. Average Loss: 2.3092
+
+Epoch 80/100, Step 200/294, Avg Loss: 2.3321
+
+Epoch 80 completed. Average Loss: 2.3025
+
+Epoch 81/100, Step 200/294, Avg Loss: 2.2569
+
+Epoch 81 completed. Average Loss: 2.2970
+
+Epoch 82/100, Step 200/294, Avg Loss: 2.2850
+
+Epoch 82 completed. Average Loss: 2.2833
+
+Epoch 83/100, Step 200/294, Avg Loss: 2.3239
+
+Epoch 83 completed. Average Loss: 2.2882
+
+Epoch 84/100, Step 200/294, Avg Loss: 2.2928
+
+Epoch 84 completed. Average Loss: 2.2821
+
+Epoch 85/100, Step 200/294, Avg Loss: 2.2557
+
+Epoch 85 completed. Average Loss: 2.2801
+
+Epoch 86/100, Step 200/294, Avg Loss: 2.2635
+
+Epoch 86 completed. Average Loss: 2.2764
+
+Epoch 87/100, Step 200/294, Avg Loss: 2.2724
+
+Epoch 87 completed. Average Loss: 2.2716
+
+Epoch 88/100, Step 200/294, Avg Loss: 2.2032
+
+Epoch 88 completed. Average Loss: 2.2600
+
+Epoch 89/100, Step 200/294, Avg Loss: 2.2593
+
+Epoch 89 completed. Average Loss: 2.2622
+
+Epoch 90/100, Step 200/294, Avg Loss: 2.2866
+
+Epoch 90 completed. Average Loss: 2.2625
+
+Epoch 91/100, Step 200/294, Avg Loss: 2.1760
+
+Epoch 91 completed. Average Loss: 2.2625
+
+Epoch 92/100, Step 200/294, Avg Loss: 2.2663
+
+Epoch 92 completed. Average Loss: 2.2578
+
+Epoch 93/100, Step 200/294, Avg Loss: 2.2294
+
+Epoch 93 completed. Average Loss: 2.2559
+
+Epoch 94/100, Step 200/294, Avg Loss: 2.2008
+
+Epoch 94 completed. Average Loss: 2.2546
+
+Epoch 95/100, Step 200/294, Avg Loss: 2.2437
+
+Epoch 95 completed. Average Loss: 2.2497
+
+Epoch 96/100, Step 200/294, Avg Loss: 2.1772
+
+Epoch 96 completed. Average Loss: 2.2463
+
+Epoch 97/100, Step 200/294, Avg Loss: 2.1760
+
+Epoch 97 completed. Average Loss: 2.2505
+
+Epoch 98/100, Step 200/294, Avg Loss: 2.2769
+
+Epoch 98 completed. Average Loss: 2.2424
+
+Epoch 99/100, Step 200/294, Avg Loss: 2.2291
+
+Epoch 99 completed. Average Loss: 2.2402
+
+Epoch 100/100, Step 200/294, Avg Loss: 2.1924
+
+Epoch 100 completed. Average Loss: 2.2376
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># PLOT TRAINING LOSS</span>
+<span class="c1"># ============================================</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">epochs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">model</span><span class="o">.</span><span class="n">loss_history</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Epoch&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Average Loss (Negative Log-Likelihood)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Skip-gram Training Loss&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/7480f2dbf8d4773a11ecc27c23ef465824fee5f29977bdf40d83f0334c33476c.png" src="../_images/7480f2dbf8d4773a11ecc27c23ef465824fee5f29977bdf40d83f0334c33476c.png" />
+</div>
+</div>
+</section>
+<section id="evaluating-the-trained-embeddings">
+<h3>Evaluating the Trained Embeddings<a class="headerlink" href="#evaluating-the-trained-embeddings" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># EVALUATE WORD SIMILARITIES</span>
+<span class="c1"># ============================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WORD SIMILARITIES&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="n">test_words</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;she&#39;</span><span class="p">,</span> <span class="s1">&#39;rabbit&#39;</span><span class="p">,</span> <span class="s1">&#39;down&#39;</span><span class="p">,</span> <span class="s1">&#39;very&#39;</span><span class="p">,</span> <span class="s1">&#39;was&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">test_words</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="p">:</span>
+        <span class="n">similar</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">idx2word</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Words similar to &#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">similar</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">w</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39; not in vocabulary&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+WORD SIMILARITIES
+============================================================
+
+Words similar to &#39;she&#39;:
+  or              0.9364
+  in              0.8669
+  it              0.8667
+  when            0.8205
+  of              0.7800
+
+Words similar to &#39;rabbit&#39;:
+  out             0.9535
+  time            0.8861
+  considering     0.8756
+  suddenly        0.8727
+  it              0.5566
+
+Words similar to &#39;down&#39;:
+  on              0.8501
+  of              0.8351
+  time            0.7850
+  before          0.6946
+  very            0.6645
+
+Words similar to &#39;very&#39;:
+  went            0.9596
+  so              0.9068
+  as              0.8678
+  of              0.8383
+  was             0.6825
+
+Words similar to &#39;was&#39;:
+  pictures        0.8755
+  that            0.8565
+  at              0.8390
+  for             0.7673
+  went            0.7241
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># TEST ANALOGIES</span>
+<span class="c1"># ============================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WORD ANALOGIES&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Check if we have suitable words for analogies</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Checking vocabulary for analogy words...&quot;</span><span class="p">)</span>
+<span class="n">analogy_words</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;she&#39;</span><span class="p">,</span> <span class="s1">&#39;her&#39;</span><span class="p">,</span> <span class="s1">&#39;he&#39;</span><span class="p">,</span> <span class="s1">&#39;his&#39;</span><span class="p">,</span> <span class="s1">&#39;rabbit&#39;</span><span class="p">,</span> <span class="s1">&#39;hole&#39;</span><span class="p">,</span> <span class="s1">&#39;went&#39;</span><span class="p">,</span> <span class="s1">&#39;down&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">analogy_words</span><span class="p">:</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;✓&quot;</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">word2idx</span> <span class="k">else</span> <span class="s2">&quot;✗&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2"> &#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Try an analogy if possible</span>
+<span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">w</span> <span class="ow">in</span> <span class="n">word2idx</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;she&#39;</span><span class="p">,</span> <span class="s1">&#39;her&#39;</span><span class="p">,</span> <span class="s1">&#39;he&#39;</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Analogy: she → her :: he → ?&quot;</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">analogy</span><span class="p">(</span><span class="s1">&#39;she&#39;</span><span class="p">,</span> <span class="s1">&#39;her&#39;</span><span class="p">,</span> <span class="s1">&#39;he&#39;</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">idx2word</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+WORD ANALOGIES
+============================================================
+
+Checking vocabulary for analogy words...
+  ✓ &#39;she&#39;
+  ✓ &#39;her&#39;
+  ✗ &#39;he&#39;
+  ✗ &#39;his&#39;
+  ✓ &#39;rabbit&#39;
+  ✓ &#39;hole&#39;
+  ✓ &#39;went&#39;
+  ✓ &#39;down&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizing-the-learned-embeddings">
+<h3>Visualizing the Learned Embeddings<a class="headerlink" href="#visualizing-the-learned-embeddings" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>
+
+<span class="k">def</span> <span class="nf">visualize_embeddings</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">idx2word</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;average&#39;</span><span class="p">,</span> 
+                         <span class="n">min_freq</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">word_counts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Visualize word embeddings using t-SNE.&quot;&quot;&quot;</span>
+    
+    <span class="c1"># Filter words by frequency if word_counts provided</span>
+    <span class="k">if</span> <span class="n">word_counts</span><span class="p">:</span>
+        <span class="n">words_to_plot</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">word_counts</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_freq</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">words_to_plot</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">word2idx</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    
+    <span class="c1"># Get embeddings</span>
+    <span class="n">embeddings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words_to_plot</span><span class="p">:</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_embedding</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+        <span class="n">embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+    
+    <span class="n">embeddings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span>
+    
+    <span class="c1"># Reduce to 2D using t-SNE</span>
+    <span class="n">tsne</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">perplexity</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">words_to_plot</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">embeddings_2d</span> <span class="o">=</span> <span class="n">tsne</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span>
+    
+    <span class="c1"># Plot</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    
+    <span class="c1"># Color points by frequency (optional)</span>
+    <span class="k">if</span> <span class="n">word_counts</span><span class="p">:</span>
+        <span class="n">frequencies</span> <span class="o">=</span> <span class="p">[</span><span class="n">word_counts</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words_to_plot</span><span class="p">]</span>
+        <span class="n">scatter</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">embeddings_2d</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">embeddings_2d</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> 
+                             <span class="n">c</span><span class="o">=</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">scatter</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Word Frequency&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">embeddings_2d</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">embeddings_2d</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    
+    <span class="c1"># Add labels</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">words_to_plot</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="p">(</span><span class="n">embeddings_2d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">embeddings_2d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
+                    <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+                    <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s1">&#39;round,pad=0.3&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> 
+                             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">))</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Word Embeddings (t-SNE) - </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1"> embeddings&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;t-SNE Dimension 1&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;t-SNE Dimension 2&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">embeddings_2d</span><span class="p">,</span> <span class="n">words_to_plot</span>
+
+<span class="c1"># Visualize</span>
+<span class="n">embeddings_2d</span><span class="p">,</span> <span class="n">plotted_words</span> <span class="o">=</span> <span class="n">visualize_embeddings</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">idx2word</span><span class="p">,</span> 
+    <span class="n">method</span><span class="o">=</span><span class="s1">&#39;average&#39;</span><span class="p">,</span>
+    <span class="n">min_freq</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">word_counts</span><span class="o">=</span><span class="n">word_counts</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\site-packages\joblib\externals\loky\backend\context.py:136: UserWarning: Could not find the number of physical cores for the following reason:
+[WinError 2] The system cannot find the file specified
+Returning the number of logical cores instead. You can silence this warning by setting LOKY_MAX_CPU_COUNT to the number of cores you want to use.
+  warnings.warn(
+  File &quot;c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\site-packages\joblib\externals\loky\backend\context.py&quot;, line 257, in _count_physical_cores
+    cpu_info = subprocess.run(
+  File &quot;c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\subprocess.py&quot;, line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File &quot;c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\subprocess.py&quot;, line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File &quot;c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\subprocess.py&quot;, line 1456, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+</pre></div>
+</div>
+<img alt="../_images/8df6fe47e0315ca4c72ca8a185f7cd6ddc7bce82a7c7833b8d1e254488bda3b7.png" src="../_images/8df6fe47e0315ca4c72ca8a185f7cd6ddc7bce82a7c7833b8d1e254488bda3b7.png" />
+</div>
+</div>
+</section>
+<section id="complete-comparison-center-vs-context-vs-average-embeddings">
+<h3>Complete Comparison: Center vs Context vs Average Embeddings<a class="headerlink" href="#complete-comparison-center-vs-context-vs-average-embeddings" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># COMPARE DIFFERENT EMBEDDING TYPES</span>
+<span class="c1"># ============================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;COMPARING EMBEDDING TYPES&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="n">word</span> <span class="o">=</span> <span class="s2">&quot;rabbit&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Embeddings for &#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Center (W1):    </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">get_center_embedding</span><span class="p">(</span><span class="n">word</span><span class="p">,</span><span class="w"> </span><span class="n">word2idx</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Context (W2):   </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">get_context_embedding</span><span class="p">(</span><span class="n">word</span><span class="p">,</span><span class="w"> </span><span class="n">word2idx</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Average:        </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">get_embedding</span><span class="p">(</span><span class="n">word</span><span class="p">,</span><span class="w"> </span><span class="n">word2idx</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;average&#39;</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+<span class="c1"># Compare similarities using different embedding types</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Similar words to &#39;rabbit&#39; using different embeddings:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;context&#39;</span><span class="p">,</span> <span class="s1">&#39;average&#39;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> embeddings:&quot;</span><span class="p">)</span>
+    <span class="n">similar</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="s1">&#39;rabbit&#39;</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">,</span> <span class="n">idx2word</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">similar</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">w</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+COMPARING EMBEDDING TYPES
+============================================================
+
+Embeddings for &#39;rabbit&#39;:
+  Center (W1):    [ 0.17506939 -0.09760884 -0.2675734   0.31602831  0.58567455]...
+  Context (W2):   [-0.046      -0.3125371  -0.07924378  0.55977444  0.59415106]...
+  Average:        [ 0.0645347  -0.20507297 -0.17340859  0.43790138  0.5899128 ]...
+
+Similar words to &#39;rabbit&#39; using different embeddings:
+--------------------------------------------------
+
+CENTER embeddings:
+  considering     0.7573
+  out             0.6121
+  down            0.5346
+  suddenly        0.4634
+  when            0.4090
+
+CONTEXT embeddings:
+  considering     0.7864
+  out             0.6040
+  down            0.5240
+  it              0.4718
+  suddenly        0.4521
+
+AVERAGE embeddings:
+  out             0.9535
+  time            0.8861
+  considering     0.8756
+  suddenly        0.8727
+  it              0.5566
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="saving-and-loading-the-model">
+<h3>Saving and Loading the Model<a class="headerlink" href="#saving-and-loading-the-model" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the trained model to a file.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span>
+            <span class="s1">&#39;W1&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">W1</span><span class="p">,</span>
+            <span class="s1">&#39;W2&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">W2</span><span class="p">,</span>
+            <span class="s1">&#39;vocab_size&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span>
+            <span class="s1">&#39;embedding_dim&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span>
+            <span class="s1">&#39;loss_history&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">loss_history</span>
+        <span class="p">},</span> <span class="n">f</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model saved to </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a trained model from a file.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    
+    <span class="n">model</span> <span class="o">=</span> <span class="n">SkipGramModel</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;vocab_size&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;embedding_dim&#39;</span><span class="p">])</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">W1</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;W1&#39;</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">W2</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;W2&#39;</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">loss_history</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;loss_history&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model loaded from </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+
+<span class="c1"># Save the model</span>
+<span class="n">save_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;skipgram_model.pkl&#39;</span><span class="p">)</span>
+
+<span class="c1"># Load the model</span>
+<span class="n">loaded_model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="s1">&#39;skipgram_model.pkl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model saved to skipgram_model.pkl
+Model loaded from skipgram_model.pkl
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="summary-what-we-ve-implemented">
+<h2>Summary: What We’ve Implemented<a class="headerlink" href="#summary-what-we-ve-implemented" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SKIP-GRAM WORD2VEC IMPLEMENTATION SUMMARY&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+
+<span class="n">summary</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">ARCHITECTURE:</span>
+<span class="s2">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="s2">    Input (one-hot, V)  →  W₁ (V×d)  →  h (d)  →  W₂ (d×V)  →  Softmax (V)</span>
+<span class="s2">    </span>
+<span class="s2">    • W₁: Center word embeddings (what we primarily use)</span>
+<span class="s2">    • W₂: Context word embeddings (used during training)</span>
+<span class="s2">    • h: Hidden representation = row of W₁ for center word</span>
+<span class="s2">    • Output: Probability distribution over vocabulary</span>
+
+<span class="s2">KEY EQUATIONS:</span>
+<span class="s2">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="s2">    Forward:   P(o|c) = softmax(W₂ · W₁[c])</span>
+<span class="s2">    </span>
+<span class="s2">    Loss:      L = -log P(o|c)</span>
+<span class="s2">    </span>
+<span class="s2">    Gradients: </span>
+<span class="s2">        ∂L/∂W₁[c] = W₂ᵀ · (ŷ - y)</span>
+<span class="s2">        ∂L/∂W₂    = (ŷ - y) ⊗ h</span>
+<span class="s2">    </span>
+<span class="s2">    Where:</span>
+<span class="s2">        • c = center word index</span>
+<span class="s2">        • o = context word index  </span>
+<span class="s2">        • ŷ = predicted distribution</span>
+<span class="s2">        • y = one-hot for true context word</span>
+
+<span class="s2">TRAINING PROCESS:</span>
+<span class="s2">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="s2">    1. For each (center, context) pair:</span>
+<span class="s2">       a. Forward pass: compute P(context | center)</span>
+<span class="s2">       b. Compute loss: -log P(context | center)</span>
+<span class="s2">       c. Backward pass: compute gradients</span>
+<span class="s2">       d. Update: W ← W - α · gradient</span>
+<span class="s2">    </span>
+<span class="s2">    2. Repeat for all pairs (one epoch)</span>
+<span class="s2">    3. Repeat for multiple epochs</span>
+
+<span class="s2">LIMITATIONS OF THIS IMPLEMENTATION:</span>
+<span class="s2">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="s2">    • Uses full softmax (O(V) per sample) - slow for large vocabularies</span>
+<span class="s2">    • No negative sampling (would reduce to O(k) where k ≈ 5-20)</span>
+<span class="s2">    • Small corpus → limited quality embeddings</span>
+<span class="s2">    • No subsampling of frequent words</span>
+<span class="s2">    • No learning rate decay</span>
+
+<span class="s2">IN PRACTICE (Gensim/Original Word2Vec):</span>
+<span class="s2">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="s2">    • Negative sampling for efficiency</span>
+<span class="s2">    • Subsampling of frequent words (the, a, is, ...)</span>
+<span class="s2">    • Learning rate linearly decreases during training</span>
+<span class="s2">    • Trained on billions of words</span>
+<span class="s2">    • Vector dimensions: 100-300 typically</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>======================================================================
+SKIP-GRAM WORD2VEC IMPLEMENTATION SUMMARY
+======================================================================
+
+ARCHITECTURE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Input (one-hot, V)  →  W₁ (V×d)  →  h (d)  →  W₂ (d×V)  →  Softmax (V)
+    
+    • W₁: Center word embeddings (what we primarily use)
+    • W₂: Context word embeddings (used during training)
+    • h: Hidden representation = row of W₁ for center word
+    • Output: Probability distribution over vocabulary
+
+KEY EQUATIONS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Forward:   P(o|c) = softmax(W₂ · W₁[c])
+    
+    Loss:      L = -log P(o|c)
+    
+    Gradients: 
+        ∂L/∂W₁[c] = W₂ᵀ · (ŷ - y)
+        ∂L/∂W₂    = (ŷ - y) ⊗ h
+    
+    Where:
+        • c = center word index
+        • o = context word index  
+        • ŷ = predicted distribution
+        • y = one-hot for true context word
+
+TRAINING PROCESS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    1. For each (center, context) pair:
+       a. Forward pass: compute P(context | center)
+       b. Compute loss: -log P(context | center)
+       c. Backward pass: compute gradients
+       d. Update: W ← W - α · gradient
+    
+    2. Repeat for all pairs (one epoch)
+    3. Repeat for multiple epochs
+
+LIMITATIONS OF THIS IMPLEMENTATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    • Uses full softmax (O(V) per sample) - slow for large vocabularies
+    • No negative sampling (would reduce to O(k) where k ≈ 5-20)
+    • Small corpus → limited quality embeddings
+    • No subsampling of frequent words
+    • No learning rate decay
+
+IN PRACTICE (Gensim/Original Word2Vec):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    • Negative sampling for efficiency
+    • Subsampling of frequent words (the, a, is, ...)
+    • Learning rate linearly decreases during training
+    • Trained on billions of words
+    • Vector dimensions: 100-300 typically
+
+======================================================================
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./misc"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">2.1 Mathematical Foundations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-hot-vectors-as-matrix-lookups">One-Hot Vectors as Matrix Lookups</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dot-product-and-similarity">Dot Product and Similarity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#softmax-function">Softmax Function</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#skip-gram-model-objective-function-and-gradients">2.2 Skip-gram Model: Objective Function and Gradients</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-formulation">Problem Formulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-objective-function">The Objective Function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-architecture">Understanding the Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-the-gradient">Computing the Gradient</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-computational-problem-full-softmax">The Computational Problem: Full Softmax</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-from-scratch-data-preparation">2.3 Implementation from Scratch: Data Preparation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-a-larger-corpus-for-better-results">Using a Larger Corpus for Better Results</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-from-scratch-model-building-and-training">2.4 Implementation from Scratch: Model Building and Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-skip-gram-model-class">The Skip-gram Model Class</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-the-model">Training the Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluating-the-trained-embeddings">Evaluating the Trained Embeddings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-learned-embeddings">Visualizing the Learned Embeddings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-comparison-center-vs-context-vs-average-embeddings">Complete Comparison: Center vs Context vs Average Embeddings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#saving-and-loading-the-model">Saving and Loading the Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-what-we-ve-implemented">Summary: What We’ve Implemented</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Mahmood Amintoosi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. CC0 Licensed - Computer Science Dept., Ferdowsi University of Mashhad.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

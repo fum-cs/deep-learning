@@ -1,0 +1,1895 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Word2Vec: Fundamentals and Practical Applications &#8212; DL</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'misc/word2vec_section1_fundamentals';</script>
+    <link rel="icon" href="../_static/fum-logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/fum-cs-logo.png" class="logo__image only-light" alt="DL - Home"/>
+    <script>document.write(`<img src="../_static/fum-cs-logo.png" class="logo__image only-dark" alt="DL - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Deep Learning
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../lecture1_introduction.html">Introduction to the Course</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_1_regression.html">Regression</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_2_gradient-descent.html">Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_3_stochastic-gradient-descent.html">Stochastic Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture3_neural-networks-basics.html">Introduction to Pytorch &amp; Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture4_neural-networks-for-classification.html">Neural Networks for Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture5_neural-networks-regularization.html">Regularization and Dropout in Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_1d_cnns.html">Introduction to 1D Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_cnns-pt1.html">Introduction to Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture7_cnns-pt2.html">Advanced Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture8_advanced-deep-learning.html">Advanced Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixA_gradients.html">Appendix A: Gradients Review</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../appendixB_logistic-loss.html">Appendix B: Logistic Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixC_computing-derivatives.html">Appendix C: Computing Derivatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixD_tensor-basics.html">Appendix D: Basics of Numpy and Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixE_pytorch-autograd.html">Appendix E: Auto Differentiation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixF_pytorch-optimizers.html">Appendix F: Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixG_bitmoji-CNN.html">Appendix G: Creating a CNN to Predict Bitmojis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixH_transposed_conv.html">Appendix H: Transposed Convolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixI_floating-point.html">Appendix I: Floating Point Numbers</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hws/index.html">Home Works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hws/HW-2D-CNN-learn-filters.html">Exercise: Learning and Inverting Image Filters with CNNs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hws/Modeling-a-Harmonic-Oscillator-with-MLP-and-GAN.html">Exercise: Modeling a Harmonic Oscillator with MLP and GAN</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/fum-cs/deep-learning/blob/main/notebooks/misc/word2vec_section1_fundamentals.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning/issues/new?title=Issue%20on%20page%20%2Fmisc/word2vec_section1_fundamentals.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/misc/word2vec_section1_fundamentals.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Word2Vec: Fundamentals and Practical Applications</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-word-embeddings">1.1 Introduction to Word Embeddings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-with-traditional-text-representation">The Problem with Traditional Text Representation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-dense-word-embeddings">The Solution: Dense Word Embeddings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-distributional-hypothesis">The Distributional Hypothesis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuitive-example-animal-space">Intuitive Example: Animal Space</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-operations-reveal-semantic-relationships">Vector Operations Reveal Semantic Relationships</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#word2vec-models-overview">1.2 Word2Vec Models Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-core-idea">The Core Idea</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-architectures">Two Architectures</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#skip-gram-model">Skip-gram Model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-bag-of-words-cbow-model">Continuous Bag of Words (CBOW) Model</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-hyperparameters">Key Hyperparameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skip-gram-vs-cbow-comparison">Skip-gram vs. CBOW Comparison</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-examples-with-pre-trained-models">1.3 Practical Examples with Pre-trained Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-pre-trained-word-vectors">Loading Pre-trained Word Vectors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-similar-words">Finding Similar Words</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-famous-analogy-king-man-woman-queen">The Famous Analogy: King - Man + Woman = Queen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-math-behind-analogies">Understanding the Math Behind Analogies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-analogy-examples">More Analogy Examples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-odd-one-out">Finding the Odd One Out</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-similarity-scores">Computing Similarity Scores</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-query-capital-of-iran">Simple Query: “Capital of Iran”</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-word-relationships-t-sne">Visualizing Word Relationships (t-SNE)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-practical-session">1.4 Complete Practical Session</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">Key Takeaways</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="word2vec-fundamentals-and-practical-applications">
+<h1>Word2Vec: Fundamentals and Practical Applications<a class="headerlink" href="#word2vec-fundamentals-and-practical-applications" title="Link to this heading">#</a></h1>
+<p><strong>Deep Learning Course</strong></p>
+<p>In this notebook, we explore Word2Vec from a practical perspective. We’ll learn:</p>
+<ol class="arabic simple">
+<li><p>What word embeddings are and why we need them</p></li>
+<li><p>The Skip-gram and CBOW architectures</p></li>
+<li><p>How to use pre-trained word vectors</p></li>
+<li><p>Vector arithmetic and analogies (king - man + woman = queen)</p></li>
+<li><p>Finding similar words and odd-one-out detection</p></li>
+</ol>
+<section id="introduction-to-word-embeddings">
+<h2>1.1 Introduction to Word Embeddings<a class="headerlink" href="#introduction-to-word-embeddings" title="Link to this heading">#</a></h2>
+<section id="the-problem-with-traditional-text-representation">
+<h3>The Problem with Traditional Text Representation<a class="headerlink" href="#the-problem-with-traditional-text-representation" title="Link to this heading">#</a></h3>
+<p>In natural language processing (NLP), we need to represent words in a way that computers can process. The simplest approach is <strong>one-hot encoding</strong>, where each word in the vocabulary is represented by a vector with a single <code class="docutils literal notranslate"><span class="pre">1</span></code> and all other values <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">vocab</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;dog&quot;</span><span class="p">,</span> <span class="s2">&quot;fish&quot;</span><span class="p">,</span> <span class="s2">&quot;bird&quot;</span><span class="p">]</span>
+<span class="n">word_to_idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">word</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocab</span><span class="p">)}</span>
+
+<span class="k">def</span> <span class="nf">one_hot</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">))</span>
+    <span class="n">vec</span><span class="p">[</span><span class="n">word_to_idx</span><span class="p">[</span><span class="n">word</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">vec</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;One-hot for &#39;cat&#39;:&quot;</span><span class="p">,</span> <span class="n">one_hot</span><span class="p">(</span><span class="s2">&quot;cat&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;One-hot for &#39;dog&#39;:&quot;</span><span class="p">,</span> <span class="n">one_hot</span><span class="p">(</span><span class="s2">&quot;dog&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>One-hot for &#39;cat&#39;: [1. 0. 0. 0.]
+One-hot for &#39;dog&#39;: [0. 1. 0. 0.]
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Problems with One-Hot Encoding:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>High Dimensionality</strong>: For a vocabulary of 100,000 words, each vector has 100,000 dimensions</p></li>
+<li><p><strong>No Semantic Information</strong>: The angle between “cat” and “dog” is the same as “cat” and “refrigerator”</p></li>
+<li><p><strong>Sparse Vectors</strong>: Almost all values are zero, leading to inefficient computation</p></li>
+</ol>
+</section>
+<section id="the-solution-dense-word-embeddings">
+<h3>The Solution: Dense Word Embeddings<a class="headerlink" href="#the-solution-dense-word-embeddings" title="Link to this heading">#</a></h3>
+<p>Word embeddings solve these problems by representing each word as a <strong>dense vector</strong> (typically 100-300 dimensions) where semantically similar words have similar vectors.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cat    → [0.23, -0.45, 0.67, ..., 0.12]  (300 dimensions)
+dog    → [0.25, -0.42, 0.65, ..., 0.15]  (300 dimensions)
+refrigerator → [-0.89, 0.34, -0.12, ..., -0.56]
+</pre></div>
+</div>
+<p>Now, the vectors for “cat” and “dog” are close together, while “refrigerator” is far away!</p>
+</section>
+<section id="the-distributional-hypothesis">
+<h3>The Distributional Hypothesis<a class="headerlink" href="#the-distributional-hypothesis" title="Link to this heading">#</a></h3>
+<p>The foundation of word embeddings is the <strong>Distributional Hypothesis</strong>, first articulated by linguist J.R. Firth in 1957:</p>
+<blockquote>
+<div><p><em>“You shall know a word by the company it keeps.”</em></p>
+</div></blockquote>
+<p>This means that words appearing in similar contexts tend to have similar meanings. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&quot;The ___ chased the mouse.&quot; → cat, dog, fox
+&quot;The ___ barked at the mailman.&quot; → dog, puppy, hound
+&quot;The ___ soared through the sky.&quot; → eagle, hawk, bird
+</pre></div>
+</div>
+</section>
+<section id="intuitive-example-animal-space">
+<h3>Intuitive Example: Animal Space<a class="headerlink" href="#intuitive-example-animal-space" title="Link to this heading">#</a></h3>
+<p>Let’s build an intuitive understanding by creating a simple 2D “animal space” based on two characteristics: <strong>cuteness</strong> and <strong>size</strong> (both on a scale of 0-100).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">animals</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;kitten&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">95</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+    <span class="s1">&#39;hamster&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+    <span class="s1">&#39;puppy&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">92</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
+    <span class="s1">&#39;cat&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">75</span><span class="p">,</span> <span class="mi">25</span><span class="p">],</span>
+    <span class="s1">&#39;dog&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span>
+    <span class="s1">&#39;chicken&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+    <span class="s1">&#39;horse&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span>
+    <span class="s1">&#39;elephant&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">95</span><span class="p">],</span>
+    <span class="s1">&#39;tarantula&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># Plot animals</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">animal</span><span class="p">,</span> <span class="p">(</span><span class="n">cute</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="ow">in</span> <span class="n">animals</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">cute</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">animal</span><span class="p">,</span> <span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">cute</span><span class="p">),</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Size →&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Cuteness →&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Animal Space (2D Word Embeddings)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">105</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">105</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/db750e39b1e8219ac568b1637ef36c84d238fbbd60f1a15184442fe25a3f40c3.png" src="../_images/db750e39b1e8219ac568b1637ef36c84d238fbbd60f1a15184442fe25a3f40c3.png" />
+</div>
+</div>
+<p>In this 2D space:</p>
+<ul class="simple">
+<li><p><strong>Kitten</strong> and <strong>hamster</strong> are close (both small and cute)</p></li>
+<li><p><strong>Elephant</strong> is isolated (very large, moderately cute)</p></li>
+<li><p><strong>Horse</strong> is between small and large animals</p></li>
+</ul>
+</section>
+<section id="vector-operations-reveal-semantic-relationships">
+<h3>Vector Operations Reveal Semantic Relationships<a class="headerlink" href="#vector-operations-reveal-semantic-relationships" title="Link to this heading">#</a></h3>
+<p>The power of word embeddings comes from <strong>vector arithmetic</strong>. Consider the relationship between “tarantula” and “hamster”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">vector_add</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">v1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v1</span><span class="p">))]</span>
+
+<span class="k">def</span> <span class="nf">vector_sub</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">v1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v1</span><span class="p">))]</span>
+
+<span class="k">def</span> <span class="nf">euclidean_distance</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">((</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
+
+<span class="c1"># The &quot;cuteness boost&quot; vector (hamster - tarantula)</span>
+<span class="n">cuteness_boost</span> <span class="o">=</span> <span class="n">vector_sub</span><span class="p">(</span><span class="n">animals</span><span class="p">[</span><span class="s1">&#39;hamster&#39;</span><span class="p">],</span> <span class="n">animals</span><span class="p">[</span><span class="s1">&#39;tarantula&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cuteness boost vector (hamster - tarantula):&quot;</span><span class="p">,</span> <span class="n">cuteness_boost</span><span class="p">)</span>
+
+<span class="c1"># Apply to chicken</span>
+<span class="n">chicken_plus_cute</span> <span class="o">=</span> <span class="n">vector_add</span><span class="p">(</span><span class="n">animals</span><span class="p">[</span><span class="s1">&#39;chicken&#39;</span><span class="p">],</span> <span class="n">cuteness_boost</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Chicken + cuteness boost:&quot;</span><span class="p">,</span> <span class="n">chicken_plus_cute</span><span class="p">)</span>
+
+<span class="c1"># Find closest animal</span>
+<span class="k">def</span> <span class="nf">find_closest</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">best_dist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">animal</span><span class="p">,</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">animals</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">animal</span> <span class="ow">in</span> <span class="n">exclude</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">euclidean_distance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">vec</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">best_dist</span><span class="p">:</span>
+            <span class="n">best_dist</span> <span class="o">=</span> <span class="n">dist</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="n">animal</span>
+    <span class="k">return</span> <span class="n">best</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">find_closest</span><span class="p">(</span><span class="n">chicken_plus_cute</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;chicken&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Chicken + cuteness_boost ≈ </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cuteness boost vector (hamster - tarantula): [85, -2]
+Chicken + cuteness boost: [115, 18]
+
+Chicken + cuteness_boost ≈ kitten
+</pre></div>
+</div>
+</div>
+</div>
+<p>This demonstrates the key insight: <strong>vector operations can capture semantic relationships!</strong></p>
+<p>The “cuteness boost” vector captures the concept “cute but similar size.” Applying it to chicken gives us puppy!</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="word2vec-models-overview">
+<h2>1.2 Word2Vec Models Overview<a class="headerlink" href="#word2vec-models-overview" title="Link to this heading">#</a></h2>
+<section id="the-core-idea">
+<h3>The Core Idea<a class="headerlink" href="#the-core-idea" title="Link to this heading">#</a></h3>
+<p>Word2Vec, introduced by Mikolov et al. in 2013, learns word embeddings by training a simple neural network on a large corpus. The network has a specific task: <strong>predict context words from center words (or vice versa)</strong>.</p>
+<p>The genius of Word2Vec is that we don’t actually care about this prediction task—we only want the <strong>learned word representations</strong> (the weights) as a side product!</p>
+</section>
+<section id="two-architectures">
+<h3>Two Architectures<a class="headerlink" href="#two-architectures" title="Link to this heading">#</a></h3>
+<section id="skip-gram-model">
+<h4>Skip-gram Model<a class="headerlink" href="#skip-gram-model" title="Link to this heading">#</a></h4>
+<p><strong>Task</strong>: Given a center word, predict the surrounding context words.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Input</span><span class="p">:</span> <span class="s2">&quot;The cat sat on the mat&quot;</span>
+<span class="n">Center</span> <span class="n">word</span><span class="p">:</span> <span class="s2">&quot;sat&quot;</span>
+<span class="n">Context</span> <span class="n">window</span> <span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span> <span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span> <span class="s2">&quot;the&quot;</span><span class="p">,</span> <span class="s2">&quot;the&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Skip-gram generates training pairs:</p>
+<ul class="simple">
+<li><p>(sat, cat), (sat, on), (sat, the), (sat, the)</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         ┌─────────────────┐
+         │   sat (input)   │
+         └────────┬────────┘
+                  │
+                  ▼
+         ┌─────────────────┐
+         │  Hidden Layer   │  ← Word Embedding (what we want!)
+         │  (no activation)│
+         └────────┬────────┘
+                  │
+                  ▼
+         ┌─────────────────┐
+         │  Output Layer   │
+         │    (Softmax)    │
+         └────────┬────────┘
+                  │
+                  ▼
+    Predict: [cat, on, the, the, ...]
+</pre></div>
+</div>
+</section>
+<section id="continuous-bag-of-words-cbow-model">
+<h4>Continuous Bag of Words (CBOW) Model<a class="headerlink" href="#continuous-bag-of-words-cbow-model" title="Link to this heading">#</a></h4>
+<p><strong>Task</strong>: Given context words, predict the center word.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Input</span> <span class="n">context</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span> <span class="s2">&quot;the&quot;</span><span class="p">,</span> <span class="s2">&quot;the&quot;</span><span class="p">]</span>
+<span class="n">Target</span><span class="p">:</span> <span class="s2">&quot;sat&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    ┌─────────────────────────────────────┐
+    │  Context: [cat, on, the, the]       │
+    └─────────────────┬───────────────────┘
+                      │
+                      ▼
+             ┌─────────────────┐
+             │  Hidden Layer   │  ← Word Embedding (what we want!)
+             │   (Average)     │
+             └────────┬────────┘
+                      │
+                      ▼
+             ┌─────────────────┐
+             │  Output Layer   │
+             │    (Softmax)    │
+             └────────┬────────┘
+                      │
+                      ▼
+                 Predict: &quot;sat&quot;
+</pre></div>
+</div>
+</section>
+</section>
+<section id="key-hyperparameters">
+<h3>Key Hyperparameters<a class="headerlink" href="#key-hyperparameters" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Typical Values</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">window_size</span></code></p></td>
+<td><p>Number of context words on each side</p></td>
+<td><p>5-10</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vector_size</span></code></p></td>
+<td><p>Dimensionality of embeddings</p></td>
+<td><p>100-300</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">min_count</span></code></p></td>
+<td><p>Minimum word frequency to include</p></td>
+<td><p>5-50</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">epochs</span></code></p></td>
+<td><p>Number of training iterations</p></td>
+<td><p>5-20</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sg</span></code></p></td>
+<td><p>0 for CBOW, 1 for Skip-gram</p></td>
+<td><p>0 or 1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="skip-gram-vs-cbow-comparison">
+<h3>Skip-gram vs. CBOW Comparison<a class="headerlink" href="#skip-gram-vs-cbow-comparison" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Skip-gram</p></th>
+<th class="head"><p>CBOW</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Training</p></td>
+<td><p>Slower</p></td>
+<td><p>Faster</p></td>
+</tr>
+<tr class="row-odd"><td><p>Performance on rare words</p></td>
+<td><p>Better</p></td>
+<td><p>Worse</p></td>
+</tr>
+<tr class="row-even"><td><p>Needs more data</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Preferred for</p></td>
+<td><p>Small datasets</p></td>
+<td><p>Large datasets</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="practical-examples-with-pre-trained-models">
+<h2>1.3 Practical Examples with Pre-trained Models<a class="headerlink" href="#practical-examples-with-pre-trained-models" title="Link to this heading">#</a></h2>
+<section id="loading-pre-trained-word-vectors">
+<h3>Loading Pre-trained Word Vectors<a class="headerlink" href="#loading-pre-trained-word-vectors" title="Link to this heading">#</a></h3>
+<p>We’ll use Gensim to load pre-trained word vectors. First, install the required package:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install gensim (run once)</span>
+<span class="c1"># !pip install gensim</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">gensim.downloader</span> <span class="k">as</span> <span class="nn">api</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\site-packages\google\api_core\_python_version_support.py:263: FutureWarning: You are using a Python version (3.10.16) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load pre-trained GloVe vectors (100-dimensional, trained on Wikipedia)</span>
+<span class="c1"># This will download the model on first run (~128 MB)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading pre-trained word vectors...&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;glove-wiki-gigaword-100&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">key_to_index</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> word vectors&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Loading pre-trained word vectors...
+[==================================================] 100.0% 128.1/128.1MB downloaded
+Loaded 400,000 word vectors
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Examine a word vector</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vector for &#39;king&#39; (first 10 dimensions): </span><span class="si">{</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;king&#39;</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vector shape: </span><span class="si">{</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;king&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Vector for &#39;king&#39; (first 10 dimensions): [-0.32307 -0.87616  0.21977  0.25268  0.22976  0.7388  -0.37954 -0.35307
+ -0.84369 -1.1113 ]
+Vector shape: (100,)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="finding-similar-words">
+<h3>Finding Similar Words<a class="headerlink" href="#finding-similar-words" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find the 10 most similar words to &quot;king&quot;</span>
+<span class="n">similar_to_king</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="s2">&quot;king&quot;</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Words most similar to &#39;king&#39;:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">similarity</span> <span class="ow">in</span> <span class="n">similar_to_king</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">word</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">similarity</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Words most similar to &#39;king&#39;:
+  prince          → 0.7682
+  queen           → 0.7508
+  son             → 0.7021
+  brother         → 0.6986
+  monarch         → 0.6978
+  throne          → 0.6920
+  kingdom         → 0.6811
+  father          → 0.6802
+  emperor         → 0.6713
+  ii              → 0.6676
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Try with other words</span>
+<span class="k">for</span> <span class="n">query_word</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;computer&quot;</span><span class="p">,</span> <span class="s2">&quot;beautiful&quot;</span><span class="p">,</span> <span class="s2">&quot;iran&quot;</span><span class="p">,</span> <span class="s2">&quot;tehran&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">query_word</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">key_to_index</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Words similar to &#39;</span><span class="si">{</span><span class="n">query_word</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">query_word</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">word</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">query_word</span><span class="si">}</span><span class="s2">&#39; not in vocabulary&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Words similar to &#39;computer&#39;:
+  computers       0.8752
+  software        0.8373
+  technology      0.7642
+  pc              0.7366
+  hardware        0.7290
+
+Words similar to &#39;beautiful&#39;:
+  lovely          0.8909
+  gorgeous        0.8722
+  wonderful       0.8081
+  charming        0.7719
+  magnificent     0.7332
+
+Words similar to &#39;iran&#39;:
+  tehran          0.8503
+  iranian         0.7911
+  syria           0.7800
+  iraq            0.7679
+  nuclear         0.7258
+
+Words similar to &#39;tehran&#39;:
+  iran            0.8503
+  iranian         0.7557
+  pyongyang       0.7014
+  ahmadinejad     0.6929
+  moscow          0.6898
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-famous-analogy-king-man-woman-queen">
+<h3>The Famous Analogy: King - Man + Woman = Queen<a class="headerlink" href="#the-famous-analogy-king-man-woman-queen" title="Link to this heading">#</a></h3>
+<p>This is the most famous example of word vector arithmetic. The idea is:</p>
+<blockquote>
+<div><p>If we take the concept of “king,” remove the “maleness,” and add “femaleness,” we should get “queen.”</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The classic analogy: king - man + woman = ?</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;king&#39;</span><span class="p">,</span> <span class="s1">&#39;woman&#39;</span><span class="p">],</span> <span class="n">negative</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;man&#39;</span><span class="p">],</span> <span class="n">topn</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;king - man + woman = ?&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">similarity</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">word</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">similarity</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>king - man + woman = ?
+----------------------------------------
+  queen           → 0.7699
+  monarch         → 0.6843
+  throne          → 0.6756
+  daughter        → 0.6595
+  princess        → 0.6521
+  prince          → 0.6517
+  elizabeth       → 0.6465
+  mother          → 0.6312
+  emperor         → 0.6106
+  wife            → 0.6099
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Queen is the top result!</strong> The vector arithmetic successfully captures the gender relationship.</p>
+</section>
+<section id="understanding-the-math-behind-analogies">
+<h3>Understanding the Math Behind Analogies<a class="headerlink" href="#understanding-the-math-behind-analogies" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">explain_analogy</span><span class="p">(</span><span class="n">word_a</span><span class="p">,</span> <span class="n">word_b</span><span class="p">,</span> <span class="n">word_c</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Analogy: word_a is to word_b as word_c is to ?</span>
+<span class="sd">    </span>
+<span class="sd">    Mathematically: ? ≈ word_b - word_a + word_c</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get vectors</span>
+    <span class="n">vec_a</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="n">word_a</span><span class="p">]</span>
+    <span class="n">vec_b</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="n">word_b</span><span class="p">]</span>
+    <span class="n">vec_c</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="n">word_c</span><span class="p">]</span>
+    
+    <span class="c1"># Compute the target vector</span>
+    <span class="n">target_vec</span> <span class="o">=</span> <span class="n">vec_b</span> <span class="o">-</span> <span class="n">vec_a</span> <span class="o">+</span> <span class="n">vec_c</span>
+    
+    <span class="c1"># Find closest words</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="n">word_b</span><span class="p">,</span> <span class="n">word_c</span><span class="p">],</span> <span class="n">negative</span><span class="o">=</span><span class="p">[</span><span class="n">word_a</span><span class="p">],</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analogy: </span><span class="si">{</span><span class="n">word_a</span><span class="si">}</span><span class="s2"> is to </span><span class="si">{</span><span class="n">word_b</span><span class="si">}</span><span class="s2"> as </span><span class="si">{</span><span class="n">word_c</span><span class="si">}</span><span class="s2"> is to ?&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Mathematical operation:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  target = </span><span class="si">{</span><span class="n">word_b</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">word_a</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">word_c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  target = </span><span class="si">{</span><span class="n">vec_b</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">... - </span><span class="si">{</span><span class="n">vec_a</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">... + </span><span class="si">{</span><span class="n">vec_c</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  target = </span><span class="si">{</span><span class="n">target_vec</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Top predictions:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Run the explanation</span>
+<span class="n">explain_analogy</span><span class="p">(</span><span class="s2">&quot;man&quot;</span><span class="p">,</span> <span class="s2">&quot;king&quot;</span><span class="p">,</span> <span class="s2">&quot;woman&quot;</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Analogy: man is to king as woman is to ?
+
+Mathematical operation:
+  target = king - man + woman
+  target = [-0.32307 -0.87616  0.21977]... - [0.37293 0.38503 0.71086]... + [0.59368 0.44825 0.5932 ]...
+  target = [-0.10231996 -0.81294006  0.10211003]...
+
+Top predictions:
+  queen: 0.7699
+  monarch: 0.6843
+  throne: 0.6756
+  daughter: 0.6595
+  princess: 0.6521
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;queen&#39;, 0.7698540687561035),
+ (&#39;monarch&#39;, 0.6843381524085999),
+ (&#39;throne&#39;, 0.6755736470222473),
+ (&#39;daughter&#39;, 0.6594556570053101),
+ (&#39;princess&#39;, 0.6520534157752991)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="more-analogy-examples">
+<h3>More Analogy Examples<a class="headerlink" href="#more-analogy-examples" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_analogy</span><span class="p">(</span><span class="n">positive</span><span class="p">,</span> <span class="n">negative</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to run analogies.&quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="n">positive</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="n">negative</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="n">topn</span><span class="p">)</span>
+    <span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot; + &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">positive</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">negative</span><span class="p">:</span>
+        <span class="n">formula</span> <span class="o">+=</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="s2">&quot; - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">negative</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">formula</span><span class="si">}</span><span class="s2"> = ?&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+<span class="c1"># Geographic analogies</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GEOGRAPHIC ANALOGIES&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">run_analogy</span><span class="p">([</span><span class="s1">&#39;paris&#39;</span><span class="p">,</span> <span class="s1">&#39;japan&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;france&#39;</span><span class="p">])</span>
+<span class="n">run_analogy</span><span class="p">([</span><span class="s1">&#39;tehran&#39;</span><span class="p">,</span> <span class="s1">&#39;germany&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;iran&#39;</span><span class="p">])</span>
+
+<span class="c1"># Grammatical analogies</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GRAMMATICAL ANALOGIES&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">run_analogy</span><span class="p">([</span><span class="s1">&#39;walking&#39;</span><span class="p">,</span> <span class="s1">&#39;swim&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;walk&#39;</span><span class="p">])</span>
+<span class="n">run_analogy</span><span class="p">([</span><span class="s1">&#39;mice&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;mouse&#39;</span><span class="p">])</span>
+
+<span class="c1"># Semantic analogies</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SEMANTIC ANALOGIES&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">run_analogy</span><span class="p">([</span><span class="s1">&#39;summer&#39;</span><span class="p">,</span> <span class="s1">&#39;cold&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;winter&#39;</span><span class="p">])</span>
+<span class="n">run_analogy</span><span class="p">([</span><span class="s1">&#39;doctor&#39;</span><span class="p">,</span> <span class="s1">&#39;law&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;hospital&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==================================================
+GEOGRAPHIC ANALOGIES
+==================================================
+paris + japan - france = ?
+  tokyo: 0.8994
+  osaka: 0.7421
+  japanese: 0.7059
+  seoul: 0.6949
+  shanghai: 0.6679
+
+tehran + germany - iran = ?
+  berlin: 0.8361
+  munich: 0.7773
+  frankfurt: 0.7377
+  cologne: 0.7185
+  hamburg: 0.7169
+
+==================================================
+GRAMMATICAL ANALOGIES
+==================================================
+walking + swim - walk = ?
+  swimming: 0.8009
+  surfing: 0.6603
+  swam: 0.6448
+  rowing: 0.6413
+  jogging: 0.6376
+
+mice + dog - mouse = ?
+  dogs: 0.8048
+  rats: 0.7038
+  cats: 0.6896
+  animals: 0.6468
+  horses: 0.6444
+
+==================================================
+SEMANTIC ANALOGIES
+==================================================
+summer + cold - winter = ?
+  hot: 0.7388
+  cool: 0.6947
+  warm: 0.6855
+  days: 0.6771
+  turned: 0.6674
+
+doctor + law - hospital = ?
+  laws: 0.7347
+  subject: 0.6480
+  statute: 0.6445
+  rules: 0.6442
+  legal: 0.6344
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="finding-the-odd-one-out">
+<h3>Finding the Odd One Out<a class="headerlink" href="#finding-the-odd-one-out" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find the word that doesn&#39;t belong</span>
+<span class="n">words_list1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;breakfast&quot;</span><span class="p">,</span> <span class="s2">&quot;cereal&quot;</span><span class="p">,</span> <span class="s2">&quot;dinner&quot;</span><span class="p">,</span> <span class="s2">&quot;lunch&quot;</span><span class="p">]</span>
+<span class="n">words_list2</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;dog&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;car&quot;</span><span class="p">,</span> <span class="s2">&quot;fish&quot;</span><span class="p">]</span>
+<span class="n">words_list3</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;apple&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="s2">&quot;banana&quot;</span><span class="p">,</span> <span class="s2">&quot;car&quot;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Which word doesn&#39;t belong?&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">words_list1</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">doesnt_match</span><span class="p">(</span><span class="n">words_list1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">words_list2</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">doesnt_match</span><span class="p">(</span><span class="n">words_list2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">words_list3</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">doesnt_match</span><span class="p">(</span><span class="n">words_list3</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Which word doesn&#39;t belong?
+  [&#39;breakfast&#39;, &#39;cereal&#39;, &#39;dinner&#39;, &#39;lunch&#39;] → cereal
+  [&#39;dog&#39;, &#39;cat&#39;, &#39;car&#39;, &#39;fish&#39;] → car
+  [&#39;apple&#39;, &#39;orange&#39;, &#39;banana&#39;, &#39;car&#39;] → car
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="computing-similarity-scores">
+<h3>Computing Similarity Scores<a class="headerlink" href="#computing-similarity-scores" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute similarity between word pairs</span>
+<span class="n">word_pairs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;king&quot;</span><span class="p">,</span> <span class="s2">&quot;queen&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;king&quot;</span><span class="p">,</span> <span class="s2">&quot;man&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;king&quot;</span><span class="p">,</span> <span class="s2">&quot;apple&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;dog&quot;</span><span class="p">,</span> <span class="s2">&quot;puppy&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;dog&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;happy&quot;</span><span class="p">,</span> <span class="s2">&quot;sad&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;fast&quot;</span><span class="p">,</span> <span class="s2">&quot;quick&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;big&quot;</span><span class="p">,</span> <span class="s2">&quot;small&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Word Pair Similarities:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">45</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">w1</span><span class="p">,</span> <span class="n">w2</span> <span class="ow">in</span> <span class="n">word_pairs</span><span class="p">:</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">w1</span><span class="si">:</span><span class="s2">10</span><span class="si">}</span><span class="s2"> ↔ </span><span class="si">{</span><span class="n">w2</span><span class="si">:</span><span class="s2">10</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">sim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Word Pair Similarities:
+---------------------------------------------
+  king       ↔ queen      : 0.7508
+  king       ↔ man        : 0.5119
+  king       ↔ apple      : 0.2668
+  dog        ↔ puppy      : 0.7236
+  dog        ↔ cat        : 0.8798
+  happy      ↔ sad        : 0.6801
+  fast       ↔ quick      : 0.7107
+  big        ↔ small      : 0.7180
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Interesting observation</strong>: Antonyms like “big” and “small” often have high similarity because they appear in similar contexts (e.g., “How big/small is it?”). This shows that word embeddings capture <strong>distributional similarity</strong>, not necessarily semantic similarity in the traditional sense.</p>
+</section>
+<section id="simple-query-capital-of-iran">
+<h3>Simple Query: “Capital of Iran”<a class="headerlink" href="#simple-query-capital-of-iran" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find the capital of Iran</span>
+<span class="c1"># Logic: If paris is to france as X is to iran</span>
+<span class="c1"># X = paris - france + iran</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paris&#39;</span><span class="p">,</span> <span class="s1">&#39;iran&#39;</span><span class="p">],</span> <span class="n">negative</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;france&#39;</span><span class="p">],</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Query: What is the capital of Iran?&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  paris - france + iran = ?&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Query: What is the capital of Iran?
+  paris - france + iran = ?
+----------------------------------------
+  tehran: 0.8785
+  iranian: 0.7055
+  moscow: 0.6929
+  seoul: 0.6468
+  cairo: 0.6466
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizing-word-relationships-t-sne">
+<h3>Visualizing Word Relationships (t-SNE)<a class="headerlink" href="#visualizing-word-relationships-t-sne" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Select interesting words</span>
+<span class="n">words_of_interest</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;king&#39;</span><span class="p">,</span> <span class="s1">&#39;queen&#39;</span><span class="p">,</span> <span class="s1">&#39;prince&#39;</span><span class="p">,</span> <span class="s1">&#39;princess&#39;</span><span class="p">,</span> <span class="s1">&#39;man&#39;</span><span class="p">,</span> <span class="s1">&#39;woman&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;paris&#39;</span><span class="p">,</span> <span class="s1">&#39;france&#39;</span><span class="p">,</span> <span class="s1">&#39;berlin&#39;</span><span class="p">,</span> <span class="s1">&#39;germany&#39;</span><span class="p">,</span> <span class="s1">&#39;rome&#39;</span><span class="p">,</span> <span class="s1">&#39;italy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;fish&#39;</span><span class="p">,</span> <span class="s1">&#39;bird&#39;</span><span class="p">,</span> <span class="s1">&#39;horse&#39;</span><span class="p">,</span> <span class="s1">&#39;elephant&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;good&#39;</span><span class="p">,</span> <span class="s1">&#39;bad&#39;</span><span class="p">,</span> <span class="s1">&#39;happy&#39;</span><span class="p">,</span> <span class="s1">&#39;sad&#39;</span><span class="p">,</span> <span class="s1">&#39;big&#39;</span><span class="p">,</span> <span class="s1">&#39;small&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;doctor&#39;</span><span class="p">,</span> <span class="s1">&#39;nurse&#39;</span><span class="p">,</span> <span class="s1">&#39;hospital&#39;</span><span class="p">,</span> <span class="s1">&#39;medicine&#39;</span>
+<span class="p">]</span>
+
+<span class="c1"># Filter to words that exist in the model</span>
+<span class="n">words_of_interest</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words_of_interest</span> <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">key_to_index</span><span class="p">]</span>
+
+<span class="c1"># Get vectors for these words</span>
+<span class="n">word_vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">model</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words_of_interest</span><span class="p">])</span>
+
+<span class="c1"># Reduce to 2D using t-SNE</span>
+<span class="n">tsne</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">perplexity</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">words_of_interest</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">word_vectors_2d</span> <span class="o">=</span> <span class="n">tsne</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">word_vectors</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">word_vectors_2d</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">word_vectors_2d</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">words_of_interest</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="p">(</span><span class="n">word_vectors_2d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">word_vectors_2d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> 
+                 <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Word Embeddings Visualized with t-SNE&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;t-SNE Dimension 1&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;t-SNE Dimension 2&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\site-packages\joblib\externals\loky\backend\context.py:136: UserWarning: Could not find the number of physical cores for the following reason:
+[WinError 2] The system cannot find the file specified
+Returning the number of logical cores instead. You can silence this warning by setting LOKY_MAX_CPU_COUNT to the number of cores you want to use.
+  warnings.warn(
+  File &quot;c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\site-packages\joblib\externals\loky\backend\context.py&quot;, line 257, in _count_physical_cores
+    cpu_info = subprocess.run(
+  File &quot;c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\subprocess.py&quot;, line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File &quot;c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\subprocess.py&quot;, line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File &quot;c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\subprocess.py&quot;, line 1456, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+</pre></div>
+</div>
+<img alt="../_images/11ccba19d8004f50611f3238c276e74ae3c126f1deee0682abd6694424b5825e.png" src="../_images/11ccba19d8004f50611f3238c276e74ae3c126f1deee0682abd6694424b5825e.png" />
+</div>
+</div>
+<p><strong>Observations from the visualization:</strong></p>
+<ul class="simple">
+<li><p>Royalty words (king, queen, prince, princess) cluster together</p></li>
+<li><p>Country-capital pairs (paris-france, berlin-germany) are near each other</p></li>
+<li><p>Animals form their own cluster</p></li>
+<li><p>Antonyms (good-bad, happy-sad, big-small) are relatively close but in opposite directions</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="complete-practical-session">
+<h2>1.4 Complete Practical Session<a class="headerlink" href="#complete-practical-session" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">gensim.downloader</span> <span class="k">as</span> <span class="nn">api</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># LOAD PRE-TRAINED MODEL</span>
+<span class="c1"># ============================================</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading pre-trained word vectors...&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;glove-wiki-gigaword-100&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">key_to_index</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> word vectors&quot;</span><span class="p">)</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># BASIC OPERATIONS</span>
+<span class="c1"># ============================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1. FINDING SIMILAR WORDS&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">show_similar</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Words similar to &#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="n">topn</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">w</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">show_similar</span><span class="p">(</span><span class="s2">&quot;computer&quot;</span><span class="p">)</span>
+<span class="n">show_similar</span><span class="p">(</span><span class="s2">&quot;beautiful&quot;</span><span class="p">)</span>
+<span class="n">show_similar</span><span class="p">(</span><span class="s2">&quot;iran&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Loading pre-trained word vectors...
+Loaded 400,000 word vectors
+
+============================================================
+1. FINDING SIMILAR WORDS
+============================================================
+
+Words similar to &#39;computer&#39;:
+  computers       0.8752
+  software        0.8373
+  technology      0.7642
+  pc              0.7366
+  hardware        0.7290
+  internet        0.7287
+  desktop         0.7234
+  electronic      0.7222
+  systems         0.7198
+  computing       0.7142
+
+Words similar to &#39;beautiful&#39;:
+  lovely          0.8909
+  gorgeous        0.8722
+  wonderful       0.8081
+  charming        0.7719
+  magnificent     0.7332
+  elegant         0.7176
+  fabulous        0.6914
+  splendid        0.6850
+  perfect         0.6778
+  pretty          0.6774
+
+Words similar to &#39;iran&#39;:
+  tehran          0.8503
+  iranian         0.7911
+  syria           0.7800
+  iraq            0.7679
+  nuclear         0.7258
+  russia          0.7156
+  arabia          0.7026
+  korea           0.6952
+  ahmadinejad     0.6773
+  pakistan        0.6705
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># VECTOR ARITHMETIC - ANALOGIES</span>
+<span class="c1"># ============================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2. WORD ANALOGIES&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">analogy</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;a is to b as c is to ?&quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">],</span> <span class="n">negative</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">topn</span><span class="o">=</span><span class="n">topn</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">  ::  </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2"> → ?&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">w</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">analogy</span><span class="p">(</span><span class="s2">&quot;man&quot;</span><span class="p">,</span> <span class="s2">&quot;king&quot;</span><span class="p">,</span> <span class="s2">&quot;woman&quot;</span><span class="p">)</span>      <span class="c1"># Classic gender example</span>
+<span class="n">analogy</span><span class="p">(</span><span class="s2">&quot;paris&quot;</span><span class="p">,</span> <span class="s2">&quot;france&quot;</span><span class="p">,</span> <span class="s2">&quot;tehran&quot;</span><span class="p">)</span>  <span class="c1"># Capital-country</span>
+<span class="n">analogy</span><span class="p">(</span><span class="s2">&quot;japan&quot;</span><span class="p">,</span> <span class="s2">&quot;tokyo&quot;</span><span class="p">,</span> <span class="s2">&quot;germany&quot;</span><span class="p">)</span>  <span class="c1"># Country-capital</span>
+<span class="n">analogy</span><span class="p">(</span><span class="s2">&quot;walk&quot;</span><span class="p">,</span> <span class="s2">&quot;walking&quot;</span><span class="p">,</span> <span class="s2">&quot;swim&quot;</span><span class="p">)</span>    <span class="c1"># Grammatical</span>
+<span class="n">analogy</span><span class="p">(</span><span class="s2">&quot;boy&quot;</span><span class="p">,</span> <span class="s2">&quot;girl&quot;</span><span class="p">,</span> <span class="s2">&quot;father&quot;</span><span class="p">)</span>      <span class="c1"># Gender family</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+2. WORD ANALOGIES
+============================================================
+
+man → king  ::  woman → ?
+  queen           0.7699
+  monarch         0.6843
+  throne          0.6756
+  daughter        0.6595
+  princess        0.6521
+
+paris → france  ::  tehran → ?
+  iran            0.8903
+  syria           0.7167
+  iraq            0.6866
+  iranian         0.6861
+  nuclear         0.6579
+
+japan → tokyo  ::  germany → ?
+  frankfurt       0.8426
+  berlin          0.8191
+  munich          0.7302
+  paris           0.7113
+  vienna          0.6937
+
+walk → walking  ::  swim → ?
+  swimming        0.8009
+  surfing         0.6603
+  swam            0.6448
+  rowing          0.6413
+  jogging         0.6376
+
+boy → girl  ::  father → ?
+  mother          0.9019
+  wife            0.8843
+  daughter        0.8842
+  husband         0.8561
+  sister          0.8180
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># ODD ONE OUT</span>
+<span class="c1"># ============================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3. FINDING THE ODD ONE OUT&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">odd_one_out</span><span class="p">(</span><span class="n">words</span><span class="p">):</span>
+    <span class="n">odd</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">doesnt_match</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">words</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Odd one out: </span><span class="si">{</span><span class="n">odd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">odd_one_out</span><span class="p">([</span><span class="s2">&quot;apple&quot;</span><span class="p">,</span> <span class="s2">&quot;banana&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="s2">&quot;car&quot;</span><span class="p">])</span>
+<span class="n">odd_one_out</span><span class="p">([</span><span class="s2">&quot;dog&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;fish&quot;</span><span class="p">,</span> <span class="s2">&quot;table&quot;</span><span class="p">])</span>
+<span class="n">odd_one_out</span><span class="p">([</span><span class="s2">&quot;monday&quot;</span><span class="p">,</span> <span class="s2">&quot;tuesday&quot;</span><span class="p">,</span> <span class="s2">&quot;january&quot;</span><span class="p">,</span> <span class="s2">&quot;wednesday&quot;</span><span class="p">])</span>
+<span class="n">odd_one_out</span><span class="p">([</span><span class="s2">&quot;happy&quot;</span><span class="p">,</span> <span class="s2">&quot;sad&quot;</span><span class="p">,</span> <span class="s2">&quot;joyful&quot;</span><span class="p">,</span> <span class="s2">&quot;angry&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+3. FINDING THE ODD ONE OUT
+============================================================
+
+[&#39;apple&#39;, &#39;banana&#39;, &#39;orange&#39;, &#39;car&#39;]
+  Odd one out: car
+
+[&#39;dog&#39;, &#39;cat&#39;, &#39;fish&#39;, &#39;table&#39;]
+  Odd one out: table
+
+[&#39;monday&#39;, &#39;tuesday&#39;, &#39;january&#39;, &#39;wednesday&#39;]
+  Odd one out: january
+
+[&#39;happy&#39;, &#39;sad&#39;, &#39;joyful&#39;, &#39;angry&#39;]
+  Odd one out: angry
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># SIMILARITY SCORES</span>
+<span class="c1"># ============================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4. SIMILARITY SCORES&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">):</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">w1</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> ↔ </span><span class="si">{</span><span class="n">w2</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">sim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Semantically similar words:&quot;</span><span class="p">)</span>
+<span class="n">compare</span><span class="p">(</span><span class="s2">&quot;king&quot;</span><span class="p">,</span> <span class="s2">&quot;queen&quot;</span><span class="p">)</span>
+<span class="n">compare</span><span class="p">(</span><span class="s2">&quot;car&quot;</span><span class="p">,</span> <span class="s2">&quot;automobile&quot;</span><span class="p">)</span>
+<span class="n">compare</span><span class="p">(</span><span class="s2">&quot;happy&quot;</span><span class="p">,</span> <span class="s2">&quot;joyful&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Semantically different words:&quot;</span><span class="p">)</span>
+<span class="n">compare</span><span class="p">(</span><span class="s2">&quot;king&quot;</span><span class="p">,</span> <span class="s2">&quot;apple&quot;</span><span class="p">)</span>
+<span class="n">compare</span><span class="p">(</span><span class="s2">&quot;car&quot;</span><span class="p">,</span> <span class="s2">&quot;mountain&quot;</span><span class="p">)</span>
+<span class="n">compare</span><span class="p">(</span><span class="s2">&quot;happy&quot;</span><span class="p">,</span> <span class="s2">&quot;chair&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Antonyms (interesting case!):&quot;</span><span class="p">)</span>
+<span class="n">compare</span><span class="p">(</span><span class="s2">&quot;hot&quot;</span><span class="p">,</span> <span class="s2">&quot;cold&quot;</span><span class="p">)</span>
+<span class="n">compare</span><span class="p">(</span><span class="s2">&quot;big&quot;</span><span class="p">,</span> <span class="s2">&quot;small&quot;</span><span class="p">)</span>
+<span class="n">compare</span><span class="p">(</span><span class="s2">&quot;good&quot;</span><span class="p">,</span> <span class="s2">&quot;bad&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+4. SIMILARITY SCORES
+============================================================
+
+Semantically similar words:
+  king            ↔ queen           : 0.7508
+  car             ↔ automobile      : 0.6832
+  happy           ↔ joyful          : 0.5260
+
+Semantically different words:
+  king            ↔ apple           : 0.2668
+  car             ↔ mountain        : 0.3259
+  happy           ↔ chair           : 0.2160
+
+Antonyms (interesting case!):
+  hot             ↔ cold            : 0.7252
+  big             ↔ small           : 0.7180
+  good            ↔ bad             : 0.7703
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># CUSTOM QUERY FUNCTION</span>
+<span class="c1"># ============================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5. CUSTOM QUERIES&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">word_query</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">positive</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom query with description.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">negative</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">negative</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="n">positive</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="n">negative</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="n">topn</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Query: </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">pos_str</span> <span class="o">=</span> <span class="s2">&quot; + &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">positive</span><span class="p">)</span>
+    <span class="n">neg_str</span> <span class="o">=</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="s2">&quot; - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">negative</span><span class="p">)</span> <span class="k">if</span> <span class="n">negative</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Formula: </span><span class="si">{</span><span class="n">pos_str</span><span class="si">}{</span><span class="n">neg_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">w</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># What is the capital of Iran?</span>
+<span class="n">word_query</span><span class="p">(</span><span class="s2">&quot;Capital of Iran&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;paris&quot;</span><span class="p">,</span> <span class="s2">&quot;iran&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;france&quot;</span><span class="p">])</span>
+
+<span class="c1"># What is like a king but female?</span>
+<span class="n">word_query</span><span class="p">(</span><span class="s2">&quot;Female king&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;king&quot;</span><span class="p">,</span> <span class="s2">&quot;woman&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;man&quot;</span><span class="p">])</span>
+
+<span class="c1"># What is like a doctor but for animals?</span>
+<span class="n">word_query</span><span class="p">(</span><span class="s2">&quot;Animal doctor&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;doctor&quot;</span><span class="p">,</span> <span class="s2">&quot;animal&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;human&quot;</span><span class="p">])</span>
+
+<span class="c1"># What is like water but not liquid?</span>
+<span class="n">word_query</span><span class="p">(</span><span class="s2">&quot;Solid water&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;water&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;liquid&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+5. CUSTOM QUERIES
+============================================================
+
+Query: Capital of Iran
+Formula: paris + iran - france
+--------------------------------------------------
+  tehran          0.8785
+  iranian         0.7055
+  moscow          0.6929
+  seoul           0.6468
+  cairo           0.6466
+  pyongyang       0.6405
+  damascus        0.6222
+  ahmadinejad     0.6179
+  baghdad         0.5961
+  teheran         0.5885
+
+Query: Female king
+Formula: king + woman - man
+--------------------------------------------------
+  queen           0.7699
+  monarch         0.6843
+  throne          0.6756
+  daughter        0.6595
+  princess        0.6521
+  prince          0.6517
+  elizabeth       0.6465
+  mother          0.6312
+  emperor         0.6106
+  wife            0.6099
+
+Query: Animal doctor
+Formula: doctor + animal - human
+--------------------------------------------------
+  nurse           0.6413
+  veterinarian    0.6307
+  physician       0.6227
+  dog             0.5946
+  dentist         0.5914
+  pharmacist      0.5759
+  cat             0.5736
+  medicine        0.5579
+  surgeon         0.5505
+  hospital        0.5478
+
+Query: Solid water
+Formula: water + solid - liquid
+--------------------------------------------------
+  good            0.7105
+  better          0.6966
+  strong          0.6875
+  well            0.6762
+  improvement     0.6692
+  excellent       0.6619
+  consistent      0.6321
+  there           0.6296
+  clean           0.6262
+  enough          0.6260
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ============================================</span>
+<span class="c1"># WORD VECTOR EXPLORER</span>
+<span class="c1"># ============================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6. WORD VECTOR EXPLORER&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">explore_word</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Explore a single word in detail.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">key_to_index</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39; not in vocabulary!&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Exploring: &#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39; ---&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vector shape: </span><span class="si">{</span><span class="n">model</span><span class="p">[</span><span class="n">word</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vector (first 5 dims): </span><span class="si">{</span><span class="n">model</span><span class="p">[</span><span class="n">word</span><span class="p">][:</span><span class="mi">5</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Most similar to &#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">w</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Fix: Use negative parameter correctly</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Least similar to &#39;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">negative</span><span class="o">=</span><span class="p">[</span><span class="n">word</span><span class="p">],</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">w</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">explore_word</span><span class="p">(</span><span class="s2">&quot;intelligence&quot;</span><span class="p">)</span>
+<span class="n">explore_word</span><span class="p">(</span><span class="s2">&quot;music&quot;</span><span class="p">)</span>
+<span class="n">explore_word</span><span class="p">(</span><span class="s2">&quot;tehran&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+6. WORD VECTOR EXPLORER
+============================================================
+
+--- Exploring: &#39;intelligence&#39; ---
+Vector shape: (100,)
+Vector (first 5 dims): [-0.31101  -0.43291   0.77734  -0.31115   0.052934]
+
+Most similar to &#39;intelligence&#39;:
+  cia             0.7422
+  information     0.7210
+  security        0.6963
+  fbi             0.6962
+  military        0.6935
+
+Least similar to &#39;intelligence&#39;:
+  gamos           0.5752
+  carys           0.5516
+  2199            0.5454
+  phyl            0.5443
+  seelbach        0.5413
+
+--- Exploring: &#39;music&#39; ---
+Vector shape: (100,)
+Vector (first 5 dims): [ 0.12705  0.37253  0.23076 -0.10727  1.4273 ]
+
+Most similar to &#39;music&#39;:
+  musical         0.8128
+  songs           0.7978
+  dance           0.7897
+  pop             0.7863
+  recording       0.7651
+
+Least similar to &#39;music&#39;:
+  maarof          0.5687
+  ghossein        0.5610
+  somu            0.5510
+  shimi           0.5460
+  thierno         0.5456
+
+--- Exploring: &#39;tehran&#39; ---
+Vector shape: (100,)
+Vector (first 5 dims): [1.0004   0.10694  0.32961  0.020119 0.20269 ]
+
+Most similar to &#39;tehran&#39;:
+  iran            0.8503
+  iranian         0.7557
+  pyongyang       0.7014
+  ahmadinejad     0.6929
+  moscow          0.6898
+
+Least similar to &#39;tehran&#39;:
+  terk            0.4853
+  seviche         0.4851
+  sudesh          0.4827
+  mallan          0.4805
+  honeycreeper    0.4796
+</pre></div>
+</div>
+</div>
+</div>
+<p>print(“\n” + “=”*60)
+print(“EXPLORATION COMPLETE!”)
+print(“=”*60)</p>
+</section>
+<hr class="docutils" />
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>In this notebook, we learned:</p>
+<ol class="arabic simple">
+<li><p><strong>Word embeddings</strong> represent words as dense vectors where semantic similarity corresponds to vector proximity</p></li>
+<li><p><strong>Word2Vec</strong> learns these embeddings by predicting context words (Skip-gram) or center words (CBOW)</p></li>
+<li><p><strong>Vector arithmetic</strong> captures semantic relationships: <code class="docutils literal notranslate"><span class="pre">king</span> <span class="pre">-</span> <span class="pre">man</span> <span class="pre">+</span> <span class="pre">woman</span> <span class="pre">≈</span> <span class="pre">queen</span></code></p></li>
+<li><p><strong>Pre-trained models</strong> (GloVe, Word2Vec) can be used directly for various NLP tasks</p></li>
+<li><p><strong>Key operations</strong> include finding similar words, solving analogies, detecting odd words, and computing similarity scores</p></li>
+</ol>
+<section id="key-takeaways">
+<h3>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Word embeddings capture <strong>distributional similarity</strong> (words in similar contexts have similar vectors)</p></li>
+<li><p>The relationship <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">-</span> <span class="pre">B</span> <span class="pre">+</span> <span class="pre">C</span> <span class="pre">≈</span> <span class="pre">D</span></code> works because the difference vector captures a meaningful semantic relationship</p></li>
+<li><p>Pre-trained embeddings work well for general-purpose tasks but may need fine-tuning for domain-specific applications</p></li>
+<li><p>t-SNE visualization helps understand the structure of the embedding space</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./misc"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-word-embeddings">1.1 Introduction to Word Embeddings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-with-traditional-text-representation">The Problem with Traditional Text Representation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-dense-word-embeddings">The Solution: Dense Word Embeddings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-distributional-hypothesis">The Distributional Hypothesis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuitive-example-animal-space">Intuitive Example: Animal Space</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-operations-reveal-semantic-relationships">Vector Operations Reveal Semantic Relationships</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#word2vec-models-overview">1.2 Word2Vec Models Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-core-idea">The Core Idea</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-architectures">Two Architectures</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#skip-gram-model">Skip-gram Model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-bag-of-words-cbow-model">Continuous Bag of Words (CBOW) Model</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-hyperparameters">Key Hyperparameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skip-gram-vs-cbow-comparison">Skip-gram vs. CBOW Comparison</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-examples-with-pre-trained-models">1.3 Practical Examples with Pre-trained Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-pre-trained-word-vectors">Loading Pre-trained Word Vectors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-similar-words">Finding Similar Words</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-famous-analogy-king-man-woman-queen">The Famous Analogy: King - Man + Woman = Queen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-math-behind-analogies">Understanding the Math Behind Analogies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-analogy-examples">More Analogy Examples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-odd-one-out">Finding the Odd One Out</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-similarity-scores">Computing Similarity Scores</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-query-capital-of-iran">Simple Query: “Capital of Iran”</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-word-relationships-t-sne">Visualizing Word Relationships (t-SNE)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-practical-session">1.4 Complete Practical Session</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">Key Takeaways</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Mahmood Amintoosi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. CC0 Licensed - Computer Science Dept., Ferdowsi University of Mashhad.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
