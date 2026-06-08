@@ -13,6 +13,7 @@ chapters:
 - file: lecture7_cnns-pt2
 - file: lecture8_advanced-deep-learning
 - file: lecture9_word2vec
+- file: lecture10_deepwalk
 - file: appendixA_gradients
 - file: appendixB_logistic-loss
 - file: appendixC_computing-derivatives
