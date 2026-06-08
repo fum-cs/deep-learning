@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Creating Node Representations with DeepWalk &#8212; DL</title>
+    <title>Graph Node Representations with DeepWalk &#8212; DL</title>
   
   
   
@@ -216,7 +216,7 @@
 
 
 
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Creating Node Representations with DeepWalk</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Graph Node Representations with DeepWalk</a></li>
 
 
 
@@ -455,7 +455,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Creating Node Representations with DeepWalk</h1>
+    <h1>Graph Node Representations with DeepWalk</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -465,7 +465,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Creating Node Representations with DeepWalk</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Graph Node Representations with DeepWalk</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#node-embedding">Node Embedding</a></li>
 </ul>
 </li>
@@ -515,8 +515,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="creating-node-representations-with-deepwalk">
-<h1>Creating Node Representations with DeepWalk<a class="headerlink" href="#creating-node-representations-with-deepwalk" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="graph-node-representations-with-deepwalk">
+<h1>Graph Node Representations with DeepWalk<a class="headerlink" href="#graph-node-representations-with-deepwalk" title="Link to this heading">#</a></h1>
 <section id="node-embedding">
 <h2>Node Embedding<a class="headerlink" href="#node-embedding" title="Link to this heading">#</a></h2>
 <p>Re-visit a layer of a simple GNN figure mentioned in <a class="reference external" href="https://gta-lab.github.io/gnn-intro/">A Gentle Introduction to Graph Neural Networks</a>:</p>
@@ -548,7 +548,7 @@ document.write(`
 </section>
 <section id="skip-gram">
 <h2>Skip-Gram<a class="headerlink" href="#skip-gram" title="Link to this heading">#</a></h2>
-<p>The skip-gram model is a popular technique in natural language processing (NLP) for learning word embeddings. It aims to learn a vector representation of each word in a corpus, such that the vectors of similar words are close to each other in the vector space. In the skip-gram model, the objective is to predict the context words (i.e., words that appear within a certain window size around a target word) given the target word.</p>
+<p>As we saw in <a class="reference internal" href="lecture9_word2vec.html"><span class="std std-doc">previous chapter</span></a> the skip-gram model is a popular technique in natural language processing (NLP) for learning word embeddings. It aims to learn a vector representation of each word in a corpus, such that the vectors of similar words are close to each other in the vector space. In the skip-gram model, the objective is to predict the context words (i.e., words that appear within a certain window size around a target word) given the target word.</p>
 </section>
 <section id="deepwalk">
 <h2>DeepWalk<a class="headerlink" href="#deepwalk" title="Link to this heading">#</a></h2>
@@ -581,7 +581,6 @@ P(W_{t-2} | W_t), \quad P(W_{t-1} | W_t), \quad P(W_{t+1} | W_t), \quad P(W_{t+2
 <h2>CBOW and Skip-gram<a class="headerlink" href="#cbow-and-skip-gram" title="Link to this heading">#</a></h2>
 <p><img alt="" src="_images/The-CBOW-and-Skip-gram-architecture-of-word2vec.jpg" /></p>
 <ul class="simple">
-<li><p>See: <a class="reference external" href="https://fum-cs.github.io/neural-networks/lecture8_advanced-deep-learning.html#autoencoders">Autoencoders in FUM-CS Neural Networks</a></p></li>
 <li><p><a class="reference external" href="https://www.fer.unizg.hr/_download/repository/TAR-2020-reading-05.pdf">Word2Vec Tutorial - The Skip-Gram Model</a></p></li>
 <li><p><a class="reference external" href="https://www.geeksforgeeks.org/implement-your-own-word2vecskip-gram-model-in-python/">Implement your own word2vec(skip-gram) model in Python</a></p></li>
 </ul>
@@ -636,9 +635,11 @@ think you had an imagination, sure enough.”</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Auto-setup when running on Google Colab</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_ipython</span><span class="p">())</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/content/graph-neural-networks&#39;</span><span class="p">):</span>
-    <span class="o">!</span>git<span class="w"> </span>clone<span class="w"> </span>-q<span class="w"> </span>https://github.com/gta-lab/graph-neural-networks.git<span class="w"> </span>/content/graph-neural-networks
-    <span class="o">%</span><span class="k">cd</span> graph-neural-networks/notebooks
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_ipython</span><span class="p">())</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/content/deep-learning&#39;</span><span class="p">):</span>
+    <span class="o">!</span>git<span class="w"> </span>clone<span class="w"> </span>-q<span class="w"> </span>https://github.com/fum-cs/deep-learning.git<span class="w"> </span>/content/deep-learning
+    <span class="o">%</span><span class="k">cd</span> deep-learning/notebooks
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s1">&#39;google.api_core&#39;</span><span class="p">)</span>    
 </pre></div>
 </div>
 </div>
@@ -692,10 +693,6 @@ think you had an imagination, sure enough.”</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>c:\Users\m.amintoosi\.conda\envs\pth-gpu\lib\site-packages\google\api_core\_python_version_support.py:263: FutureWarning: You are using a Python version (3.10.16) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
-  warnings.warn(message, FutureWarning)
-</pre></div>
-</div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;her&#39;, 0.9902161359786987),
  (&#39;she&#39;, 0.9899694919586182),
  (&#39;wedding&#39;, 0.988711416721344),
@@ -737,7 +734,7 @@ think you had an imagination, sure enough.”</p>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[nltk_data] Downloading package stopwords to
 [nltk_data]     C:\Users\m.amintoosi\AppData\Roaming\nltk_data...
-[nltk_data]   Unzipping corpora\stopwords.zip.
+[nltk_data]   Package stopwords is already up-to-date!
 </pre></div>
 </div>
 </div>
@@ -1013,8 +1010,7 @@ Total number of graph edges: 78
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example usage  </span>
-<span class="n">plot_graph_with_labels</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">true_labels</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">train_mask</span><span class="p">,</span> <span class="n">test_mask</span><span class="p">,</span> <span class="s2">&quot;Karate Club Graph Partitioned by kNN&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_graph_with_labels</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">true_labels</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">train_mask</span><span class="p">,</span> <span class="n">test_mask</span><span class="p">,</span> <span class="s2">&quot;Karate Club Graph Partitioned by kNN&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1050,8 +1046,8 @@ Total number of graph edges: 78
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;0&#39;, &#39;3&#39;, &#39;1&#39;, &#39;30&#39;]
-[&#39;6&#39;, &#39;4&#39;, &#39;10&#39;, &#39;4&#39;]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;0&#39;, &#39;1&#39;, &#39;13&#39;, &#39;2&#39;]
+[&#39;6&#39;, &#39;4&#39;, &#39;10&#39;, &#39;0&#39;]
 </pre></div>
 </div>
 </div>
@@ -1070,7 +1066,7 @@ Total number of graph edges: 78
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;0&#39;, &#39;1&#39;, &#39;19&#39;, &#39;1&#39;, &#39;7&#39;, &#39;1&#39;, &#39;13&#39;, &#39;33&#39;, &#39;26&#39;, &#39;33&#39;, &#39;30&#39;]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;0&#39;, &#39;13&#39;, &#39;3&#39;, &#39;12&#39;, &#39;3&#39;, &#39;7&#39;, &#39;0&#39;, &#39;4&#39;, &#39;10&#39;, &#39;0&#39;, &#39;7&#39;]
 </pre></div>
 </div>
 </div>
@@ -1113,7 +1109,7 @@ Total number of graph edges: 78
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(187226, 897600)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(187406, 897600)
 </pre></div>
 </div>
 </div>
@@ -1147,18 +1143,18 @@ Total number of graph edges: 78
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Nodes that are the most similar to node 0:
-   (&#39;17&#39;, 0.635050892829895)
-   (&#39;11&#39;, 0.6320763826370239)
-   (&#39;21&#39;, 0.6100155711174011)
-   (&#39;10&#39;, 0.6025248765945435)
-   (&#39;3&#39;, 0.5971857309341431)
-   (&#39;4&#39;, 0.582301139831543)
-   (&#39;5&#39;, 0.5811346173286438)
-   (&#39;1&#39;, 0.5575661063194275)
-   (&#39;13&#39;, 0.5440354347229004)
-   (&#39;12&#39;, 0.543958306312561)
+   (&#39;11&#39;, 0.6439632773399353)
+   (&#39;10&#39;, 0.6413512825965881)
+   (&#39;6&#39;, 0.6250662803649902)
+   (&#39;21&#39;, 0.6190865635871887)
+   (&#39;5&#39;, 0.6172654032707214)
+   (&#39;1&#39;, 0.6080925464630127)
+   (&#39;17&#39;, 0.5963014364242554)
+   (&#39;4&#39;, 0.5958076119422913)
+   (&#39;7&#39;, 0.5571776032447815)
+   (&#39;13&#39;, 0.5459367036819458)
 
-Similarity between node 0 and 4: 0.5823010802268982
+Similarity between node 0 and 4: 0.5958076119422913
 </pre></div>
 </div>
 </div>
@@ -1217,12 +1213,12 @@ Similarity between node 0 and 4: 0.5823010802268982
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.31,  0.44,  0.08,  0.09,  0.01, -0.35,  0.19,  0.09, -0.35,
-       -0.17,  0.15, -0.16,  0.19,  0.02,  0.05, -0.25, -0.02,  0.26,
-       -0.51, -0.14, -0.03,  0.27,  0.34, -0.14, -0.06, -0.13,  0.23,
-        0.08, -0.22, -0.09, -0.14, -0.34,  0.15, -0.06, -0.25,  0.33,
-        0.41, -0.16, -0.26, -0.17, -0.  , -0.02, -0.  ,  0.1 ,  0.08,
-       -0.03, -0.02,  0.26, -0.09,  0.17], dtype=float32)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.14,  0.09, -0.07,  0.27,  0.06, -0.24,  0.18,  0.32, -0.14,
+       -0.12,  0.08, -0.13,  0.11,  0.01, -0.08,  0.19,  0.38, -0.14,
+       -0.41, -0.06,  0.24,  0.21,  0.33,  0.06,  0.14, -0.18,  0.22,
+        0.26, -0.  , -0.11, -0.01, -0.18, -0.17, -0.1 , -0.24, -0.17,
+        0.42, -0.31,  0.09,  0.09, -0.08,  0.16,  0.07, -0.23,  0.44,
+        0.24, -0.02, -0.2 ,  0.  ,  0.1 ], dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -1411,10 +1407,10 @@ Similarity between node 0 and 4: 0.5823010802268982
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/ead95ceb8311417bf6386e5a2c0849a797ce81767285016d9b749fc8390ca884.png" src="_images/ead95ceb8311417bf6386e5a2c0849a797ce81767285016d9b749fc8390ca884.png" />
+<img alt="_images/91ee6597320d3b2df270a1f51806c3fcd5acb21aeca57e40010bbcc5f870981c.png" src="_images/91ee6597320d3b2df270a1f51806c3fcd5acb21aeca57e40010bbcc5f870981c.png" />
 </div>
 </div>
-<p>For an introduction to K-means clustering, see the <a class="reference external" href="https://fum-cs.github.io/cs-bsc-dm/">Data Minig Course at FUM</a></p>
+<p>For an introduction to K-means clustering, see the <a class="reference external" href="https://fum-cs.github.io/a4ds/machine-learning/05.09-Principal-Component-Analysis-part2.html">Algorithm for Data Science Course at FUM</a></p>
 </section>
 </section>
 
@@ -1482,7 +1478,7 @@ Similarity between node 0 and 4: 0.5823010802268982
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Creating Node Representations with DeepWalk</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Graph Node Representations with DeepWalk</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#node-embedding">Node Embedding</a></li>
 </ul>
 </li>
