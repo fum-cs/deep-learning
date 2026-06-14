@@ -1,0 +1,1908 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Physics-Informed Neural Networks (PINNs) &#8212; DL</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'misc/PINNs';</script>
+    <link rel="icon" href="../_static/fum-logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/fum-cs-logo.png" class="logo__image only-light" alt="DL - Home"/>
+    <script>document.write(`<img src="../_static/fum-cs-logo.png" class="logo__image only-dark" alt="DL - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Deep Learning
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../lecture1_introduction.html">Introduction to the Course</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_1_regression.html">Regression</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_2_gradient-descent.html">Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture2_3_stochastic-gradient-descent.html">Stochastic Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture3_neural-networks-basics.html">Introduction to Pytorch &amp; Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture4_neural-networks-for-classification.html">Neural Networks for Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture5_neural-networks-regularization.html">Regularization and Dropout in Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_1d_cnns.html">Introduction to 1D Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture6_cnns-pt1.html">Introduction to Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture7_cnns-pt2.html">Advanced Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture8_advanced-deep-learning.html">Advanced Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture9_word2vec.html">Word2Vec: Learning Meaning from Context</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../lecture10_deepwalk.html">Graph Node Representations with DeepWalk</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../lecture11_pinns.html">Physics-Informed Neural Networks (PINNs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixA_gradients.html">Appendix A: Gradients Review</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../appendixB_logistic-loss.html">Appendix B: Logistic Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixC_computing-derivatives.html">Appendix C: Computing Derivatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixD_tensor-basics.html">Appendix D: Basics of Numpy and Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixE_pytorch-autograd.html">Appendix E: Auto Differentiation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixF_pytorch-optimizers.html">Appendix F: Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixG_bitmoji-CNN.html">Appendix G: Creating a CNN to Predict Bitmojis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixH_transposed_conv.html">Appendix H: Transposed Convolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendixI_floating-point.html">Appendix I: Floating Point Numbers</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hws/index.html">Home Works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hws/HW-2D-CNN-learn-filters.html">Exercise: Learning and Inverting Image Filters with CNNs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hws/Modeling-a-Harmonic-Oscillator-with-MLP-and-GAN.html">Exercise: Modeling a Harmonic Oscillator with MLP and GAN</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/fum-cs/deep-learning/issues/new?title=Issue%20on%20page%20%2Fmisc/PINNs.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/misc/PINNs.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Physics-Informed Neural Networks (PINNs)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-session-of-deep-learning-course">Final Session of Deep Learning Course</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisite-knowledge-check">Prerequisite Knowledge Check</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-motivation-why-pinns">Part 1: Motivation – Why PINNs?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fundamental-problem-with-pure-data-driven-approaches">1.1 The Fundamental Problem with Pure Data-Driven Approaches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-pinns-different">1.2 What Makes PINNs Different?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-analogy-teaching-a-student">1.3 The Analogy: Teaching a Student</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-example-1-projectile-motion-parabolic-trajectory">Part 2: Example 1 – Projectile Motion (Parabolic Trajectory)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#physics-background">2.1 Physics Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-example">2.2 Why This Example?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-experimental-setup-simulated">2.3 The Experimental Setup (Simulated)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-mlp-approach-what-students-already-did">2.4 Standard MLP Approach (What Students Already Did)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pinn-solution-adding-physics-knowledge">2.5 PINN Solution – Adding Physics Knowledge</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-differentiation-the-secret-sauce">2.6 Automatic Differentiation – The Secret Sauce</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-results">2.7 Expected Results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-code-with-detailed-comments">2.8 Complete Code with Detailed Comments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions-for-students">2.9 Discussion Questions for Students</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-example-2-projectile-motion-with-noisy-data">Part 3: Example 2 – Projectile Motion with Noisy Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-with-real-experiments">3.1 The Problem with Real Experiments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#noise-characteristics">3.2 Noise Characteristics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-to-standard-mlp">3.3 What Happens to Standard MLP?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-pinns-handle-noise">3.4 How PINNs Handle Noise</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extended-code-with-noise-analysis">3.5 Extended Code with Noise Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-pedagogical-observations-for-students">3.6 Key Pedagogical Observations for Students</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-example-3-damped-harmonic-oscillator">Part 4: Example 3 – Damped Harmonic Oscillator</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">4.1 Physics Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-challenged-mlp-and-gan">4.2 Why This Challenged MLP and GAN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pinn-solution-strategy">4.3 PINN Solution Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-implementation-based-on-your-file">4.4 Complete Implementation (Based on Your File)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-results">4.5 Understanding the Results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-with-gan-results-connection-to-previous-assignment">4.6 Comparison with GAN Results (Connection to Previous Assignment)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-5-summary-and-course-conclusion">Part 5: Summary and Course Conclusion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pinn-framework-general-recipe">5.1 The PINN Framework – General Recipe</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-to-use-pinns-vs-traditional-methods">5.2 When to Use PINNs (vs. Traditional Methods)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-of-pinns-be-honest-with-students">5.3 Limitations of PINNs (Be Honest with Students)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-big-picture-where-we-ve-been-in-this-course">5.4 The Big Picture: Where We’ve Been in This Course</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-thoughts-for-students">5.5 Final Thoughts for Students</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#take-home-assignment-optional-extension">5.6 Take-Home Assignment (Optional Extension)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix-quick-reference-card-for-students">Appendix: Quick Reference Card for Students</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="physics-informed-neural-networks-pinns">
+<h1>Physics-Informed Neural Networks (PINNs)<a class="headerlink" href="#physics-informed-neural-networks-pinns" title="Link to this heading">#</a></h1>
+<section id="final-session-of-deep-learning-course">
+<h2>Final Session of Deep Learning Course<a class="headerlink" href="#final-session-of-deep-learning-course" title="Link to this heading">#</a></h2>
+<section id="prerequisite-knowledge-check">
+<h3>Prerequisite Knowledge Check<a class="headerlink" href="#prerequisite-knowledge-check" title="Link to this heading">#</a></h3>
+<p>Your students have already completed the harmonic oscillator problem using:</p>
+<ul class="simple">
+<li><p><strong>MLP (Multilayer Perceptron):</strong> They experienced how standard neural networks fail to extrapolate beyond training data and overfit to noise.</p></li>
+<li><p><strong>GAN (Generative Adversarial Network):</strong> They saw that while GANs can generate realistic samples, they don’t inherently respect physical laws and require大量 training data.</p></li>
+</ul>
+<p>Now we introduce <strong>PINNs</strong> – a paradigm that bridges the gap between data-driven learning and first-principles physics.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-1-motivation-why-pinns">
+<h2>Part 1: Motivation – Why PINNs?<a class="headerlink" href="#part-1-motivation-why-pinns" title="Link to this heading">#</a></h2>
+<section id="the-fundamental-problem-with-pure-data-driven-approaches">
+<h3>1.1 The Fundamental Problem with Pure Data-Driven Approaches<a class="headerlink" href="#the-fundamental-problem-with-pure-data-driven-approaches" title="Link to this heading">#</a></h3>
+<p>Consider what your students discovered when solving the harmonic oscillator with MLP:</p>
+<p><strong>Problem 1: Extrapolation Failure</strong></p>
+<ul class="simple">
+<li><p>An MLP trained on <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">∈</span> <span class="pre">[0,</span> <span class="pre">0.3]</span></code> cannot predict <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">&gt;</span> <span class="pre">0.3</span></code> accurately</p></li>
+<li><p>The network learns a mapping, not the underlying law</p></li>
+<li><p>It has no “knowledge” that the oscillator should oscillate with a specific frequency and decay rate</p></li>
+</ul>
+<p><strong>Problem 2: Noise Sensitivity</strong></p>
+<ul class="simple">
+<li><p>Real experimental data contains measurement noise</p></li>
+<li><p>MLPs overfit to this noise, learning spurious oscillations</p></li>
+<li><p>The resulting model violates energy conservation and other physical principles</p></li>
+</ul>
+<p><strong>Problem 3: Data Scarcity</strong></p>
+<ul class="simple">
+<li><p>In many engineering contexts (aerospace, biomedical, climate science), high-quality data is expensive or impossible to obtain</p></li>
+<li><p>GANs require大量 data to generate realistic samples – a luxury we often don’t have</p></li>
+</ul>
+</section>
+<section id="what-makes-pinns-different">
+<h3>1.2 What Makes PINNs Different?<a class="headerlink" href="#what-makes-pinns-different" title="Link to this heading">#</a></h3>
+<p>The key insight of <strong>Physics-Informed Neural Networks (PINNs)</strong> is to <strong>embed the governing differential equations directly into the loss function</strong>.</p>
+<p>Instead of learning only from data points:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Loss_data</span> <span class="o">=</span> <span class="n">MSE</span><span class="p">(</span><span class="n">predicted</span><span class="p">,</span> <span class="n">measured</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>PINNs learn from BOTH data AND physics:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Loss_PINN = Loss_data + λ × Loss_physics
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">Loss_physics</span></code> measures how much the network’s predictions violate the laws of physics.</p>
+</section>
+<section id="the-analogy-teaching-a-student">
+<h3>1.3 The Analogy: Teaching a Student<a class="headerlink" href="#the-analogy-teaching-a-student" title="Link to this heading">#</a></h3>
+<p>Think of training a neural network like teaching a physics student:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Approach</p></th>
+<th class="head"><p>Analogy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>MLP</strong></p></td>
+<td><p>Student only sees experimental results, never learns Newton’s laws</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>GAN</strong></p></td>
+<td><p>Student learns to mimic experiments but doesn’t understand why</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>PINN</strong></p></td>
+<td><p>Student learns both: “Here’s what experiments show, AND here are the fundamental equations that must always be satisfied”</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-2-example-1-projectile-motion-parabolic-trajectory">
+<h2>Part 2: Example 1 – Projectile Motion (Parabolic Trajectory)<a class="headerlink" href="#part-2-example-1-projectile-motion-parabolic-trajectory" title="Link to this heading">#</a></h2>
+<section id="physics-background">
+<h3>2.1 Physics Background<a class="headerlink" href="#physics-background" title="Link to this heading">#</a></h3>
+<p><strong>The Physical Scenario</strong></p>
+<p>Imagine throwing a ball straight upward from a height of 1 meter with an initial velocity of 10 m/s. Gravity pulls it back down. Assuming no air resistance, what is its height at any time t?</p>
+<p><strong>Governing Equation</strong></p>
+<p>Newton’s second law gives us:
+$<span class="math notranslate nohighlight">\(F = ma = m \cdot \frac{d^2h}{dt^2} = -mg\)</span>$</p>
+<p>Since mass cancels out:
+$<span class="math notranslate nohighlight">\(\frac{d^2h}{dt^2} = -g\)</span>$</p>
+<p>This is a <strong>second-order ordinary differential equation (ODE)</strong>. To solve it uniquely, we need two initial conditions:</p>
+<ol class="arabic simple">
+<li><p>Initial height: <span class="math notranslate nohighlight">\(h(0) = 1\)</span> meter</p></li>
+<li><p>Initial velocity: <span class="math notranslate nohighlight">\(\dot{h}(0) = 10\)</span> m/s</p></li>
+</ol>
+<p><strong>Analytical Solution</strong></p>
+<p>Integrating twice gives the familiar parabolic equation:
+$<span class="math notranslate nohighlight">\(h(t) = 1 + 10t - \frac{1}{2}(9.8)t^2\)</span>$</p>
+<p>This is the <strong>ground truth</strong> we’ll use to generate training data and evaluate our models.</p>
+</section>
+<section id="why-this-example">
+<h3>2.2 Why This Example?<a class="headerlink" href="#why-this-example" title="Link to this heading">#</a></h3>
+<p>This problem is pedagogically valuable because:</p>
+<ol class="arabic simple">
+<li><p><strong>Simple physics</strong> – Students already understand projectile motion from introductory physics</p></li>
+<li><p><strong>Low-dimensional</strong> – Only one input variable (time t) and one output (height h)</p></li>
+<li><p><strong>Clear failure modes</strong> – MLPs fail dramatically outside the training range</p></li>
+<li><p><strong>Easy visualization</strong> – We can plot everything in 2D</p></li>
+</ol>
+</section>
+<section id="the-experimental-setup-simulated">
+<h3>2.3 The Experimental Setup (Simulated)<a class="headerlink" href="#the-experimental-setup-simulated" title="Link to this heading">#</a></h3>
+<p>Suppose you conduct an experiment and measure the ball’s height at 5 different times during the first 0.5 seconds:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Time (s)</p></th>
+<th class="head"><p>Height (m)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0.00</p></td>
+<td><p>1.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.125</p></td>
+<td><p>2.10</p></td>
+</tr>
+<tr class="row-even"><td><p>0.250</p></td>
+<td><p>3.03</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.375</p></td>
+<td><p>3.81</p></td>
+</tr>
+<tr class="row-even"><td><p>0.500</p></td>
+<td><p>4.42</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Crucial observation:</strong> Your measurements only go up to t = 0.5 s, but you want to predict the height at t = 1.5 s (which is 6.1 m in reality).</p>
+</section>
+<section id="standard-mlp-approach-what-students-already-did">
+<h3>2.4 Standard MLP Approach (What Students Already Did)<a class="headerlink" href="#standard-mlp-approach-what-students-already-did" title="Link to this heading">#</a></h3>
+<p>A standard MLP would:</p>
+<ol class="arabic simple">
+<li><p>Take time t as input</p></li>
+<li><p>Output predicted height ĥ(t)</p></li>
+<li><p>Minimize mean squared error on the 5 data points</p></li>
+</ol>
+<p><strong>The Result:</strong> The MLP learns to fit the 5 points perfectly within t ∈ [0, 0.5], but outside this interval, its predictions are meaningless – it might go to zero, blow up, or oscillate randomly.</p>
+<p><strong>Why does this happen?</strong> The MLP has no constraints outside the training region. It doesn’t “know” that gravity is still acting at t = 1.0 s.</p>
+</section>
+<section id="pinn-solution-adding-physics-knowledge">
+<h3>2.5 PINN Solution – Adding Physics Knowledge<a class="headerlink" href="#pinn-solution-adding-physics-knowledge" title="Link to this heading">#</a></h3>
+<p><strong>Step 1: Reformulate the physics as a first-order ODE</strong></p>
+<p>Instead of the second-order equation, we can write:
+$<span class="math notranslate nohighlight">\(\frac{dh}{dt} = v(t) = 10 - 9.8t\)</span>$</p>
+<p>This says: the velocity at any time equals the initial velocity minus gravity × time.</p>
+<p><strong>Step 2: Define the physics loss</strong></p>
+<p>At any set of time points <code class="docutils literal notranslate"><span class="pre">{t₁,</span> <span class="pre">t₂,</span> <span class="pre">...,</span> <span class="pre">tₙ}</span></code>, we can:</p>
+<ul class="simple">
+<li><p>Compute the network’s predicted height <code class="docutils literal notranslate"><span class="pre">ĥ(tᵢ)</span></code></p></li>
+<li><p>Use automatic differentiation to compute <code class="docutils literal notranslate"><span class="pre">dĥ/dt</span></code> at those points</p></li>
+<li><p>Compare <code class="docutils literal notranslate"><span class="pre">dĥ/dt</span></code> to the known physical value <code class="docutils literal notranslate"><span class="pre">10</span> <span class="pre">-</span> <span class="pre">9.8tᵢ</span></code></p></li>
+<li><p>The physics loss is the mean squared difference</p></li>
+</ul>
+<p><strong>Step 3: Define the data loss</strong></p>
+<p>At the 5 experimental time points, compute the MSE between predicted and measured heights.</p>
+<p><strong>Step 4: Combine them</strong></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{total} = \mathcal{L}_{data} + \lambda \cdot \mathcal{L}_{physics}\]</div>
+<p>The hyperparameter λ (e.g., λ = 0.01) balances the two objectives.</p>
+</section>
+<section id="automatic-differentiation-the-secret-sauce">
+<h3>2.6 Automatic Differentiation – The Secret Sauce<a class="headerlink" href="#automatic-differentiation-the-secret-sauce" title="Link to this heading">#</a></h3>
+<p>How do we compute <code class="docutils literal notranslate"><span class="pre">dĥ/dt</span></code> from a neural network? PyTorch’s <strong>autograd</strong> system does this automatically:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># t_physics requires gradient tracking</span>
+<span class="n">t_physics</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Forward pass: compute heights</span>
+<span class="n">h_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">t_physics</span><span class="p">)</span>
+
+<span class="c1"># Backward pass: compute dh/dt</span>
+<span class="n">dh_dt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">h_pred</span><span class="p">,</span> <span class="n">t_physics</span><span class="p">,</span> 
+                            <span class="n">grad_outputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">h_pred</span><span class="p">),</span>
+                            <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>This computes exact derivatives (not finite differences), making PINNs both accurate and computationally efficient.</p>
+</section>
+<section id="expected-results">
+<h3>2.7 Expected Results<a class="headerlink" href="#expected-results" title="Link to this heading">#</a></h3>
+<p>After training, the PINN will:</p>
+<ul class="simple">
+<li><p>Fit the 5 data points accurately (low data loss)</p></li>
+<li><p>Also satisfy <code class="docutils literal notranslate"><span class="pre">dh/dt</span> <span class="pre">=</span> <span class="pre">10</span> <span class="pre">-</span> <span class="pre">9.8t</span></code> everywhere (low physics loss)</p></li>
+<li><p>Successfully predict heights at t = 1.5 s and beyond</p></li>
+</ul>
+<p><strong>The key insight:</strong> The physics loss acts as a <strong>regularizer</strong> that constrains the network’s behavior even in regions without data.</p>
+</section>
+<section id="complete-code-with-detailed-comments">
+<h3>2.8 Complete Code with Detailed Comments<a class="headerlink" href="#complete-code-with-detailed-comments" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">PINN for Projectile Motion</span>
+<span class="sd">Problem: Predict height h(t) of a ball thrown upward</span>
+<span class="sd">Physics: dh/dt = v0 - g*t</span>
+<span class="sd">Data: 5 measurements in [0, 0.5] seconds</span>
+<span class="sd">Goal: Extrapolate to t = 2.0 seconds</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># PHYSICAL PARAMETERS</span>
+<span class="c1"># ============================================</span>
+<span class="n">g</span> <span class="o">=</span> <span class="mf">9.8</span>          <span class="c1"># gravitational acceleration (m/s²)</span>
+<span class="n">h0</span> <span class="o">=</span> <span class="mf">1.0</span>         <span class="c1"># initial height (m)</span>
+<span class="n">v0</span> <span class="o">=</span> <span class="mf">10.0</span>        <span class="c1"># initial velocity (m/s)</span>
+
+<span class="k">def</span> <span class="nf">true_solution</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analytical solution for reference&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">h0</span> <span class="o">+</span> <span class="n">v0</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">t</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># GENERATE TRAINING DATA (simulated experiment)</span>
+<span class="c1"># ============================================</span>
+<span class="c1"># We only have measurements in the first 0.5 seconds</span>
+<span class="n">t_experiment</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">h_experiment</span> <span class="o">=</span> <span class="n">true_solution</span><span class="p">(</span><span class="n">t_experiment</span><span class="p">)</span>
+
+<span class="c1"># For visualization, we&#39;ll use the full range [0, 2]</span>
+<span class="n">t_full</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">h_full</span> <span class="o">=</span> <span class="n">true_solution</span><span class="p">(</span><span class="n">t_full</span><span class="p">)</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># NEURAL NETWORK ARCHITECTURE</span>
+<span class="c1"># ============================================</span>
+<span class="k">class</span> <span class="nc">ProjectilePINN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple feedforward network with 2 hidden layers</span>
+<span class="sd">    Input: time t (scalar)</span>
+<span class="sd">    Output: height h(t) (scalar)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_units</span><span class="o">=</span><span class="mi">32</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden_units</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span>                    <span class="c1"># Smooth activation for derivatives</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_units</span><span class="p">,</span> <span class="n">hidden_units</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_units</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">compute_derivative</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute dy/dt using PyTorch&#39;s automatic differentiation</span>
+<span class="sd">    y: output tensor</span>
+<span class="sd">    t: input tensor (requires grad)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
+        <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span>
+        <span class="n">grad_outputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>
+        <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span>      <span class="c1"># Needed for higher-order derivatives</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># TRAINING FUNCTION</span>
+<span class="c1"># ============================================</span>
+<span class="k">def</span> <span class="nf">train_pinn</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">t_data</span><span class="p">,</span> <span class="n">h_data</span><span class="p">,</span> <span class="n">t_physics</span><span class="p">,</span> 
+               <span class="n">lambda_physics</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Train a PINN with combined data and physics loss</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+    
+    <span class="c1"># Storage for tracking loss history</span>
+    <span class="n">loss_history</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;physics&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+    
+    <span class="c1"># Check if physics points are provided</span>
+    <span class="n">use_physics</span> <span class="o">=</span> <span class="n">t_physics</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        
+        <span class="c1"># ----- DATA LOSS -----</span>
+        <span class="c1"># Fit the experimental measurements</span>
+        <span class="n">h_pred_data</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">t_data</span><span class="p">)</span>
+        <span class="n">loss_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">h_pred_data</span> <span class="o">-</span> <span class="n">h_data</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># ----- PHYSICS LOSS -----</span>
+        <span class="k">if</span> <span class="n">use_physics</span><span class="p">:</span>
+            <span class="c1"># Ensure dh/dt follows Newton&#39;s law</span>
+            <span class="n">t_physics</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">h_physics</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">t_physics</span><span class="p">)</span>
+            <span class="n">dh_dt</span> <span class="o">=</span> <span class="n">compute_derivative</span><span class="p">(</span><span class="n">h_physics</span><span class="p">,</span> <span class="n">t_physics</span><span class="p">)</span>
+            
+            <span class="c1"># Known physics: dh/dt = v0 - g*t</span>
+            <span class="n">dh_dt_true</span> <span class="o">=</span> <span class="n">v0</span> <span class="o">-</span> <span class="n">g</span> <span class="o">*</span> <span class="n">t_physics</span>
+            <span class="n">loss_physics</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">dh_dt</span> <span class="o">-</span> <span class="n">dh_dt_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">loss_physics</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        
+        <span class="c1"># ----- TOTAL LOSS -----</span>
+        <span class="n">loss_total</span> <span class="o">=</span> <span class="n">loss_data</span> <span class="o">+</span> <span class="n">lambda_physics</span> <span class="o">*</span> <span class="n">loss_physics</span>
+        
+        <span class="c1"># Backpropagation</span>
+        <span class="n">loss_total</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        
+        <span class="c1"># Record losses</span>
+        <span class="n">loss_history</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_total</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">loss_history</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_data</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">loss_history</span><span class="p">[</span><span class="s1">&#39;physics&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_physics</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        
+        <span class="c1"># Print progress</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">500</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">4d</span><span class="si">}</span><span class="s2">: &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;Total=</span><span class="si">{</span><span class="n">loss_total</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;Data=</span><span class="si">{</span><span class="n">loss_data</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;Physics=</span><span class="si">{</span><span class="n">loss_physics</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">loss_history</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># TRAIN BOTH MODELS FOR COMPARISON</span>
+<span class="c1"># ============================================</span>
+<span class="c1"># Standard MLP (data only)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TRAINING STANDARD MLP (NO PHYSICS)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">ProjectilePINN</span><span class="p">()</span>
+<span class="n">loss_history_mlp</span> <span class="o">=</span> <span class="n">train_pinn</span><span class="p">(</span>
+    <span class="n">mlp</span><span class="p">,</span> <span class="n">t_experiment</span><span class="p">,</span> <span class="n">h_experiment</span><span class="p">,</span> 
+    <span class="n">t_physics</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([]),</span>  <span class="c1"># No physics points</span>
+    <span class="n">lambda_physics</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>          <span class="c1"># Physics loss disabled</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">3000</span>
+<span class="p">)</span>
+
+<span class="c1"># PINN (data + physics)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TRAINING PINN (WITH PHYSICS)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="c1"># Use 50 points spread across the whole domain for physics loss</span>
+<span class="n">t_physics</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pinn</span> <span class="o">=</span> <span class="n">ProjectilePINN</span><span class="p">()</span>
+<span class="n">loss_history_pinn</span> <span class="o">=</span> <span class="n">train_pinn</span><span class="p">(</span>
+    <span class="n">pinn</span><span class="p">,</span> <span class="n">t_experiment</span><span class="p">,</span> <span class="n">h_experiment</span><span class="p">,</span>
+    <span class="n">t_physics</span><span class="p">,</span> <span class="n">lambda_physics</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">3000</span>
+<span class="p">)</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># VISUALIZE RESULTS</span>
+<span class="c1"># ============================================</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">h_mlp</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">t_full</span><span class="p">)</span>
+    <span class="n">h_pinn</span> <span class="o">=</span> <span class="n">pinn</span><span class="p">(</span><span class="n">t_full</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># Plot 1: Predictions</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_full</span><span class="p">,</span> <span class="n">h_full</span><span class="p">,</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True Solution (Physics)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_full</span><span class="p">,</span> <span class="n">h_mlp</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MLP (Data only)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_full</span><span class="p">,</span> <span class="n">h_pinn</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PINN (Data + Physics)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">t_experiment</span><span class="p">,</span> <span class="n">h_experiment</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Experimental Data (5 points)&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training region boundary&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time t (seconds)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Height h(t) (meters)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;PINN vs MLP: Extrapolation to t=2.0s&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">2.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+
+<span class="c1"># Plot 2: Loss history</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">loss_history_pinn</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">],</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PINN Total&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">loss_history_pinn</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span> <span class="s1">&#39;g--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PINN Data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">loss_history_pinn</span><span class="p">[</span><span class="s1">&#39;physics&#39;</span><span class="p">],</span> <span class="s1">&#39;g:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PINN Physics&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">loss_history_mlp</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">],</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MLP Total&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Epoch&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Loss (log scale)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Training Convergence&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># QUANTITATIVE COMPARISON</span>
+<span class="c1"># ============================================</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;QUANTITATIVE RESULTS&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># Test at t=1.5s (far outside training)</span>
+<span class="n">t_test</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">1.5</span><span class="p">]])</span>
+<span class="n">h_true</span> <span class="o">=</span> <span class="n">true_solution</span><span class="p">(</span><span class="n">t_test</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">h_mlp_test</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">t_test</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">h_pinn_test</span> <span class="o">=</span> <span class="n">pinn</span><span class="p">(</span><span class="n">t_test</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test point: t = 1.5 s&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;True height:        </span><span class="si">{</span><span class="n">h_true</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MLP prediction:     </span><span class="si">{</span><span class="n">h_mlp_test</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> m (error: </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">h_true</span><span class="o">-</span><span class="n">h_mlp_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PINN prediction:    </span><span class="si">{</span><span class="n">h_pinn_test</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> m (error: </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">h_true</span><span class="o">-</span><span class="n">h_pinn_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="discussion-questions-for-students">
+<h3>2.9 Discussion Questions for Students<a class="headerlink" href="#discussion-questions-for-students" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Why does the MLP fail at extrapolation?</strong><br />
+<em>Answer: It has no constraints outside training region; minimizes only data loss.</em></p></li>
+<li><p><strong>How does automatic differentiation enable PINNs?</strong><br />
+<em>Answer: It computes exact derivatives of network output with respect to inputs, allowing us to enforce differential equations.</em></p></li>
+<li><p><strong>What happens if λ (physics weight) is too large?</strong><br />
+<em>Answer: The network will perfectly satisfy physics but ignore data completely – it becomes a pure ODE solver.</em></p></li>
+<li><p><strong>What if λ is too small?</strong><br />
+<em>Answer: The network behaves like a standard MLP, overfitting to noise and failing to extrapolate.</em></p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-3-example-2-projectile-motion-with-noisy-data">
+<h2>Part 3: Example 2 – Projectile Motion with Noisy Data<a class="headerlink" href="#part-3-example-2-projectile-motion-with-noisy-data" title="Link to this heading">#</a></h2>
+<section id="the-problem-with-real-experiments">
+<h3>3.1 The Problem with Real Experiments<a class="headerlink" href="#the-problem-with-real-experiments" title="Link to this heading">#</a></h3>
+<p>In the previous example, we used perfect (noise-free) data. But real experiments always have <strong>measurement uncertainty</strong>:</p>
+<ul class="simple">
+<li><p>Sensor precision limits (e.g., ±2 cm for a ultrasonic sensor)</p></li>
+<li><p>Environmental disturbances (wind, vibration, temperature drift)</p></li>
+<li><p>Human error in recording</p></li>
+</ul>
+<p>Let’s add realistic noise to our measurements and observe how MLPs and PINNs respond.</p>
+</section>
+<section id="noise-characteristics">
+<h3>3.2 Noise Characteristics<a class="headerlink" href="#noise-characteristics" title="Link to this heading">#</a></h3>
+<p>We’ll add <strong>Gaussian (normal) noise</strong> with:</p>
+<ul class="simple">
+<li><p>Mean = 0 (no systematic bias)</p></li>
+<li><p>Standard deviation = 0.3 meters (about 30 cm of uncertainty)</p></li>
+</ul>
+<p>For a ball reaching 6 meters height, this represents ~5% measurement error – quite realistic.</p>
+</section>
+<section id="what-happens-to-standard-mlp">
+<h3>3.3 What Happens to Standard MLP?<a class="headerlink" href="#what-happens-to-standard-mlp" title="Link to this heading">#</a></h3>
+<p><strong>The Overfitting Problem:</strong></p>
+<p>An MLP trained on noisy data will:</p>
+<ul class="simple">
+<li><p>Try to pass exactly through every noisy point</p></li>
+<li><p>Learn the noise pattern as if it were real signal</p></li>
+<li><p>Create a “wiggly” trajectory that violates physics</p></li>
+<li><p>Fail dramatically when asked to predict new points</p></li>
+</ul>
+<p><strong>Why this matters:</strong> In scientific computing, we want models that capture the <strong>underlying physical law</strong>, not the measurement errors.</p>
+</section>
+<section id="how-pinns-handle-noise">
+<h3>3.4 How PINNs Handle Noise<a class="headerlink" href="#how-pinns-handle-noise" title="Link to this heading">#</a></h3>
+<p>The physics loss acts as a <strong>powerful regularizer</strong>:</p>
+<ul class="simple">
+<li><p>The network cannot simultaneously fit the noisy data AND satisfy <code class="docutils literal notranslate"><span class="pre">dh/dt</span> <span class="pre">=</span> <span class="pre">v0</span> <span class="pre">-</span> <span class="pre">g*t</span></code></p></li>
+<li><p>It must find a compromise: follow physics while staying reasonably close to measurements</p></li>
+<li><p>The result is a smooth trajectory that <strong>ignores the noise</strong> and follows the true physics</p></li>
+</ul>
+<p><strong>Mathematical intuition:</strong> The physics loss imposes that the solution must lie in the subspace of functions satisfying the ODE. Noisy data points outside this subspace are “projected” onto it.</p>
+</section>
+<section id="extended-code-with-noise-analysis">
+<h3>3.5 Extended Code with Noise Analysis<a class="headerlink" href="#extended-code-with-noise-analysis" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">PINN for Projectile Motion with Noisy Measurements</span>
+<span class="sd">Demonstrates robustness to experimental uncertainty</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># PHYSICAL PARAMETERS (same as before)</span>
+<span class="c1"># ============================================</span>
+<span class="n">g</span><span class="p">,</span> <span class="n">h0</span><span class="p">,</span> <span class="n">v0</span> <span class="o">=</span> <span class="mf">9.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span>
+
+<span class="k">def</span> <span class="nf">true_solution</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">h0</span> <span class="o">+</span> <span class="n">v0</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">t</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># GENERATE NOISY EXPERIMENTAL DATA</span>
+<span class="c1"># ============================================</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># Reproducible noise</span>
+
+<span class="n">t_experiment</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># More points, still limited</span>
+<span class="n">h_clean</span> <span class="o">=</span> <span class="n">true_solution</span><span class="p">(</span><span class="n">t_experiment</span><span class="p">)</span>
+
+<span class="c1"># Add Gaussian noise (std = 0.3 m)</span>
+<span class="n">noise_std</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">noise</span> <span class="o">=</span> <span class="n">noise_std</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">h_clean</span><span class="p">)</span>
+<span class="n">h_noisy</span> <span class="o">=</span> <span class="n">h_clean</span> <span class="o">+</span> <span class="n">noise</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added noise with standard deviation: </span><span class="si">{</span><span class="n">noise_std</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Noise range: [</span><span class="si">{</span><span class="n">noise</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">noise</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">] m&quot;</span><span class="p">)</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># NETWORK ARCHITECTURE (same)</span>
+<span class="c1"># ============================================</span>
+<span class="k">class</span> <span class="nc">NoisyProjectilePINN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="mi">32</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">hidden</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">derivative</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> 
+                               <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># TRAINING WITH DIFFERENT λ VALUES</span>
+<span class="c1"># ============================================</span>
+<span class="n">t_full</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">h_full</span> <span class="o">=</span> <span class="n">true_solution</span><span class="p">(</span><span class="n">t_full</span><span class="p">)</span>
+<span class="n">t_physics</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Try different physics weights</span>
+<span class="n">lambda_values</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">losses</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">lambda_values</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training with λ_physics = </span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">model</span> <span class="o">=</span> <span class="n">NoisyProjectilePINN</span><span class="p">()</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+    
+    <span class="n">loss_history</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;physics&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+    
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4000</span><span class="p">):</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        
+        <span class="c1"># Data loss (on noisy measurements)</span>
+        <span class="n">h_pred_data</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">t_experiment</span><span class="p">)</span>
+        <span class="n">loss_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">h_pred_data</span> <span class="o">-</span> <span class="n">h_noisy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Physics loss (using clean physics)</span>
+        <span class="n">t_physics</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">h_phys</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">t_physics</span><span class="p">)</span>
+        <span class="n">dh_dt</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">h_phys</span><span class="p">,</span> <span class="n">t_physics</span><span class="p">)</span>
+        <span class="n">dh_dt_true</span> <span class="o">=</span> <span class="n">v0</span> <span class="o">-</span> <span class="n">g</span> <span class="o">*</span> <span class="n">t_physics</span>
+        <span class="n">loss_physics</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">dh_dt</span> <span class="o">-</span> <span class="n">dh_dt_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Total loss</span>
+        <span class="n">loss_total</span> <span class="o">=</span> <span class="n">loss_data</span> <span class="o">+</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">loss_physics</span>
+        
+        <span class="n">loss_total</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">4d</span><span class="si">}</span><span class="s2">: Total=</span><span class="si">{</span><span class="n">loss_total</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;Data=</span><span class="si">{</span><span class="n">loss_data</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, Physics=</span><span class="si">{</span><span class="n">loss_physics</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Store loss history</span>
+        <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">loss_history</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_total</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="n">loss_history</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_data</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="n">loss_history</span><span class="p">[</span><span class="s1">&#39;physics&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_physics</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+    
+    <span class="n">models</span><span class="p">[</span><span class="n">lam</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="n">losses</span><span class="p">[</span><span class="n">lam</span><span class="p">]</span> <span class="o">=</span> <span class="n">loss_history</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># VISUALIZATION</span>
+<span class="c1"># ============================================</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">lam</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lambda_values</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="n">lam</span><span class="p">]</span>
+    
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">h_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">t_full</span><span class="p">)</span>
+    
+    <span class="c1"># Plot predictions</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_full</span><span class="p">,</span> <span class="n">h_full</span><span class="p">,</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True Physics&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_full</span><span class="p">,</span> <span class="n">h_pred</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> 
+            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PINN Prediction&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">t_experiment</span><span class="p">,</span> <span class="n">h_noisy</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
+              <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Noisy Data&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate MSE on clean data (evaluation metric)</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">mse_vs_true</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">h_pred</span> <span class="o">-</span> <span class="n">h_full</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;λ_physics = </span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="se">\n</span><span class="s1">MSE vs True = </span><span class="si">{</span><span class="n">mse_vs_true</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> 
+                 <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time t (seconds)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Height h(t) (meters)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">2.05</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Effect of Physics Loss Weight on Noise Robustness&quot;</span><span class="p">,</span> 
+             <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># LOSS CONVERGENCE COMPARISON</span>
+<span class="c1"># ============================================</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">lambda_values</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">losses</span><span class="p">[</span><span class="n">lam</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;λ=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Epoch (×100)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Total Loss (log scale)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Training Convergence for Different λ Values&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">losses</span><span class="p">:</span>
+        <span class="n">data_losses</span> <span class="o">=</span> <span class="n">losses</span><span class="p">[</span><span class="n">lam</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">data_losses</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;λ=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s1"> (data loss)&#39;</span><span class="p">)</span>
+<span class="c1"># Also plot MLP baseline (λ=0)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">losses</span><span class="p">[</span><span class="mf">0.0</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;λ=0 (MLP baseline)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Epoch (×100)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Data Loss (log scale)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Data Loss Convergence (lower is better for fitting data)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># QUANTITATIVE ANALYSIS</span>
+<span class="c1"># ============================================</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;QUANTITATIVE COMPARISON ON NOISY DATA&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;λ_physics&#39;</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;MSE_vs_clean&#39;</span><span class="si">:</span><span class="s2">&lt;15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;MSE_vs_noisy&#39;</span><span class="si">:</span><span class="s2">&lt;15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Physics_loss&#39;</span><span class="si">:</span><span class="s2">&lt;15</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">lambda_values</span><span class="p">:</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="n">lam</span><span class="p">]</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">h_pred_full</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">t_full</span><span class="p">)</span>
+        <span class="n">h_pred_train</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">t_experiment</span><span class="p">)</span>
+        
+        <span class="n">mse_vs_clean</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">h_pred_full</span> <span class="o">-</span> <span class="n">h_full</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">mse_vs_noisy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">h_pred_train</span> <span class="o">-</span> <span class="n">h_noisy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    
+    <span class="c1"># Get final physics loss</span>
+    <span class="n">t_physics</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">enable_grad</span><span class="p">():</span>
+        <span class="n">h_phys</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">t_physics</span><span class="p">)</span>
+        <span class="n">dh_dt</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">h_phys</span><span class="p">,</span> <span class="n">t_physics</span><span class="p">)</span>
+        <span class="n">dh_dt_true</span> <span class="o">=</span> <span class="n">v0</span> <span class="o">-</span> <span class="n">g</span> <span class="o">*</span> <span class="n">t_physics</span>
+        <span class="n">physics_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">dh_dt</span> <span class="o">-</span> <span class="n">dh_dt_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lam</span><span class="si">:</span><span class="s2">&lt;12.3f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mse_vs_clean</span><span class="si">:</span><span class="s2">&lt;15.6f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mse_vs_noisy</span><span class="si">:</span><span class="s2">&lt;15.6f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">physics_loss</span><span class="si">:</span><span class="s2">&lt;15.8f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KEY OBSERVATIONS:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1. λ = 0 (MLP): Lowest data loss on training data, but highest error vs true solution&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2. λ = 0.01-0.1: Higher data loss (good! ignoring noise), lower error vs true solution&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3. Very large λ: Physics dominates, data is almost ignored&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="key-pedagogical-observations-for-students">
+<h3>3.6 Key Pedagogical Observations for Students<a class="headerlink" href="#key-pedagogical-observations-for-students" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>λ Value</p></th>
+<th class="head"><p>Behavior</p></th>
+<th class="head"><p>Best for…</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0 (MLP)</p></td>
+<td><p>Fits noise exactly, poor extrapolation</p></td>
+<td><p>When data is perfect (never happens)</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.001</p></td>
+<td><p>Still overfits, slightly better</p></td>
+<td><p>Low noise scenarios</p></td>
+</tr>
+<tr class="row-even"><td><p>0.01</p></td>
+<td><p><strong>Sweet spot</strong> – balances physics and data</p></td>
+<td><p>Most real experiments</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.1</p></td>
+<td><p>Physically accurate, ignores some data</p></td>
+<td><p>High noise, well-understood physics</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>The key insight:</strong> There’s a trade-off controlled by λ. Students should learn to tune this hyperparameter using validation data (hold-out clean points if available) or physical reasoning.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-4-example-3-damped-harmonic-oscillator">
+<h2>Part 4: Example 3 – Damped Harmonic Oscillator<a class="headerlink" href="#part-4-example-3-damped-harmonic-oscillator" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h3>4.1 Physics Background<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p><strong>Why This Problem?</strong></p>
+<p>Your students already attempted this with MLP and GAN. They likely encountered:</p>
+<ul class="simple">
+<li><p>MLP: Can’t capture oscillations outside training window</p></li>
+<li><p>GAN: Generates plausible-looking but physically impossible trajectories (e.g., energy increasing)</p></li>
+</ul>
+<p>Now they’ll see how PINN solves both problems simultaneously.</p>
+<p><strong>The Physical System</strong></p>
+<p>Consider a mass attached to a spring, immersed in a viscous fluid (like water or oil):</p>
+<ul class="simple">
+<li><p>Spring pulls back proportionally to displacement (Hooke’s law: F = -kx)</p></li>
+<li><p>Fluid resists motion proportionally to velocity (F = -μ dx/dt)</p></li>
+<li><p>Mass accelerates according to F = ma</p></li>
+</ul>
+<p><strong>Governing Equation (Second-Order ODE)</strong></p>
+<div class="math notranslate nohighlight">
+\[m\frac{d^2x}{dt^2} + \mu\frac{dx}{dt} + kx = 0\]</div>
+<p><strong>Standard Form</strong></p>
+<p>Dividing by m:
+$<span class="math notranslate nohighlight">\(\frac{d^2x}{dt^2} + 2\delta\frac{dx}{dt} + \omega_0^2 x = 0\)</span>$</p>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\delta = \frac{\mu}{2m}\)</span> = damping coefficient (controls energy loss rate)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\omega_0 = \sqrt{\frac{k}{m}}\)</span> = natural frequency (how fast it would oscillate without damping)</p></li>
+</ul>
+<p><strong>Initial Conditions</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(x(0) = 1\)</span> (pull mass to position 1 and release)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\dot{x}(0) = 0\)</span> (release from rest)</p></li>
+</ul>
+<p><strong>Underdamped Case (<span class="math notranslate nohighlight">\(\delta &lt; \omega_0\)</span>) – What We’ll Solve</strong></p>
+<p>When damping is light, the system oscillates with exponentially decaying amplitude:
+$<span class="math notranslate nohighlight">\(x(t) = e^{-\delta t}\left(\cos(\omega t) + \frac{\delta}{\omega}\sin(\omega t)\right)\)</span>$</p>
+<p>where <span class="math notranslate nohighlight">\(\omega = \sqrt{\omega_0^2 - \delta^2}\)</span> is the <strong>damped natural frequency</strong>.</p>
+<p><strong>Parameters for This Example</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\delta = 2\)</span> (moderate damping)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\omega_0 = 20\)</span> (fast oscillation)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\omega = \sqrt{400 - 4} = \sqrt{396} \approx 19.9\)</span></p></li>
+</ul>
+<p>The solution will oscillate about 3-4 times before decaying significantly.</p>
+</section>
+<section id="why-this-challenged-mlp-and-gan">
+<h3>4.2 Why This Challenged MLP and GAN<a class="headerlink" href="#why-this-challenged-mlp-and-gan" title="Link to this heading">#</a></h3>
+<p><strong>MLP Difficulties:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>High frequency</strong> (<span class="math notranslate nohighlight">\(\omega \approx 20\)</span>) requires many training points to resolve oscillations</p></li>
+<li><p><strong>Exponential decay</strong> is not naturally represented by standard activations (ReLU, sigmoid)</p></li>
+<li><p><strong>Extrapolation</strong> beyond training window is impossible – MLP doesn’t “know” oscillations continue</p></li>
+</ol>
+<p><strong>GAN Difficulties:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Mode collapse</strong> – GAN might generate only a few oscillation patterns</p></li>
+<li><p><strong>No physics constraints</strong> – Generated trajectories may violate energy conservation</p></li>
+<li><p><strong>Training instability</strong> – Adversarial training is notoriously hard</p></li>
+</ol>
+</section>
+<section id="pinn-solution-strategy">
+<h3>4.3 PINN Solution Strategy<a class="headerlink" href="#pinn-solution-strategy" title="Link to this heading">#</a></h3>
+<p>PINNs address these challenges through:</p>
+<p><strong>1. Physics Loss with Second Derivatives</strong></p>
+<p>We need to enforce the second-order ODE. Using automatic differentiation twice:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">dx_dt</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>      <span class="c1"># first derivative</span>
+<span class="n">d2x_dt2</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">dx_dt</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="c1"># second derivative</span>
+<span class="n">residual</span> <span class="o">=</span> <span class="n">d2x_dt2</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">δ</span><span class="o">*</span><span class="n">dx_dt</span> <span class="o">+</span> <span class="n">ω0</span><span class="err">²</span><span class="o">*</span><span class="n">x</span>
+<span class="n">loss_physics</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">residual</span><span class="err">²</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>2. Initial Condition Loss</strong></p>
+<p>We must enforce both initial conditions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x0</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">dx0_dt</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">loss_ic</span> <span class="o">=</span> <span class="p">(</span><span class="n">x0</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="err">²</span> <span class="o">+</span> <span class="p">(</span><span class="n">dx0_dt</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span><span class="err">²</span>
+</pre></div>
+</div>
+<p><strong>3. Data Loss (if available)</strong></p>
+<p>If we have some measurements (even noisy ones), we add:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loss_data</span> <span class="o">=</span> <span class="n">mean</span><span class="p">((</span><span class="n">model</span><span class="p">(</span><span class="n">t_data</span><span class="p">)</span> <span class="o">-</span> <span class="n">x_data</span><span class="p">)</span><span class="err">²</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="complete-implementation-based-on-your-file">
+<h3>4.4 Complete Implementation (Based on Your File)<a class="headerlink" href="#complete-implementation-based-on-your-file" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">PINN for Damped Harmonic Oscillator</span>
+<span class="sd">Based on the code from benmoseley/harmonic-oscillator-pinn</span>
+<span class="sd">Extended with detailed explanations for teaching</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># PHYSICAL PARAMETERS</span>
+<span class="c1"># ============================================</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="mf">2.0</span>      <span class="c1"># damping coefficient (controls energy loss)</span>
+<span class="n">omega0</span> <span class="o">=</span> <span class="mf">20.0</span>    <span class="c1"># natural frequency (controls oscillation speed)</span>
+<span class="n">omega</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">omega0</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">delta</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># damped frequency</span>
+
+<span class="c1"># Parameters for the ODE: d²x/dt² + 2δ dx/dt + ω0² x = 0</span>
+<span class="n">mu_physics</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">delta</span>     <span class="c1"># coefficient for dx/dt</span>
+<span class="n">k_physics</span> <span class="o">=</span> <span class="n">omega0</span><span class="o">**</span><span class="mi">2</span>      <span class="c1"># coefficient for x</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHYSICAL PARAMETERS&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;δ (damping coefficient) = </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ω₀ (natural frequency) = </span><span class="si">{</span><span class="n">omega0</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ω (damped frequency) = </span><span class="si">{</span><span class="n">omega</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected oscillations in [0,1]: about </span><span class="si">{</span><span class="n">omega</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cycles&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">exact_solution</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analytical solution for underdamped case&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">delta</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span> 
+                                    <span class="p">(</span><span class="n">delta</span><span class="o">/</span><span class="n">omega</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">t</span><span class="p">))</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># GENERATE &quot;EXPERIMENTAL&quot; DATA</span>
+<span class="c1"># ============================================</span>
+<span class="c1"># Full domain for visualization</span>
+<span class="n">t_full</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">x_full</span> <span class="o">=</span> <span class="n">exact_solution</span><span class="p">(</span><span class="n">t_full</span><span class="p">)</span>
+
+<span class="c1"># Training data: sparse measurements (only 10 points!)</span>
+<span class="n">t_data</span> <span class="o">=</span> <span class="n">t_full</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">200</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span>  <span class="c1"># First 10 points only (t ∈ [0, 0.4])</span>
+<span class="n">x_data</span> <span class="o">=</span> <span class="n">exact_solution</span><span class="p">(</span><span class="n">t_data</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Training data: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">t_data</span><span class="p">)</span><span class="si">}</span><span class="s2"> points in t ∈ [0, </span><span class="si">{</span><span class="n">t_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;We will test extrapolation to t = 1.0 (no data beyond </span><span class="si">{</span><span class="n">t_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># NETWORK ARCHITECTURE (from your file)</span>
+<span class="c1"># ============================================</span>
+<span class="k">class</span> <span class="nc">HarmonicOscillatorPINN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fully Connected Network with Tanh activation</span>
+<span class="sd">    Architecture: Input → Hidden → ... → Hidden → Output</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_input</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_output</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_hidden</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">activation</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span>  <span class="c1"># Tanh is smooth and differentiable</span>
+        
+        <span class="c1"># Input layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fcs</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_input</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">),</span>
+            <span class="n">activation</span><span class="p">()</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Hidden layers (n_layers - 1 of them)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fch</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="p">[</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">),</span>
+                <span class="n">activation</span><span class="p">()</span>
+            <span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_layers</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">])</span>
+        
+        <span class="c1"># Output layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fce</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">n_output</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fch</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fce</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">t</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># STANDARD MLP TRAINING (Data Only)</span>
+<span class="c1"># ============================================</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TRAINING STANDARD MLP (DATA ONLY)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">HarmonicOscillatorPINN</span><span class="p">()</span>
+<span class="n">optimizer_mlp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">mlp</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3000</span><span class="p">):</span>
+    <span class="n">optimizer_mlp</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+    <span class="n">x_pred</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">t_data</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">x_pred</span> <span class="o">-</span> <span class="n">x_data</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer_mlp</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">4d</span><span class="si">}</span><span class="s2">: Loss = </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># PINN TRAINING (Data + Physics)</span>
+<span class="c1"># ============================================</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TRAINING PINN (DATA + PHYSICS)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="n">pinn</span> <span class="o">=</span> <span class="n">HarmonicOscillatorPINN</span><span class="p">()</span>
+<span class="n">optimizer_pinn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">pinn</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+
+<span class="c1"># Points where we enforce physics (50 points across full domain)</span>
+<span class="n">t_physics</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Initial condition points</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Weight for physics loss (tuned empirically)</span>
+<span class="n">lambda_physics</span> <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="n">lambda_ic</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Weight for initial condition loss</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15000</span><span class="p">):</span>
+    <span class="n">optimizer_pinn</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+    
+    <span class="c1"># ----- DATA LOSS -----</span>
+    <span class="n">x_pred_data</span> <span class="o">=</span> <span class="n">pinn</span><span class="p">(</span><span class="n">t_data</span><span class="p">)</span>
+    <span class="n">loss_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">x_pred_data</span> <span class="o">-</span> <span class="n">x_data</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># ----- PHYSICS LOSS (second-order ODE) -----</span>
+    <span class="c1"># Forward pass on physics points</span>
+    <span class="n">x_phys</span> <span class="o">=</span> <span class="n">pinn</span><span class="p">(</span><span class="n">t_physics</span><span class="p">)</span>
+    
+    <span class="c1"># First derivative (velocity)</span>
+    <span class="n">dx_dt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
+        <span class="n">x_phys</span><span class="p">,</span> <span class="n">t_physics</span><span class="p">,</span>
+        <span class="n">grad_outputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x_phys</span><span class="p">),</span>
+        <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1"># Second derivative (acceleration)</span>
+    <span class="n">d2x_dt2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
+        <span class="n">dx_dt</span><span class="p">,</span> <span class="n">t_physics</span><span class="p">,</span>
+        <span class="n">grad_outputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">dx_dt</span><span class="p">),</span>
+        <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1"># Residual of the ODE: should be zero</span>
+    <span class="c1"># d²x/dt² + 2δ dx/dt + ω₀² x = 0</span>
+    <span class="n">residual</span> <span class="o">=</span> <span class="n">d2x_dt2</span> <span class="o">+</span> <span class="n">mu_physics</span> <span class="o">*</span> <span class="n">dx_dt</span> <span class="o">+</span> <span class="n">k_physics</span> <span class="o">*</span> <span class="n">x_phys</span>
+    <span class="n">loss_physics</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">residual</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># ----- INITIAL CONDITION LOSS -----</span>
+    <span class="n">x0_pred</span> <span class="o">=</span> <span class="n">pinn</span><span class="p">(</span><span class="n">t0</span><span class="p">)</span>
+    <span class="n">dx0_dt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
+        <span class="n">x0_pred</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span>
+        <span class="n">grad_outputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x0_pred</span><span class="p">),</span>
+        <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">loss_ic</span> <span class="o">=</span> <span class="p">(</span><span class="n">x0_pred</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">dx0_dt</span> <span class="o">-</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    
+    <span class="c1"># ----- TOTAL LOSS -----</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_data</span> <span class="o">+</span> <span class="n">lambda_physics</span> <span class="o">*</span> <span class="n">loss_physics</span> <span class="o">+</span> <span class="n">lambda_ic</span> <span class="o">*</span> <span class="n">loss_ic</span>
+    
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer_pinn</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">5d</span><span class="si">}</span><span class="s2">: &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;Total=</span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;Data=</span><span class="si">{</span><span class="n">loss_data</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;Physics=</span><span class="si">{</span><span class="n">loss_physics</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">, &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;IC=</span><span class="si">{</span><span class="n">loss_ic</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># VISUALIZATION</span>
+<span class="c1"># ============================================</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">x_mlp_pred</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">t_full</span><span class="p">)</span>
+    <span class="n">x_pinn_pred</span> <span class="o">=</span> <span class="n">pinn</span><span class="p">(</span><span class="n">t_full</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># Plot 1: Time domain predictions</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_full</span><span class="p">,</span> <span class="n">x_full</span><span class="p">,</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Exact Solution&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_full</span><span class="p">,</span> <span class="n">x_mlp_pred</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> 
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MLP (Data only)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_full</span><span class="p">,</span> <span class="n">x_pinn_pred</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> 
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PINN (Data + Physics)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">t_data</span><span class="p">,</span> <span class="n">x_data</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> 
+           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training Data (10 points)&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">t_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training region boundary&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time t (seconds)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Displacement x(t)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;PINN vs MLP: Damped Harmonic Oscillator&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">1.02</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+
+<span class="c1"># Plot 2: Zoom on extrapolation region</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">t_full</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.4</span>
+<span class="n">t_extrap</span> <span class="o">=</span> <span class="n">t_full</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">x_exact_extrap</span> <span class="o">=</span> <span class="n">x_full</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">x_mlp_extrap</span> <span class="o">=</span> <span class="n">x_mlp_pred</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">x_pinn_extrap</span> <span class="o">=</span> <span class="n">x_pinn_pred</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_extrap</span><span class="p">,</span> <span class="n">x_exact_extrap</span><span class="p">,</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Exact&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_extrap</span><span class="p">,</span> <span class="n">x_mlp_extrap</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MLP&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_extrap</span><span class="p">,</span> <span class="n">x_pinn_extrap</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PINN&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">t_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Last training point&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time t (seconds) - Extrapolation Region&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Displacement x(t)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Zoom: Extrapolation Performance (t &gt; 0.4)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">1.02</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># ============================================</span>
+<span class="c1"># QUANTITATIVE COMPARISON</span>
+<span class="c1"># ============================================</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;QUANTITATIVE RESULTS&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Compute MSE on full domain</span>
+<span class="n">mse_mlp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">x_mlp_pred</span> <span class="o">-</span> <span class="n">x_full</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="n">mse_pinn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">x_pinn_pred</span> <span class="o">-</span> <span class="n">x_full</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean Squared Error on t ∈ [0, 1]:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  MLP:  </span><span class="si">{</span><span class="n">mse_mlp</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  PINN: </span><span class="si">{</span><span class="n">mse_pinn</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Compute at specific test points</span>
+<span class="n">test_times</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Predictions at specific test times:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;t&#39;</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Exact&#39;</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;MLP&#39;</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;PINN&#39;</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;MLP Error&#39;</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;PINN Error&#39;</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">65</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">t_val</span> <span class="ow">in</span> <span class="n">test_times</span><span class="p">:</span>
+        <span class="n">t_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="n">t_val</span><span class="p">]])</span>
+        <span class="n">exact</span> <span class="o">=</span> <span class="n">exact_solution</span><span class="p">(</span><span class="n">t_tensor</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">mlp_pred</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">t_tensor</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">pinn_pred</span> <span class="o">=</span> <span class="n">pinn</span><span class="p">(</span><span class="n">t_tensor</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t_val</span><span class="si">:</span><span class="s2">&lt;6.1f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">exact</span><span class="si">:</span><span class="s2">&lt;10.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mlp_pred</span><span class="si">:</span><span class="s2">&lt;12.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">pinn_pred</span><span class="si">:</span><span class="s2">&lt;12.4f</span><span class="si">}</span><span class="s2"> &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">exact</span><span class="o">-</span><span class="n">mlp_pred</span><span class="p">)</span><span class="si">:</span><span class="s2">&lt;12.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">exact</span><span class="o">-</span><span class="n">pinn_pred</span><span class="p">)</span><span class="si">:</span><span class="s2">&lt;12.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="understanding-the-results">
+<h3>4.5 Understanding the Results<a class="headerlink" href="#understanding-the-results" title="Link to this heading">#</a></h3>
+<p><strong>What Students Will Observe:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>MLP Performance:</strong></p>
+<ul class="simple">
+<li><p>Fits training data perfectly (low data loss)</p></li>
+<li><p>Completely wrong for t &gt; 0.5</p></li>
+<li><p>Predictions might blow up, decay too fast, or oscillate at wrong frequency</p></li>
+</ul>
+</li>
+<li><p><strong>PINN Performance:</strong></p>
+<ul class="simple">
+<li><p>Slightly higher error on training data (acceptable trade-off)</p></li>
+<li><p>Accurately predicts oscillations beyond training region</p></li>
+<li><p>Correctly captures both frequency (ω ≈ 20) and decay rate (δ = 2)</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>Why PINN Succeeds Where MLP Failed:</strong></p>
+<p>The physics loss constrains the network to a very specific <strong>function space</strong> – the set of functions that satisfy the ODE. Even with minimal data, the network “knows” the solution must oscillate with frequency ω and decay like e^{-δt}.</p>
+</section>
+<section id="comparison-with-gan-results-connection-to-previous-assignment">
+<h3>4.6 Comparison with GAN Results (Connection to Previous Assignment)<a class="headerlink" href="#comparison-with-gan-results-connection-to-previous-assignment" title="Link to this heading">#</a></h3>
+<p>Students previously attempted this with GANs. Let’s highlight the advantages of PINN over GAN:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>GAN</p></th>
+<th class="head"><p>PINN</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Training stability</p></td>
+<td><p>Unstable (mode collapse, non-convergence)</p></td>
+<td><p>Stable (standard gradient descent)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Data requirement</p></td>
+<td><p>Large dataset needed</p></td>
+<td><p>Works with tiny datasets</p></td>
+</tr>
+<tr class="row-even"><td><p>Physics guarantee</p></td>
+<td><p>None</p></td>
+<td><p>Enforced via loss function</p></td>
+</tr>
+<tr class="row-odd"><td><p>Interpretability</p></td>
+<td><p>Black box</p></td>
+<td><p>Can extract residual, derivatives</p></td>
+</tr>
+<tr class="row-even"><td><p>Determinism</p></td>
+<td><p>Different seeds → different results</p></td>
+<td><p>Consistent given same initialization</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-5-summary-and-course-conclusion">
+<h2>Part 5: Summary and Course Conclusion<a class="headerlink" href="#part-5-summary-and-course-conclusion" title="Link to this heading">#</a></h2>
+<section id="the-pinn-framework-general-recipe">
+<h3>5.1 The PINN Framework – General Recipe<a class="headerlink" href="#the-pinn-framework-general-recipe" title="Link to this heading">#</a></h3>
+<p>For any physical system, implementing a PINN involves four steps:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span> <span class="n">Define</span> <span class="n">the</span> <span class="n">neural</span> <span class="n">network</span> <span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">coordinates</span><span class="o">/</span><span class="n">times</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">solution</span><span class="p">)</span>
+<span class="mf">2.</span> <span class="n">Define</span> <span class="n">the</span> <span class="n">governing</span> <span class="n">differential</span> <span class="n">equations</span> <span class="p">(</span><span class="n">physics</span><span class="p">)</span>
+<span class="mf">3.</span> <span class="n">Compute</span> <span class="n">residuals</span> <span class="n">using</span> <span class="n">automatic</span> <span class="n">differentiation</span>
+<span class="mf">4.</span> <span class="n">Minimize</span> <span class="n">combined</span> <span class="n">loss</span><span class="p">:</span> <span class="n">Data</span> <span class="o">+</span> <span class="n">Physics</span> <span class="o">+</span> <span class="p">(</span><span class="n">Initial</span><span class="o">/</span><span class="n">Boundary</span> <span class="n">conditions</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="when-to-use-pinns-vs-traditional-methods">
+<h3>5.2 When to Use PINNs (vs. Traditional Methods)<a class="headerlink" href="#when-to-use-pinns-vs-traditional-methods" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Scenario</p></th>
+<th class="head"><p>Recommended approach</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Abundant clean data</p></td>
+<td><p>MLP or any standard method</p></td>
+</tr>
+<tr class="row-odd"><td><p>No data, known physics</p></td>
+<td><p>Traditional numerical solvers (FEM, FDM)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Little data, known physics</strong></p></td>
+<td><p><strong>PINN (sweet spot!)</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Noisy data, known physics</p></td>
+<td><p>PINN with tuned λ</p></td>
+</tr>
+<tr class="row-even"><td><p>Partially known physics</p></td>
+<td><p>PINN with incomplete model</p></td>
+</tr>
+<tr class="row-odd"><td><p>Inverse problems (find parameters)</p></td>
+<td><p>PINN (differentiate through physics)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="limitations-of-pinns-be-honest-with-students">
+<h3>5.3 Limitations of PINNs (Be Honest with Students)<a class="headerlink" href="#limitations-of-pinns-be-honest-with-students" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Training can be slow</strong> – Physics loss adds computational cost</p></li>
+<li><p><strong>Hyperparameter tuning</strong> – Finding the right λ requires experimentation</p></li>
+<li><p><strong>Stiff ODEs/PDEs</strong> – Fast dynamics are hard to learn (spectral bias)</p></li>
+<li><p><strong>High-dimensional problems</strong> – Curse of dimensionality still applies</p></li>
+</ol>
+</section>
+<section id="the-big-picture-where-we-ve-been-in-this-course">
+<h3>5.4 The Big Picture: Where We’ve Been in This Course<a class="headerlink" href="#the-big-picture-where-we-ve-been-in-this-course" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Week 1-2:   Regression &amp; MLP (function approximation basics)
+Week 3-4:   CNNs (spatial structure, image data)
+Week 5-6:   GANs (generative modeling, adversarial learning)
+Week 7:     RNNs/LSTMs (sequential data)
+Week 8:     Transformers &amp; Attention
+Week 9-10:  Autoencoders &amp; Latent Representations
+Week 11:    Reinforcement Learning
+Week 12:    PINNs (integrating physics into deep learning) ← TODAY
+</pre></div>
+</div>
+<p><strong>The Unifying Theme:</strong> All these methods learn from data. PINNs add prior knowledge (physics) to the learning process, bridging the gap between data-driven and knowledge-driven AI.</p>
+</section>
+<section id="final-thoughts-for-students">
+<h3>5.5 Final Thoughts for Students<a class="headerlink" href="#final-thoughts-for-students" title="Link to this heading">#</a></h3>
+<p><strong>Quote to End the Course:</strong></p>
+<blockquote>
+<div><p><em>“In the end, deep learning is not about replacing physical laws with black boxes. It’s about using neural networks as flexible function approximators that can respect both data AND first principles. PINNs represent a paradigm shift: from pure pattern recognition to physics-aware learning. As you move forward in your careers, remember that the most powerful AI systems will be those that combine the best of both worlds: the flexibility of data-driven learning and the reliability of physical laws.”</em></p>
+</div></blockquote>
+</section>
+<section id="take-home-assignment-optional-extension">
+<h3>5.6 Take-Home Assignment (Optional Extension)<a class="headerlink" href="#take-home-assignment-optional-extension" title="Link to this heading">#</a></h3>
+<p>Ask students to modify the oscillator code to:</p>
+<ol class="arabic simple">
+<li><p><strong>Change the damping</strong> – Set δ = 5 (overdamped case) and update the physics loss accordingly</p></li>
+<li><p><strong>Add boundary conditions</strong> – Instead of ICs, try x(0)=1 and x(1)=0 (two-point boundary value problem)</p></li>
+<li><p><strong>Inverse problem</strong> – Treat δ and ω₀ as unknown parameters to be learned from sparse data</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="appendix-quick-reference-card-for-students">
+<h2>Appendix: Quick Reference Card for Students<a class="headerlink" href="#appendix-quick-reference-card-for-students" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># PINN Template (General Structure)</span>
+<span class="k">class</span> <span class="nc">PINN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Define network layers with Tanh activation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Training loop pseudocode</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">PINN</span><span class="p">()</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+    <span class="c1"># Data loss (if data available)</span>
+    <span class="n">loss_data</span> <span class="o">=</span> <span class="n">MSE</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">x_data</span><span class="p">),</span> <span class="n">y_data</span><span class="p">)</span>
+    
+    <span class="c1"># Physics loss (using automatic differentiation)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x_physics</span><span class="p">)</span>
+    <span class="n">u_x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">x_physics</span><span class="p">,</span> <span class="o">...</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">u_xx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">u_x</span><span class="p">,</span> <span class="n">x_physics</span><span class="p">,</span> <span class="o">...</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">residual</span> <span class="o">=</span> <span class="n">u_xx</span> <span class="o">+</span> <span class="o">...</span>  <span class="c1"># Your PDE/ODE here</span>
+    <span class="n">loss_physics</span> <span class="o">=</span> <span class="n">MSE</span><span class="p">(</span><span class="n">residual</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Initial/Boundary conditions</span>
+    <span class="n">loss_ic</span> <span class="o">=</span> <span class="n">MSE</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">x_boundary</span><span class="p">),</span> <span class="n">u_boundary</span><span class="p">)</span>
+    
+    <span class="c1"># Total loss</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_data</span> <span class="o">+</span> <span class="n">λ_p</span> <span class="o">*</span> <span class="n">loss_physics</span> <span class="o">+</span> <span class="n">λ_ic</span> <span class="o">*</span> <span class="n">loss_ic</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./misc"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-session-of-deep-learning-course">Final Session of Deep Learning Course</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisite-knowledge-check">Prerequisite Knowledge Check</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-motivation-why-pinns">Part 1: Motivation – Why PINNs?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fundamental-problem-with-pure-data-driven-approaches">1.1 The Fundamental Problem with Pure Data-Driven Approaches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-pinns-different">1.2 What Makes PINNs Different?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-analogy-teaching-a-student">1.3 The Analogy: Teaching a Student</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-example-1-projectile-motion-parabolic-trajectory">Part 2: Example 1 – Projectile Motion (Parabolic Trajectory)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#physics-background">2.1 Physics Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-example">2.2 Why This Example?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-experimental-setup-simulated">2.3 The Experimental Setup (Simulated)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-mlp-approach-what-students-already-did">2.4 Standard MLP Approach (What Students Already Did)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pinn-solution-adding-physics-knowledge">2.5 PINN Solution – Adding Physics Knowledge</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-differentiation-the-secret-sauce">2.6 Automatic Differentiation – The Secret Sauce</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-results">2.7 Expected Results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-code-with-detailed-comments">2.8 Complete Code with Detailed Comments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions-for-students">2.9 Discussion Questions for Students</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-example-2-projectile-motion-with-noisy-data">Part 3: Example 2 – Projectile Motion with Noisy Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-with-real-experiments">3.1 The Problem with Real Experiments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#noise-characteristics">3.2 Noise Characteristics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-to-standard-mlp">3.3 What Happens to Standard MLP?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-pinns-handle-noise">3.4 How PINNs Handle Noise</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extended-code-with-noise-analysis">3.5 Extended Code with Noise Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-pedagogical-observations-for-students">3.6 Key Pedagogical Observations for Students</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-example-3-damped-harmonic-oscillator">Part 4: Example 3 – Damped Harmonic Oscillator</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">4.1 Physics Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-challenged-mlp-and-gan">4.2 Why This Challenged MLP and GAN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pinn-solution-strategy">4.3 PINN Solution Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-implementation-based-on-your-file">4.4 Complete Implementation (Based on Your File)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-results">4.5 Understanding the Results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-with-gan-results-connection-to-previous-assignment">4.6 Comparison with GAN Results (Connection to Previous Assignment)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-5-summary-and-course-conclusion">Part 5: Summary and Course Conclusion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pinn-framework-general-recipe">5.1 The PINN Framework – General Recipe</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-to-use-pinns-vs-traditional-methods">5.2 When to Use PINNs (vs. Traditional Methods)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-of-pinns-be-honest-with-students">5.3 Limitations of PINNs (Be Honest with Students)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-big-picture-where-we-ve-been-in-this-course">5.4 The Big Picture: Where We’ve Been in This Course</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-thoughts-for-students">5.5 Final Thoughts for Students</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#take-home-assignment-optional-extension">5.6 Take-Home Assignment (Optional Extension)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix-quick-reference-card-for-students">Appendix: Quick Reference Card for Students</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Mahmood Amintoosi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. CC0 Licensed - Computer Science Dept., Ferdowsi University of Mashhad.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
