@@ -14,6 +14,7 @@ chapters:
 - file: lecture8_advanced-deep-learning
 - file: lecture9_word2vec
 - file: lecture10_deepwalk
+- file: lecture11_pinns
 - file: appendixA_gradients
 - file: appendixB_logistic-loss
 - file: appendixC_computing-derivatives
