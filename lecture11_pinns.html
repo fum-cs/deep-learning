@@ -469,12 +469,11 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-motivation-why-pinns">Part 1: Motivation – Why PINNs?</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fundamental-problem-with-pure-data-driven-approaches">1.1 The Fundamental Problem with Pure Data-Driven Approaches</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-pinns-different">1.2 What Makes PINNs Different?</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-analogy-teaching-a-student">1.3 The Analogy: Teaching a Student</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-example-1-projectile-motion-parabolic-trajectory">Part 2: Example 1 – Projectile Motion (Parabolic Trajectory)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#physics-background">2.1 Physics Background</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-example">2.2 Why This Example?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#projectile-motion">2.2 Projectile Motion</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-experimental-setup-simulated">2.3 The Experimental Setup (Simulated)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-mlp-approach">2.4 Standard MLP Approach</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pinn-solution-adding-physics-knowledge">2.5 PINN Solution – Adding Physics Knowledge</a></li>
@@ -488,7 +487,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-with-real-experiments">3.1 The Problem with Real Experiments</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-pinns-handle-noise">3.2 How PINNs Handle Noise</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extended-code-with-noise-analysis">3.3 Extended Code with Noise Analysis</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-observations">3.4 Key Observations</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-example-3-damped-harmonic-oscillator">Part 4: Example 3 – Damped Harmonic Oscillator</a><ul class="nav section-nav flex-column">
@@ -563,29 +561,6 @@ document.write(`
 \[\mathcal{L}_{PINN} = \mathcal{L}_{data} + \lambda \cdot \mathcal{L}_{physics}\]</div>
 <p>Where <span class="math notranslate nohighlight">\(\mathcal{L}_{physics}\)</span> measures how much the network’s predictions violate the known laws of physics (i.e., the residual of the differential equation).</p>
 </section>
-<section id="the-analogy-teaching-a-student">
-<h3>1.3 The Analogy: Teaching a Student<a class="headerlink" href="#the-analogy-teaching-a-student" title="Link to this heading">#</a></h3>
-<p>Think of training a neural network like teaching a physics student:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head text-left"><p>Approach</p></th>
-<th class="head text-left"><p>Analogy</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="text-left"><p><strong>MLP</strong></p></td>
-<td class="text-left"><p>A student who only memorizes lab experiment results but never learns Newton’s laws. They can interpolate between experiments, but cannot predict new scenarios.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><strong>GAN</strong></p></td>
-<td class="text-left"><p>A student who learns to flawlessly mimic experimental setups, but doesn’t understand <em>why</em> the setups work. They might suggest physically impossible setups that just “look right.”</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><strong>PINN</strong></p></td>
-<td class="text-left"><p>A student who learns both: “Here is what the experiments show, AND here are the fundamental equations that must always be satisfied.”</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
 </section>
 <hr class="docutils" />
 <section id="part-2-example-1-projectile-motion-parabolic-trajectory">
@@ -612,15 +587,15 @@ Integrating twice gives the familiar parabolic equation:</p>
 \[h(t) = 1 + 10t - \frac{1}{2}(9.8)t^2\]</div>
 <p>This is the <strong>ground truth</strong> we’ll use to generate training data and evaluate our models.</p>
 </section>
-<section id="why-this-example">
-<h3>2.2 Why This Example?<a class="headerlink" href="#why-this-example" title="Link to this heading">#</a></h3>
-<p>This problem is pedagogically valuable because:</p>
-<ol class="arabic simple">
-<li><p><strong>Simple physics:</strong> You already understand projectile motion from introductory physics.</p></li>
-<li><p><strong>Low-dimensional:</strong> Only one input (<span class="math notranslate nohighlight">\(t\)</span>) and one output (<span class="math notranslate nohighlight">\(h\)</span>).</p></li>
-<li><p><strong>Clear failure modes:</strong> MLPs fail dramatically outside the training range.</p></li>
-<li><p><strong>Easy visualization:</strong> We can plot everything in 2D.</p></li>
-</ol>
+<section id="projectile-motion">
+<h3>2.2 Projectile Motion<a class="headerlink" href="#projectile-motion" title="Link to this heading">#</a></h3>
+<p><img alt="" src="_images/Projectile-Motion.png" /></p>
+<p><img alt="" src="_images/Projectile-Motion-time-axis.png" /></p>
+<!-- This problem is pedagogically valuable because:
+1. **Simple physics:** You already understand projectile motion from introductory physics.
+2. **Low-dimensional:** Only one input ($t$) and one output ($h$).
+3. **Clear failure modes:** MLPs fail dramatically outside the training range.
+4. **Easy visualization:** We can plot everything in 2D. -->
 </section>
 <section id="the-experimental-setup-simulated">
 <h3>2.3 The Experimental Setup (Simulated)<a class="headerlink" href="#the-experimental-setup-simulated" title="Link to this heading">#</a></h3>
@@ -1056,36 +1031,15 @@ Training with λ_physics = 0.5
 <img alt="_images/cd9d28eb18334289891817e72bd4bca774dc9d92c2f3e5191fefc619b7d81300.png" src="_images/cd9d28eb18334289891817e72bd4bca774dc9d92c2f3e5191fefc619b7d81300.png" />
 </div>
 </div>
-</section>
-<section id="key-observations">
-<h3>3.4 Key Observations<a class="headerlink" href="#key-observations" title="Link to this heading">#</a></h3>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head text-left"><p><span class="math notranslate nohighlight">\(\lambda\)</span> Value</p></th>
-<th class="head text-left"><p>Behavior</p></th>
-<th class="head text-left"><p>Best for…</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="text-left"><p>0 (MLP)</p></td>
-<td class="text-left"><p>Fits noise exactly, poor extrapolation</p></td>
-<td class="text-left"><p>When data is perfect (never happens)</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p>0.001</p></td>
-<td class="text-left"><p>Still overfits, slightly better</p></td>
-<td class="text-left"><p>Low noise scenarios</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p>0.01</p></td>
-<td class="text-left"><p><strong>Sweet spot</strong> – balances physics and data</p></td>
-<td class="text-left"><p>Most real experiments</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p>0.1</p></td>
-<td class="text-left"><p>Physically accurate, ignores some data</p></td>
-<td class="text-left"><p>High noise, well-understood physics</p></td>
-</tr>
-</tbody>
-</table>
-</div>
+<!-- 
+### 3.4 Key Observations
+
+| $\lambda$ Value | Behavior | Best for... |
+| :--- | :--- | :--- |
+| 0 (MLP) | Fits noise exactly, poor extrapolation | When data is perfect (never happens) |
+| 0.001 | Still overfits, slightly better | Low noise scenarios |
+| 0.01 | **Sweet spot** – balances physics and data | Most real experiments |
+| 0.1 | Physically accurate, ignores some data | High noise, well-understood physics | -->
 </section>
 </section>
 <hr class="docutils" />
@@ -1469,12 +1423,11 @@ TRAINING PINN (DATA + PHYSICS)
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-motivation-why-pinns">Part 1: Motivation – Why PINNs?</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fundamental-problem-with-pure-data-driven-approaches">1.1 The Fundamental Problem with Pure Data-Driven Approaches</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-pinns-different">1.2 What Makes PINNs Different?</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-analogy-teaching-a-student">1.3 The Analogy: Teaching a Student</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-example-1-projectile-motion-parabolic-trajectory">Part 2: Example 1 – Projectile Motion (Parabolic Trajectory)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#physics-background">2.1 Physics Background</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-example">2.2 Why This Example?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#projectile-motion">2.2 Projectile Motion</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-experimental-setup-simulated">2.3 The Experimental Setup (Simulated)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-mlp-approach">2.4 Standard MLP Approach</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pinn-solution-adding-physics-knowledge">2.5 PINN Solution – Adding Physics Knowledge</a></li>
@@ -1488,7 +1441,6 @@ TRAINING PINN (DATA + PHYSICS)
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-with-real-experiments">3.1 The Problem with Real Experiments</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-pinns-handle-noise">3.2 How PINNs Handle Noise</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extended-code-with-noise-analysis">3.3 Extended Code with Noise Analysis</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-observations">3.4 Key Observations</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-example-3-damped-harmonic-oscillator">Part 4: Example 3 – Damped Harmonic Oscillator</a><ul class="nav section-nav flex-column">
