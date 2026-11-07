@@ -5,3 +5,8 @@ __pycache__
 
 /notebooks/data/bitmoji_bw/train
 /notebooks/.ipynb_checkpoints
+.ipynb_checkpoints/
+_sources/
+_build/
+*.pt
+*.pkl
